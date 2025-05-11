@@ -2,23 +2,6 @@ let currentPoolData = null;
 let isDeepDiveRunning = false;
 let cancelDeepDive = false;
 
-function closeWelcomePopup() {
-    const welcomePopup = document.getElementById('welcomePopup');
-    const disclaimerPopup = document.getElementById('disclaimerPopup');
-    
-    if (welcomePopup) {
-        welcomePopup.style.display = 'none';
-    } else {
-        log('Error: #welcomePopup not found when closing.');
-    }
-    
-    if (disclaimerPopup) {
-        disclaimerPopup.style.display = 'flex';
-    } else {
-        log('Error: #disclaimerPopup not found.');
-    }
-}
-
 function openChartFromDropdown(dropdown) {
     const chartUrl = dropdown.value;
     if (!chartUrl) {
@@ -1823,13 +1806,13 @@ async function loadUnencryptedWalletFile(event) {
             await connectWebSocket();
             await checkBalance();
 
-            log('Overwriting temporary seed data...');
+            
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data = null;
         } catch (error) {
-            log(`Error: Failed to load unencrypted wallet file: ${error.message}`);
+            
         }
     };
     reader.onerror = function() {

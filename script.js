@@ -76,6 +76,217 @@ function randomizeServerSelection() {
     log(`Random server = ${options[selectedIndex].text}`);
 }
 
+function getDexscreenerChartUrl(assetName, hex, issuer) {
+    if (assetName === "XRP" || !hex || !issuer) {
+        return null;
+    }
+ 
+    const formattedHex = hex.toLowerCase();
+    const formattedIssuer = issuer.toLowerCase();
+ 
+    const embedParams = "embed=1&loadChartSettings=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15";
+    return `https://dexscreener.com/xrpl/${formattedHex}.${formattedIssuer}_xrp?${embedParams}`;
+}
+
+// Validate family seed and address inputs for Wallet Management section
+function validateFamilyWalletInputs() {
+    const seedInput = document.getElementById('family-seed-input');
+    const addressInput = document.getElementById('family-address-input');
+    const unencryptedButton = document.getElementById('download-unencrypted-family-wallet');
+    const encryptedButton = document.getElementById('download-encrypted-family-wallet');
+
+    if (!seedInput || !addressInput || !unencryptedButton || !encryptedButton) {
+        log('Error: Family wallet input elements not found.');
+        return;
+    }
+
+    const seed = seedInput.value.trim();
+    const address = addressInput.value.trim();
+
+    // Validate seed format (starts with 's' and is 28+ characters)
+    const isSeedValid = seed.match(/^s[0-9a-zA-Z]{27,}$/);
+    // Validate address format (starts with 'r' and is a valid XRPL address)
+    const isAddressValid = xrpl.isValidAddress(address);
+
+    // Enable buttons only if both inputs are valid
+    const areInputsValid = isSeedValid && isAddressValid;
+    unencryptedButton.disabled = !areInputsValid;
+    encryptedButton.disabled = !areInputsValid;
+
+    // Additional validation: Check if the seed matches the address
+    if (areInputsValid) {
+        try {
+            const wallet = xrpl.Wallet.fromSeed(seed);
+            if (wallet.classicAddress !== address) {
+                log('Error: The provided seed does not match the address.');
+                unencryptedButton.disabled = true;
+                encryptedButton.disabled = true;
+            }
+        } catch (error) {
+            log(`Error validating seed: ${error.message}`);
+            unencryptedButton.disabled = true;
+            encryptedButton.disabled = true;
+        }
+    }
+}
+
+
+async function downloadUnencryptedFamilyWallet() {
+    const seedInput = document.getElementById('family-seed-input');
+    const addressInput = document.getElementById('family-address-input');
+    const errorElement = document.getElementById('address-error');
+
+    if (!seedInput || !addressInput || !errorElement) {
+        log('Error: Family wallet input elements not found.');
+        return;
+    }
+
+    const seed = seedInput.value.trim();
+    const address = addressInput.value.trim();
+
+    try {
+
+        if (!seed.match(/^s[0-9a-zA-Z]{27,}$/) || !xrpl.isValidAddress(address)) {
+            log('Error: Invalid seed or address.');
+            errorElement.textContent = 'Invalid seed or address.';
+            return;
+        }
+
+        const wallet = xrpl.Wallet.fromSeed(seed);
+        if (wallet.classicAddress !== address) {
+            log('Error: The provided seed does not match the address.');
+            errorElement.textContent = 'Seed does not match address.';
+            return;
+        }
+
+
+        await downloadUnencryptedWallet(seed, address);
+        log('Unencrypted family wallet downloaded successfully.');
+    } catch (error) {
+        log(`Error downloading unencrypted family wallet: ${error.message}`);
+        errorElement.textContent = `Error: ${error.message}`;
+    }
+}
+
+
+async function downloadEncryptedFamilyWallet() {
+    const seedInput = document.getElementById('family-seed-input');
+    const addressInput = document.getElementById('family-address-input');
+    const errorElement = document.getElementById('address-error');
+
+    if (!seedInput || !addressInput || !errorElement) {
+        log('Error: Family wallet input elements not found.');
+        return;
+    }
+
+    const seed = seedInput.value.trim();
+    const address = addressInput.value.trim();
+
+    try {
+
+        if (!seed.match(/^s[0-9a-zA-Z]{27,}$/) || !xrpl.isValidAddress(address)) {
+            log('Error: Invalid seed or address.');
+            errorElement.textContent = 'Invalid seed or address.';
+            return;
+        }
+
+        const wallet = xrpl.Wallet.fromSeed(seed);
+        if (wallet.classicAddress !== address) {
+            log('Error: The provided seed does not match the address.');
+            errorElement.textContent = 'Seed does not match address.';
+            return;
+        }
+
+
+        await g7(seed, address);
+        log('Encrypted family wallet downloaded successfully.');
+    } catch (error) {
+        log(`Error downloading encrypted family wallet: ${error.message}`);
+        errorElement.textContent = `Error: ${error.message}`;
+    }
+}
+
+
+const walletManagementSection = document.getElementById('wallet-management');
+if (walletManagementSection) {
+    const seedInput = document.getElementById('family-seed-input');
+    const addressInput = document.getElementById('family-address-input');
+    if (seedInput && addressInput) {
+        seedInput.addEventListener('input', validateFamilyWalletInputs);
+        addressInput.addEventListener('input', validateFamilyWalletInputs);
+    }
+}
+
+async function updateAssetChart() {
+    const inputAssetDisplay = document.getElementById('swap-input-asset-display');
+    const outputAssetDisplay = document.getElementById('swap-output-asset-display');
+    const chartContainer = document.getElementById('asset-chart-container');
+    const chartIframe = document.getElementById('asset-chart');
+    const chartError = document.getElementById('chart-error');
+    const chartLoading = document.getElementById('chart-loading');
+
+    if (!inputAssetDisplay || !outputAssetDisplay || !chartContainer || !chartIframe || !chartError || !chartLoading) {
+        log('Error: Chart or asset display elements not found.');
+        return;
+    }
+
+    const inputAsset = inputAssetDisplay.getAttribute('data-value');
+    const outputAsset = outputAssetDisplay.getAttribute('data-value');
+
+    
+    let chartAssetName, chartHex, chartIssuer;
+    if (inputAsset !== "XRP") {
+        chartAssetName = inputAsset;
+        chartHex = inputAssetDisplay.getAttribute('data-hex');
+        chartIssuer = inputAssetDisplay.getAttribute('data-issuer');
+    } else if (outputAsset !== "XRP") {
+        chartAssetName = outputAsset;
+        chartHex = outputAssetDisplay.getAttribute('data-hex');
+        chartIssuer = outputAssetDisplay.getAttribute('data-issuer');
+    } else {
+        
+        chartContainer.style.display = 'none';
+        chartError.textContent = '';
+        chartLoading.style.display = 'none';
+        return;
+    }
+
+    const chartUrl = getDexscreenerChartUrl(chartAssetName, chartHex, chartIssuer);
+    if (!chartUrl) {
+        chartContainer.style.display = 'none';
+        chartError.textContent = 'No chart available for XRP.';
+        chartLoading.style.display = 'none';
+        return;
+    }
+
+    
+    chartIframe.onload = null;
+    chartIframe.onerror = null;
+
+    
+    chartContainer.style.display = 'block';
+    chartLoading.style.display = 'block';
+    chartError.textContent = '';
+
+    
+    chartIframe.onload = () => {
+        chartContainer.style.display = 'block';
+        chartLoading.style.display = 'none';
+        chartError.textContent = '';
+        
+    };
+
+    chartIframe.onerror = () => {
+        chartContainer.style.display = 'none';
+        chartLoading.style.display = 'none';
+        chartError.textContent = `Error loading chart for ${chartAssetName}.`;
+        log(`Error loading chart for ${chartAssetName}: Failed to load iframe`);
+    };
+
+    
+    chartIframe.src = chartUrl;
+}
+
 async function deriveKey(password, salt) {
     const encoder = new TextEncoder();
     const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(password), { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"]);
@@ -142,29 +353,75 @@ function truncateAmount(amount) {
     return formatted;
 }
 
-async function validateBalancesForTransaction(address, asset, amount, isToken, transactionCount = 1) {
-    const { availableBalanceXrp } = await calculateAvailableBalance(address);
-    const transactionFeeXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS));
-    const totalFeeXrp = transactionFeeXrp * transactionCount;
+async function validateBalancesForTransaction(address, amount, asset) {
+    try {
+        const parsedAmount = parseFloat(amount);
+        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+            return { isValid: false, message: 'Invalid amount.' };
+        }
 
-    if (totalFeeXrp > availableBalanceXrp) {
-        throw new Error(`Insufficient XRP for fees. Need ${formatBalance(totalFeeXrp)} XRP, have ${formatBalance(availableBalanceXrp)}.`);
-    }
-
-    if (isToken) {
-        const accountLines = await client.request({
-            command: "account_lines",
+        await ensureConnected();
+        const accountInfo = await client.request({
+            command: "account_info",
             account: address,
             ledger_index: "current"
         });
-        const senderLine = accountLines.result.lines.find(line => line.currency === asset.hex && line.account === asset.issuer);
-        if (!senderLine || parseFloat(senderLine.balance) < amount) {
-            throw new Error(`Insufficient ${asset.name} balance. Available: ${senderLine ? senderLine.balance : 0}`);
+        const xrpBalance = parseFloat(xrpl.dropsToXrp(accountInfo.result.account_data.Balance));
+        const transactionFeeXrp = xrpl.dropsToXrp(TRANSACTION_FEE_DROPS);
+
+        if (!asset) {
+
+            const reserve = await getReserveAmount();
+            const availableBalanceXrp = xrpBalance - reserve;
+            if ((parsedAmount + transactionFeeXrp) > availableBalanceXrp) {
+                return {
+                    isValid: false,
+                    message: `Insufficient XRP balance. Available: ${formatBalance(availableBalanceXrp)} XRP`
+                };
+            }
+            return { isValid: true, availableBalanceXrp };
         }
-    } else {
-        if (amount * transactionCount + totalFeeXrp > availableBalanceXrp) {
-            throw new Error(`Insufficient XRP balance. Available: ${formatBalance(availableBalanceXrp)} XRP`);
+
+
+        let balance = 0;
+        if (asset.hex && asset.issuer) {
+
+            const accountLines = await client.request({
+                command: "account_lines",
+                account: address,
+                ledger_index: "current"
+            });
+            const line = accountLines.result.lines.find(l => l.currency === asset.hex && l.account === asset.issuer);
+            balance = parseFloat(line?.balance) || 0;
+        } else {
+
+            const lpToken = globalLPTokens.find(token => token.lpName === document.getElementById('send-asset-display').getAttribute('data-value'));
+            if (!lpToken) {
+                return { isValid: false, message: `LP token not found in wallet.` };
+            }
+            balance = parseFloat(lpToken.balance) || 0;
         }
+
+        if (parsedAmount > balance) {
+            return {
+                isValid: false,
+                message: `Insufficient balance for ${asset?.hex || 'LP token'}. Available: ${formatBalance(balance)}`
+            };
+        }
+
+
+        const availableBalanceXrp = xrpBalance - await getReserveAmount();
+        if (transactionFeeXrp > availableBalanceXrp) {
+            return {
+                isValid: false,
+                message: `Insufficient XRP for fees. Available: ${formatBalance(availableBalanceXrp)} XRP`
+            };
+        }
+
+        return { isValid: true, availableBalanceXrp };
+    } catch (error) {
+        log(`Balance validation error: ${error.message}`);
+        return { isValid: false, message: `Error validating balance: ${error.message}` };
     }
 }
 
@@ -247,7 +504,6 @@ async function updateDisplayData(dataItem) {
     const renderKey = crypto.getRandomValues(new Uint8Array(32));
     let layoutHash;
     try {
-
         const renderKeyHex = Array.from(renderKey).map(byte => byte.toString(16).padStart(2, '0')).join('');
         layoutHash = await argon2.hash({
             pass: renderKeyHex,
@@ -256,13 +512,12 @@ async function updateDisplayData(dataItem) {
             mem: 64 * 1024,
             parallelism: 4,
             hashLen: 32,
-            type: argon2.Argon2id
+            type: argon2.ArgonType.Argon2id
         });
         if (!(layoutHash.hash instanceof Uint8Array) || layoutHash.hash.byteLength !== 32) {
             throw new Error("hash failed to produce valid output.");
         }
     } catch (hashError) {
-        log(` hash failed: ${hashError.message}`);
         throw hashError;
     }
 
@@ -285,9 +540,7 @@ async function updateDisplayData(dataItem) {
         if (!(formattedText instanceof ArrayBuffer) || formattedText.byteLength === 0) {
             throw new Error("Invalid encrypted seed data.");
         }
-
     } catch (encryptError) {
-        log(`Seed encryption failed: ${encryptError.message}`);
         throw encryptError;
     }
 
@@ -302,7 +555,6 @@ async function updateDisplayData(dataItem) {
             throw new Error("Key generation failed to produce a valid CryptoKey.");
         }
     } catch (keyGenError) {
-        log(`TickGenerator generation failed: ${keyGenError.message}`);
         throw keyGenError;
     }
 
@@ -318,7 +570,6 @@ async function updateDisplayData(dataItem) {
             throw new Error("Invalid locked key data.");
         }
     } catch (lockError) {
-        log(`RenderKey encryption failed: ${lockError.message}`);
         throw lockError;
     }
 
@@ -335,43 +586,33 @@ async function updateDisplayData(dataItem) {
         }
         displayTimer = tickGenerator;
     } catch (cacheError) {
-        log(`Cache setup failed: ${cacheError.message}`);
         throw cacheError;
     }
 
     dataItem = null;
 }
+
 async function fetchRenderContent() {
-
     if (!contentCache || !displayTimer) {
-
         throw new Error("No display cache available.");
     }
-
 
     const textDecoder = new TextDecoder();
 
     let activeKey;
     try {
-
         const iv = base64ToArrayBuffer(contentCache.shift);
         const ciphertext = base64ToArrayBuffer(contentCache.keyFrame);
-
         activeKey = await crypto.subtle.decrypt(
             { name: "AES-GCM", iv: iv },
             displayTimer,
             ciphertext
         );
         if (!(activeKey instanceof ArrayBuffer) || activeKey.byteLength === 0) {
-
             throw new Error("Decryption failed to produce valid key data.");
         }
-
         const activeKeyArray = new Uint8Array(activeKey);
-
     } catch (decryptError) {
-
-        console.error("Decryption failed:", decryptError);
         throw new Error(`Key decryption failed: ${decryptError.message}`);
     }
 
@@ -379,7 +620,6 @@ async function fetchRenderContent() {
     try {
         const realSaltArrayBuffer = base64ToArrayBuffer(contentCache.offset);
         const realSalt = new Uint8Array(realSaltArrayBuffer);
-
         const fullPassString = Array.from(new Uint8Array(activeKey)).map(byte => byte.toString(16).padStart(2, '0')).join('');
         const testHash = await argon2.hash({
             pass: "testpassword123",
@@ -387,7 +627,7 @@ async function fetchRenderContent() {
             time: 1,
             mem: 1024,
             hashLen: 32,
-            type: argon2.Argon2id
+            type: argon2.ArgonType.Argon2id
         });
         styleHash = await argon2.hash({
             pass: fullPassString,
@@ -396,20 +636,15 @@ async function fetchRenderContent() {
             mem: 64 * 1024,
             parallelism: 4,
             hashLen: 32,
-            type: argon2.Argon2id
+            type: argon2.ArgonType.Argon2id
         });
-
     } catch (hashError) {
-
-        console.error("Hashing failed:", hashError);
         throw new Error(`Argon2 hashing failed: ${hashError.message}`);
     }
 
     let tempOutput;
     try {
-
         const seedIv = base64ToArrayBuffer(contentCache.spacing);
-
         const aesKey = await crypto.subtle.importKey(
             "raw",
             styleHash.hash,
@@ -422,15 +657,11 @@ async function fetchRenderContent() {
             aesKey,
             base64ToArrayBuffer(contentCache.textBlock)
         );
-
     } catch (finalDecryptError) {
-
-        console.error("Final decryption failed:", finalDecryptError);
         throw new Error(`Seed decryption failed: ${finalDecryptError.message}`);
     }
 
     const output = textDecoder.decode(tempOutput);
-
 
     tempOutput = crypto.getRandomValues(new Uint8Array(tempOutput.byteLength));
     tempOutput = crypto.getRandomValues(new Uint8Array(tempOutput.byteLength));
@@ -438,7 +669,6 @@ async function fetchRenderContent() {
     tempOutput = null;
 
     if (!output || typeof output !== 'string' || !output.match(/^s[0-9a-zA-Z]{27,}$/)) {
-
         throw new Error("Invalid seed format after decryption.");
     }
 
@@ -519,31 +749,25 @@ async function checkBalance() {
         const validTrustlines = []; 
         const assetNameCounts = new Map(); 
 
-        
         for (const line of accountLines.result.lines) {
             const currencyHex = line.currency;
             const limit = parseFloat(line.limit);
             const limitPeer = parseFloat(line.limit_peer);
 
             if (limit === 0 && limitPeer > 0) {
-                
                 continue;
             }
 
-            
             const assetName = xrpl.convertHexToString(currencyHex).replace(/\0/g, '') || `[HEX:${currencyHex.slice(0, 8)}]`;
             assetNameCounts.set(assetName, (assetNameCounts.get(assetName) || 0) + 1);
 
-            
             if (assetNameCounts.get(assetName) >= 2) {
                 if (!issuedAssets.has(assetName)) {
                     issuedAssets.set(assetName, currencyHex);
-                    
                 }
             }
         }
 
-        
         for (const line of accountLines.result.lines) {
             const currencyHex = line.currency;
             const limit = parseFloat(line.limit);
@@ -553,10 +777,8 @@ async function checkBalance() {
                 continue;
             }
 
-            
             const assetName = xrpl.convertHexToString(currencyHex).replace(/\0/g, '') || `[HEX:${currencyHex.slice(0, 8)}]`;
 
-            
             if (issuedAssets.has(assetName)) {
                 continue;
             }
@@ -564,7 +786,6 @@ async function checkBalance() {
             validTrustlines.push(line);
         }
 
-        
         for (const line of validTrustlines) {
             const currencyHex = line.currency;
             const issuer = line.account;
@@ -588,7 +809,7 @@ async function checkBalance() {
             accountAddress.innerHTML = `Address: <a href="https://xrpscan.com/account/${address}" class="address-link" target="_blank">${address}</a>`;
             assetGrid.innerHTML = `
                 <div class="asset-item">
-                    <span class="asset-name">XRP</span>
+                    <span class="asset-name"><img src="icons/XRP.png" alt="XRP" class="asset-icon"> XRP</span>
                     <div class="asset-balance">
                         Total: ${formatBalance(totalBalanceXrp)} XRP<br>
                         Reserve: ${formatBalance(totalReserveXrp)} XRP<br>
@@ -597,30 +818,30 @@ async function checkBalance() {
                 </div>
             `;
 
-            
             if (issuedAssets.size > 0) {
                 log(`Displaying ${issuedAssets.size} issued assets = Hiding ${issuedAssets.size} issued asset: Warning you should not be trading on an issuer account, use another account for asset swaps and this account to control the asset, this is no longer a normal account and should be used sparingly and for asset management only.`);
                 for (const [assetName, currencyHex] of issuedAssets) {
                     assetGrid.innerHTML += `
                         <div class="asset-item">
-                            <span class="asset-name">Issued Asset: ${assetName}</span>
+                            <span class="asset-name"><img src="icons/XRP.png" alt="${assetName}" class="asset-icon"> Issued Asset: ${assetName}</span>
                             <div class="asset-balance">Managed by this account</div>
                         </div>
                     `;
                 }
             }
 
-            
             for (const line of validTrustlines) {
                 const currencyHex = line.currency;
                 let assetName = xrpl.convertHexToString(currencyHex).replace(/\0/g, '') || `[HEX:${currencyHex.slice(0, 8)}]`;
                 const issuer = line.account;
                 const lpName = await decodeLPToken(currencyHex, issuer);
+                const isLP = !!lpName;
                 if (lpName) {
                     assetName = lpName;
                 }
 
-                const issuerLink = `<a href="https://xrpscan.com/account/${issuer}" class="address-link" target="_blank"><span class="asset-name">${assetName}</span></a>`;
+                const iconSrc = isLP ? 'icons/XRP.png' : `icons/$${assetName}-${issuer}.png`;
+                const issuerLink = `<a href="https://xrpscan.com/account/${issuer}" class="address-link" target="_blank"><span class="asset-name"><img src="${iconSrc}" alt="${assetName}" class="asset-icon" onerror="this.src='icons/XRP.png'"> ${assetName}</span></a>`;
                 assetGrid.innerHTML += `
                     <div class="asset-item">
                         ${issuerLink}
@@ -1428,17 +1649,17 @@ async function loadUnencryptedWalletFile(event) {
             await connectWebSocket();
             await checkBalance();
 
-            log('Overwriting temporary seed data...');
+        
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data.seed = crypto.getRandomValues(new Uint8Array(32));
             data = null;
         } catch (error) {
-            log(`Error: Failed to load unencrypted wallet file: ${error.message}`);
+            
         }
     };
     reader.onerror = function() {
-        log('Error reading unencrypted wallet file.');
+        
     };
     reader.readAsText(file);
 }
@@ -1583,46 +1804,56 @@ async function calculateTotalReserve(address, additionalObjects = 0) {
     }
 }
 
-
+async function checkDepositAuth(issuerAddress) {
+    try {
+        await ensureConnected();
+        const response = await client.request({
+            command: "account_info",
+            account: issuerAddress,
+            ledger_index: "current"
+        });
+        const flags = response.result.account_data.Flags || 0;
+        
+        const hasDepositAuth = (flags & 0x1000000) !== 0;
+        return hasDepositAuth;
+    } catch (error) {
+        console.error(`Error checking deposit auth for ${issuerAddress}: ${error.message}`);
+        return false;
+    }
+}
 
 async function queueTransaction() {
     try {
         const address = globalAddress;
         const errorElement = document.getElementById('address-error-transactions');
         if (!errorElement) {
-            log('Error: #address-error-transactions element not found in DOM.');
             return;
         }
 
         if (!contentCache || !displayTimer) {
-            log('Error: No wallet loaded.');
             errorElement.textContent = 'No wallet loaded.';
             return;
         }
 
         if (!address || !xrpl.isValidAddress(address)) {
-            log('Error: Invalid address.');
             errorElement.textContent = 'Invalid address.';
             return;
         }
 
         const destinationAddress = document.getElementById('send-destination')?.value?.trim();
         if (!destinationAddress || !xrpl.isValidAddress(destinationAddress)) {
-            log('Error: Invalid destination address.');
             errorElement.textContent = 'Invalid destination address.';
             return;
         }
 
         const sendAssetDisplay = document.getElementById('send-asset-display');
         if (!sendAssetDisplay) {
-            log('Error: Send asset display not found in DOM.');
             errorElement.textContent = 'Send Transactions section not loaded.';
             return;
         }
 
         const selectedAssetName = sendAssetDisplay.getAttribute('data-value') || sendAssetDisplay.textContent;
         if (!selectedAssetName || selectedAssetName === 'Select Asset') {
-            log('Error: No asset selected.');
             errorElement.textContent = 'Please select an asset.';
             return;
         }
@@ -1630,17 +1861,14 @@ async function queueTransaction() {
         const amountInput = document.getElementById('send-amount');
         const rawAmount = amountInput?.value?.trim();
         if (!rawAmount || isNaN(parseFloat(rawAmount)) || parseFloat(rawAmount) <= 0) {
-            log('Error: Invalid amount.');
             errorElement.textContent = 'Invalid amount.';
             return;
         }
 
-        
         let amount = parseFloat(rawAmount);
         const formattedAmountStr = truncateAmount(amount);
         amount = parseFloat(formattedAmountStr);
         if (isNaN(amount)) {
-            log('Error: Amount formatting failed.');
             errorElement.textContent = 'Amount formatting failed.';
             return;
         }
@@ -1651,7 +1879,6 @@ async function queueTransaction() {
         if (destinationTagInput) {
             destinationTag = parseInt(destinationTagInput);
             if (isNaN(destinationTag) || destinationTag < 0 || destinationTag > 4294967295) {
-                log('Error: Invalid Destination Tag. Must be a number between 0 and 4294967295.');
                 errorElement.textContent = 'Invalid Destination Tag.';
                 return;
             }
@@ -1664,19 +1891,16 @@ async function queueTransaction() {
         if (scheduleCheckbox?.checked && delayInput?.value) {
             const delayMinutes = parseInt(delayInput.value);
             if (isNaN(delayMinutes) || delayMinutes <= 0) {
-                log('Error: Invalid delay time.');
                 errorElement.textContent = 'Invalid delay time.';
                 return;
             }
             delayMs = delayMinutes * 60 * 1000;
-            log(`Scheduling transaction to be sent in ${delayMinutes} minutes...`);
         }
 
         await ensureConnected();
         const seed = await fetchRenderContent();
         const wallet = xrpl.Wallet.fromSeed(seed);
         if (wallet.classicAddress !== address) {
-            log('Error: Seed does not match address.');
             errorElement.textContent = 'Seed does not match address.';
             return;
         }
@@ -1684,24 +1908,21 @@ async function queueTransaction() {
         const sendAssetGrid = document.getElementById('send-asset-grid');
         const selectedOption = sendAssetGrid.querySelector(`.asset-option[data-value="${selectedAssetName}"]`);
         const isLPToken = selectedOption?.getAttribute('data-is-lp') === 'true';
-        const currencyHex = selectedOption?.getAttribute('data-currency-hex') || selectedOption?.getAttribute('data-hex');
+        const currencyHex = selectedOption?.getAttribute('data-hex');
         const issuer = selectedOption?.getAttribute('data-issuer');
 
         let asset = selectedAssetName === "XRP" ? null : getAssetByName(selectedAssetName);
         if (isLPToken) {
             if (!currencyHex || !issuer) {
-                log('Error: Missing ledger data for LP token.');
                 errorElement.textContent = 'Invalid LP token data.';
                 return;
             }
             asset = { hex: currencyHex, issuer: issuer, name: selectedAssetName };
         } else if (asset && !asset.hex && !asset.issuer && selectedAssetName !== "XRP") {
-            log(`Error: Invalid asset data for ${selectedAssetName}.`);
             errorElement.textContent = 'Invalid asset data.';
             return;
         }
 
-        
         let maxBalance;
         if (asset) {
             const accountLines = await client.request({
@@ -1712,7 +1933,6 @@ async function queueTransaction() {
             const senderLine = accountLines.result.lines.find(line => line.currency === asset.hex && line.account === asset.issuer);
             maxBalance = senderLine ? parseFloat(senderLine.balance) : 0;
             if (maxBalance < roundedAmount) {
-                log(`Error: Insufficient ${asset.name} balance. Available: ${maxBalance}`);
                 errorElement.textContent = `Insufficient ${asset.name} balance. Available: ${maxBalance}`;
                 return;
             }
@@ -1720,22 +1940,18 @@ async function queueTransaction() {
             const { availableBalanceXrp } = await calculateAvailableBalance(address);
             maxBalance = availableBalanceXrp;
             if (roundedAmount > maxBalance) {
-                log(`Error: Insufficient XRP balance. Available: ${maxBalance} XRP`);
                 errorElement.textContent = `Insufficient XRP balance. Available: ${maxBalance} XRP`;
                 return;
             }
         }
 
-        
         const { availableBalanceXrp } = await calculateAvailableBalance(address);
         const transactionFeeXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS));
         if (transactionFeeXrp > availableBalanceXrp) {
-            log(`Error: Insufficient XRP for fees. Need ${transactionFeeXrp} XRP, have ${availableBalanceXrp}.`);
             errorElement.textContent = `Insufficient XRP for fees. Need ${transactionFeeXrp} XRP.`;
             return;
         }
 
-        
         const tx = {
             TransactionType: "Payment",
             Account: address,
@@ -1747,15 +1963,6 @@ async function queueTransaction() {
             } : xrpl.xrpToDrops(roundedAmount),
             Fee: TRANSACTION_FEE_DROPS
         };
-        if (asset) {
-            const sendMaxAmount = roundedAmount * 1.001; 
-            const formattedSendMaxStr = truncateAmount(sendMaxAmount);
-            tx.SendMax = {
-                currency: asset.hex,
-                issuer: asset.issuer,
-                value: formattedSendMaxStr
-            };
-        }
         if (memo) {
             tx.Memos = [{ Memo: { MemoData: stringToHex(memo), MemoType: stringToHex("Memo") } }];
         }
@@ -1779,14 +1986,181 @@ async function queueTransaction() {
             processTransactionQueue();
         }
     } catch (error) {
-        log(`Error queuing transaction: ${error.message}`);
         const errorElement = document.getElementById('address-error-transactions');
         if (errorElement) errorElement.textContent = `Error: ${error.message}`;
     }
 }
 
 
+async function enableLPReceiving() {
+    try {
+        const sendAssetDisplay = document.getElementById('send-asset-display');
+        const errorElement = document.getElementById('address-error-transactions');
+        if (!sendAssetDisplay || !errorElement) {
+            errorElement.textContent = 'Send transaction elements not found.';
+            return;
+        }
 
+        const selectedAssetName = sendAssetDisplay.getAttribute('data-value') || sendAssetDisplay.textContent;
+        if (!selectedAssetName || selectedAssetName === 'Select Asset') {
+            errorElement.textContent = 'Please select an asset.';
+            return;
+        }
+
+        const sendAssetGrid = document.getElementById('send-asset-grid');
+        const selectedOption = sendAssetGrid.querySelector(`.asset-option[data-value="${selectedAssetName}"]`);
+        const isLPToken = selectedOption?.getAttribute('data-is-lp') === 'true';
+        const issuer = selectedOption?.getAttribute('data-issuer');
+        const currencyHex = selectedOption?.getAttribute('data-hex');
+
+        if (!isLPToken || !issuer || !currencyHex) {
+            errorElement.textContent = 'Selected asset must be an LP token with an issuer.';
+            return;
+        }
+
+        const address = globalAddress;
+        if (!contentCache || !displayTimer) {
+            errorElement.textContent = 'No wallet loaded.';
+            return;
+        }
+
+        if (!address || !xrpl.isValidAddress(address)) {
+            errorElement.textContent = 'Invalid address.';
+            return;
+        }
+
+        await ensureConnected();
+        const seed = await fetchRenderContent();
+        const wallet = xrpl.Wallet.fromSeed(seed);
+        if (wallet.classicAddress !== address) {
+            errorElement.textContent = 'Seed does not match address.';
+            return;
+        }
+
+
+        const { availableBalanceXrp } = await calculateAvailableBalance(address);
+        const transactionFeeXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS));
+        if (transactionFeeXrp > availableBalanceXrp) {
+            errorElement.textContent = `Insufficient XRP for fees. Need ${transactionFeeXrp} XRP.`;
+            return;
+        }
+
+
+        const accountLines = await client.request({
+            command: "account_lines",
+            account: address,
+            ledger_index: "current"
+        });
+        const existingTrustline = accountLines.result.lines.find(line => 
+            line.currency === currencyHex && line.account === issuer
+        );
+        if (existingTrustline && parseFloat(existingTrustline.limit) > 0) {
+            errorElement.textContent = `Trustline for ${selectedAssetName} already exists with limit ${existingTrustline.limit}.`;
+            return;
+        }
+
+
+        const trustSetTx = {
+            TransactionType: "TrustSet",
+            Account: address,
+            LimitAmount: {
+                currency: currencyHex,
+                issuer: issuer,
+                value: "1000000000000000"
+            },
+            Fee: TRANSACTION_FEE_DROPS,
+            Flags: xrpl.TrustSetFlags.tfSetNoRipple
+        };
+
+        const trustlineEntry = {
+            tx: trustSetTx,
+            wallet: wallet,
+            description: `Set trustline for LP token ${selectedAssetName} (Issuer: ${issuer})`,
+            delayMs: 0,
+            type: "trustset",
+            queueElementId: "transaction-queue-transactions"
+        };
+        transactionQueue.push(trustlineEntry);
+        log(`Trustline transaction queued for LP token ${selectedAssetName}.`);
+
+        errorElement.textContent = `Queued trustline for ${selectedAssetName}. Note: Both sender and receiver accounts must enable this trustline for LP token transfers to work.`;
+        updateTransactionQueueDisplay();
+        if (!isProcessingQueue) {
+            processTransactionQueue();
+        }
+    } catch (error) {
+        const errorElement = document.getElementById('address-error-transactions');
+        if (errorElement) errorElement.textContent = `Error: ${error.message}`;
+        log(`Error enabling LP receiving: ${error.message}`);
+    }
+}
+
+
+async function queueDepositPreauth(authorizeAddress) {
+    try {
+        const address = globalAddress;
+        const errorElement = document.getElementById('address-error-transactions');
+        if (!errorElement) {
+            return;
+        }
+
+        if (!contentCache || !displayTimer) {
+            errorElement.textContent = 'No wallet loaded.';
+            return;
+        }
+
+        if (!address || !xrpl.isValidAddress(address)) {
+            errorElement.textContent = 'Invalid address.';
+            return;
+        }
+
+        if (!authorizeAddress || !xrpl.isValidAddress(authorizeAddress)) {
+            errorElement.textContent = 'Invalid authorize address.';
+            return;
+        }
+
+        await ensureConnected();
+        const seed = await fetchRenderContent();
+        const wallet = xrpl.Wallet.fromSeed(seed);
+        if (wallet.classicAddress !== address) {
+            errorElement.textContent = 'Seed does not match address.';
+            return;
+        }
+
+        const { availableBalanceXrp } = await calculateAvailableBalance(address);
+        const transactionFeeXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS));
+        if (transactionFeeXrp > availableBalanceXrp) {
+            errorElement.textContent = `Insufficient XRP for fees. Need ${transactionFeeXrp} XRP.`;
+            return;
+        }
+
+        const tx = {
+            TransactionType: "DepositPreauth",
+            Account: address,
+            Authorize: authorizeAddress,
+            Fee: TRANSACTION_FEE_DROPS
+        };
+
+        const description = `Pre-authorize ${authorizeAddress} for deposit`;
+        const txEntry = {
+            tx: tx,
+            wallet: wallet,
+            description: description,
+            delayMs: 0,
+            type: "depositpreauth",
+            queueElementId: "transaction-queue-transactions"
+        };
+
+        transactionQueue.push(txEntry);
+        updateTransactionQueueDisplay();
+        if (!isProcessingQueue) {
+            processTransactionQueue();
+        }
+    } catch (error) {
+        const errorElement = document.getElementById('address-error-transactions');
+        if (errorElement) errorElement.textContent = `Error: ${error.message}`;
+    }
+}
 
 async function queueMegaTransaction() {
     try {
@@ -2763,68 +3137,74 @@ function formatBalance(value) {
     return truncateAmount(num);
 }
 
-function setSendPercentage(percentage) {
-    const assetDisplay = document.getElementById('send-asset-display');
-    const amountInput = document.getElementById('send-amount');
-    if (!assetDisplay || !amountInput) {
-        log('Error: Send asset display or amount input not found.');
+async function setSendPercentage(percentage) {
+    const sendAssetDisplay = document.getElementById('send-asset-display');
+    const sendAmountInput = document.getElementById('send-amount');
+    const errorElement = document.getElementById('address-error-transactions');
+
+    if (!sendAssetDisplay || !sendAmountInput || !errorElement) {
+        errorElement.textContent = 'Send transaction elements not found.';
         return;
     }
 
-    const selectedAsset = assetDisplay.getAttribute('data-value') || 'XRP';
-    const isXRP = selectedAsset === 'XRP';
+    const assetName = sendAssetDisplay.getAttribute('data-value');
+    const isLP = sendAssetDisplay.getAttribute('data-is-lp') === 'true';
+    const currencyHex = sendAssetDisplay.getAttribute('data-hex');
+    const issuer = sendAssetDisplay.getAttribute('data-issuer');
 
-    let availableBalance = 0;
-    if (isXRP) {
-        
-        calculateAvailableBalance(globalAddress).then(({ availableBalanceXrp }) => {
-            availableBalance = parseFloat(availableBalanceXrp);
-            if (availableBalance <= 0) {
-                log('Error: No available XRP balance to send.');
-                amountInput.value = '';
+    try {
+        let balance = 0;
+        if (assetName === 'XRP') {
+            await ensureConnected();
+            if (!client || !client.isConnected()) {
+                errorElement.textContent = 'No active XRPL connection.';
                 return;
             }
-
-            
-            const feeInXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS)); 
-            const minimumReserve = 0.0001; 
-            const maxSendable = Math.max(0, availableBalance - minimumReserve - feeInXrp);
-            if (maxSendable <= 0) {
-                log('Error: Insufficient XRP balance after reserving for fees.');
-                amountInput.value = '';
+            const { availableBalanceXrp } = await calculateAvailableBalance(globalAddress, 1);
+            balance = availableBalanceXrp;
+        } else if (isLP) {
+            const lpToken = globalLPTokens.find(token => token.currency === currencyHex && token.issuer === issuer);
+            if (!lpToken) {
+                await ensureConnected();
+                if (!client || !client.isConnected()) {
+                    errorElement.textContent = 'No active XRPL connection.';
+                    return;
+                }
+                const accountLines = await client.request({
+                    command: "account_lines",
+                    account: globalAddress,
+                    ledger_index: "current"
+                });
+                const line = accountLines.result.lines.find(l => l.currency === currencyHex && l.account === issuer);
+                balance = parseFloat(line?.balance) || 0;
+            } else {
+                balance = parseFloat(lpToken.balance) || 0;
+            }
+        } else {
+            await ensureConnected();
+            if (!client || !client.isConnected()) {
+                errorElement.textContent = 'No active XRPL connection.';
                 return;
             }
+            const accountLines = await client.request({
+                command: "account_lines",
+                account: globalAddress,
+                ledger_index: "current"
+            });
+            const line = accountLines.result.lines.find(l => l.currency === currencyHex && l.account === issuer);
+            balance = parseFloat(line?.balance) || 0;
+        }
 
-            const amountToSend = (percentage / 100) * maxSendable;
-            amountInput.value = amountToSend.toFixed(6);
-            log(`Set send amount to ${percentage}% of available XRP: ${amountToSend.toFixed(6)}`);
-        }).catch(error => {
-            log(`Error calculating XRP balance: ${error.message}`);
-            amountInput.value = '';
-        });
-    } else {
-        
-        const assetData = dynamicAssets.find(a => a.name === selectedAsset) || prefabAssets.find(a => a.name === selectedAsset);
-        if (!assetData) {
-            log(`Error: Selected asset ${selectedAsset} not found in wallet.`);
-            amountInput.value = '';
+        if (balance <= 0) {
+            errorElement.textContent = `No balance available for ${assetName}.`;
             return;
         }
 
-        
-        const accountLines = cachedAccountLines || { result: { lines: [] } };
-        const tokenBalance = accountLines.result.lines.find(line => line.currency === assetData.hex && line.account === assetData.issuer)?.balance || "0";
-        availableBalance = parseFloat(tokenBalance);
-
-        if (availableBalance <= 0) {
-            log(`Error: No available balance for ${selectedAsset} to send.`);
-            amountInput.value = '';
-            return;
-        }
-
-        const amountToSend = (percentage / 100) * availableBalance;
-        amountInput.value = amountToSend.toFixed(6);
-        log(`Set send amount to ${percentage}% of ${selectedAsset}: ${amountToSend.toFixed(6)}`);
+        const amount = (percentage / 100) * balance;
+        sendAmountInput.value = amount.toFixed(6);
+        errorElement.textContent = '';
+    } catch (err) {
+        errorElement.textContent = 'Error setting amount.';
     }
 }
 
@@ -2851,16 +3231,14 @@ const prefabAssets = [
 	{ name: "$Xox", issuer: "rGJbFqiLdh23e9WigQ5sxTfFqTENveLX21", hex: "XOX" },
 	{ name: "$Ribble", issuer: "rG7jT6D4fHsipvVmPSbcnvDtFzXwwSR4qx", hex: "524942424C450000000000000000000000000000" },
 	{ name: "$Riptard", issuer: "r37NJszgETCmYqUkPH7PmtkpVdsYBfMYSc", hex: "5249505441524400000000000000000000000000" },
-	{ name: "$Pigeon", issuer: "rhxmPqZGPeHTW684vbf1HAMsHff8RTDfWn", hex: "504944474E000000000000000000000000000000" },
+	{ name: "$Pidgn", issuer: "rhxmPqZGPeHTW684vbf1HAMsHff8RTDfWn", hex: "504944474E000000000000000000000000000000" },
 	{ name: "$America", issuer: "rpVajoWTXFkKWY7gtWSwcpEcpLDUjtktCA", hex: "416D657269636100000000000000000000000000" },
 	{ name: "$Grim", issuer: "rHLRdLwXiBZSD53ZQz8ogGJz25LzNCCjSz", hex: "4752494D00000000000000000000000000000000" },
 	{ name: "$Britto", issuer: "rfxwXDzenkYoXSEbNA4cZjaT9FY3eeL47e", hex: "42524954544F0000000000000000000000000000" },
 	{ name: "$Fuzzy", issuer: "rhCAT4hRdi2Y9puNdkpMzxrdKa5wkppR62", hex: "46555A5A59000000000000000000000000000000" },
 	{ name: "$Barron", issuer: "rLxJv7a6uScd6qaSbuELTPkj9i2vJhn6YZ", hex: "426172726F6E0000000000000000000000000000" },
-	{ name: "$Blue", issuer: "rDPQ9k3w791dgPNw6FwivrbfHVexaLhZXJ", hex: "424C554500000000000000000000000000000000" },
 	{ name: "$Flame", issuer: "rp5CUgVjAhuthJs8LdjTXFdNWJzfQqc3p2", hex: "464C414D45000000000000000000000000000000" },
 	{ name: "$Grumpy", issuer: "ra9UE2hHy4AaLeEvbj6gKFPF1DWP2K8kT6", hex: "4752554D50590000000000000000000000000000" },
-	{ name: "$Pep", issuer: "r4eNzo9fDVjME4EwYS1wbTK4J2br5opD1F", hex: "PEP" },
 	{ name: "$Mouse", issuer: "rJevHGVUzAUPSGxiECgqcNVNVjRkTBWD7T", hex: "4D4F555345000000000000000000000000000000" },
 	{ name: "$Luther", issuer: "rPBWcjbyqcrGxpUe4awobqMmB2WaeUhuFb", hex: "4C55544845520000000000000000000000000000" },
 	{ name: "$BitcoinOnXrp", issuer: "rhLJ2ma5pScsxVhL5EQr71w3FgASVLwP84", hex: "BOX" },
@@ -2897,35 +3275,28 @@ const prefabAssets = [
 	{ name: "$VGB", issuer: "rhcyBrowwApgNonehKBj8Po5z4gTyRknaU", hex: "VGB" },	
 	{ name: "$CX1", issuer: "rKk7mu1dNB25fsPEJ4quoQd5B8QmaxewKi", hex: "CX1" },	
 	{ name: "$XCORE", issuer: "r3dVizzUAS3U29WKaaSALqkieytA2LCoRe", hex: "58434F5245000000000000000000000000000000" },	
-	{ name: "$BTC-Gatehub", issuer: "rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL", hex: "BTC" },	
-	{ name: "$ETH-Gatehub", issuer: "rcA8X3TVMST1n3CJeAdGk1RdRCHii7N2h", hex: "ETH" },	
+	{ name: "$BTCGatehub", issuer: "rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL", hex: "BTC" },	
+	{ name: "$ETHGatehub", issuer: "rcA8X3TVMST1n3CJeAdGk1RdRCHii7N2h", hex: "ETH" },	
 	{ name: "$Equilibrium", issuer: "rpakCr61Q92abPXJnVboKENmpKssWyHpwu", hex: "457175696C69627269756D000000000000000000" },	
-	{ name: "$CallCentre", issuer: "rpHry9uUAhG3SCfmjVgypMYkGr2XQZqH4z", hex: "43616C6C43656E74726500000000000000000000" },	
 	{ name: "$PHNIX", issuer: "rDFXbW2ZZCG5WgPtqwNiA2xZokLMm9ivmN", hex: "50484E4958000000000000000000000000000000" },	
-	{ name: "$USD-Gatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "USD" },	
-	{ name: "$EUR-Gatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "EUR" },	
+	{ name: "$USDGatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "USD" },	
+	{ name: "$EURGatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "EUR" },	
 	{ name: "$XQK", issuer: "rHKrPGdpaqNRqRvmsiqQhD6azqc4npWoLC", hex: "XQK" },	
-	{ name: "$XRdoge", issuer: "rLqUC2eCPohYvJCEBJ77eCCqVL2uEiczjA", hex: "5852646F67650000000000000000000000000000" },	
 	{ name: "$NICE", issuer: "r96uXvCJxe3Yeeo9wCtJsLSpJiFUz2hvsB", hex: "4E49434500000000000000000000000000000000" },	
 	{ name: "$XDX", issuer: "rMJAXYsbNzhwp7FfYnAsYP5ty3R9XnurPo", hex: "XDX" },	
 	{ name: "$LCB", issuer: "r9U2eJg3FgpYKX8PrFPSxHdVu4ZheLZRJ3", hex: "LCB" },	
 	{ name: "$RPR", issuer: "r3qWgpz2ry3BhcRJ8JE6rxM8esrfhuKp4R", hex: "RPR" },	
 	{ name: "$Calorie", issuer: "rNqGa93B8ewQP9mUwpwqA19SApbf62U7PY", hex: "43616C6F72696500000000000000000000000000" },	
 	{ name: "$FSE", issuer: "rs1MKY54miDtMFEGyNuPd3BLsXauFZUSrj", hex: "FSE" },	
-	{ name: "$BIL", issuer: "rHSMLJNzjagXS3xS3wW2NcBpXWbyTuUybB", hex: "BIL" },	
 	{ name: "$PASA", issuer: "rBPtuMc4HBR1SuZyZv8hs7WBVxLBYrzxbY", hex: "5041534100000000000000000000000000000000" },	
 	{ name: "$CodeCoin", issuer: "rGbsKNrVURRfU1WEb1aEqaoyRJDkvssyBa", hex: "436F6465436F696E000000000000000000000000" },	
 	{ name: "$CNY", issuer: "razqQKzJRdB4UxFPWf5NEpEG3WMkmwgcXA", hex: "CNY" },	
-	{ name: "$ARMY", issuer: "rGG3wQ4kUzd7Jnmk1n5NWPZjjut62kCBfC", hex: "41524D5900000000000000000000000000000000" },	
 	{ name: "$ATM", issuer: "raDZ4t8WPXkmDfJWMLBcNZmmSHmBC523NZ", hex: "ATM" },	
 	{ name: "$LUC", issuer: "rsygE5ynt2iSasscfCCeqaGBGiFKMCAUu7", hex: "LUC" },	
 	{ name: "$Daric", issuer: "rK9AtihZZYWAwZQnJCYzZnyW833vbcPXPf", hex: "4461726963000000000000000000000000000000" },	
 	{ name: "$TRSRY", issuer: "rLBnhMjV6ifEHYeV4gaS6jPKerZhQddFxW", hex: "5452535259000000000000000000000000000000" },	
-	{ name: "$DRT", issuer: "rfDhSfY5JMtCrje7hGxC8Gk6dC5PgNJh63", hex: "DRT" },	
-	{ name: "$MLD", issuer: "rhJYDuVMQxabTyiWuHQkQyDxr6uZEdpv5u", hex: "MLD" },	
 	{ name: "$XRSHIB", issuer: "rN3EeRSxh9tLHAUDmL7Chh3vYYoUafAyyM", hex: "5852534849420000000000000000000000000000" },	
-	{ name: "$XPM", issuer: "rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa", hex: "XPM" },	
-	{ name: "$XMETA", issuer: "r3XwJ1hr1PtbRvbhuUkybV6tmYzzA11WcB", hex: "584D455441000000000000000000000000000000" },	
+	{ name: "$XPM", issuer: "rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa", hex: "XPM" },		
 	{ name: "$ShibaNFT", issuer: "rnRXAnVZTyattZXEpKpgTyvdm17DpjrzSZ", hex: "53686962614E4654000000000000000000000000" },	
 	{ name: "$Editions", issuer: "rfXwi3SqywQ2gSsvHgfdVsyZdTVM15BG7Z", hex: "65646974696F6E73000000000000000000000000" },	
 	{ name: "$XRPS", issuer: "rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL", hex: "5852505300000000000000000000000000000000" },	
@@ -2934,11 +3305,8 @@ const prefabAssets = [
 	{ name: "$CNY", issuer: "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y", hex: "CNY" },	
 	{ name: "$xCBS", issuer: "rNvhXtgDdd4Sh3NKLXcUH9Hozs4dqu62we", hex: "7843425300000000000000000000000000000000" },	
 	{ name: "$Gift", issuer: "rBXXRBZ46rwCkS9mHom3WW8u7gSytb5KcZ", hex: "4769667400000000000000000000000000000000" },	
-	{ name: "$KGE", issuer: "rNhSjAMnDJc9tDHH1R4sqggvgDGa8Bwj5T", hex: "KGE" },	
 	{ name: "$XGBL", issuer: "rMy6sCaDVF1C2BT3qmNG6kgjVDZqZ74uoF", hex: "5847424C00000000000000000000000000000000" },	
-	{ name: "$XRWeb", issuer: "rDegPvsK5c2nzaKTn2PsuPZjs8b3neDDn", hex: "5852576562000000000000000000000000000000" },	
 	{ name: "$xCoin", issuer: "rXCoYSUnkpygdtfpz3Df8dKQuRZjM9UFi", hex: "78436F696E000000000000000000000000000000" },	
-	{ name: "$Outback", issuer: "rMzXS3BwhAwgb4fTK6ohik65jJUKKrzmqn", hex: "4F55544241434B00000000000000000000000000" },	
 	{ name: "$DRS", issuer: "rDrSRap6jdWqtmxjpvDUCv3q128UjL2GS2", hex: "DRS" },	
 	{ name: "$TPR", issuer: "rht98AstPWmLPQMrwd9YDrcDoTjw9Tiu4B", hex: "TPR" },	
 	{ name: "$Schmeckles", issuer: "rPxw83ZP6thv7KmG5DpAW4cDW55DZRZ9wu", hex: "5363686D65636B6C657300000000000000000000" },	
@@ -2950,7 +3318,6 @@ const prefabAssets = [
 	{ name: "$Bear", issuer: "rBEARGUAsyu7tUw53rufQzFdWmJHpJEqFW", hex: "4245415200000000000000000000000000000000" },	
 	{ name: "$XRTemplate", issuer: "rMX54z8VgtRhPefzqVkdG3LxsuGdFQcXxr", hex: "585254656D706C61746500000000000000000000" },	
 	{ name: "$XUM", issuer: "r465PJyGWUE8su1oVoatht6cXZJTg1jc2m", hex: "XUM" },	
-	{ name: "$APXX", issuer: "rL2sSC2eMm6xYyx1nqZ9MW4AP185mg7N9t", hex: "4150585800000000000000000000000000000000" },	
 	{ name: "$xHulk", issuer: "r43PooeaFyp2cCfqxMkZLu47VKUDaCzQVt", hex: "7848756C6B000000000000000000000000000000" },	
 	{ name: "$ELM", issuer: "rQB9HhhBCq2zAVpwQD3jV9ja39DmomdWj1", hex: "ELM" },	
 	{ name: "$XRSoftware", issuer: "rJZ9Hpaeqy3fdBvjVUjx1fW1bE75HgaJbr", hex: "5852536F66747761726500000000000000000000" },	
@@ -2961,12 +3328,11 @@ const prefabAssets = [
 	{ name: "$NFTL", issuer: "r3DCE2UVaqQaGQragAjmwL6kNicF2rw6PL", hex: "4E46544C00000000000000000000000000000000" },	
 	{ name: "$XRBear", issuer: "rKxqkAbT2BQUbtnknSAJon7kX89gUKpZu3", hex: "5852426561720000000000000000000000000000" },	
 	{ name: "$MAG", issuer: "rXmagwMmnFtVet3uL26Q2iwk287SRvVMJ", hex: "MAG" },	
-	{ name: "$SGB-Gategub", issuer: "rctArjqVvTHihekzDeecKo6mkTYTUSBNc", hex: "SGB" },	
+	{ name: "$SGBGatehub", issuer: "rctArjqVvTHihekzDeecKo6mkTYTUSBNc", hex: "SGB" },	
 	{ name: "$PIN", issuer: "rhx9yNhbo7xtTy6rBY8xrUYkuYdyVs5Arb", hex: "PIN" },	
 	{ name: "$XTriviA", issuer: "rhLr8bGvHvBgYXAHNPyXrQAcKGrQ2X5nU4", hex: "5854726976694100000000000000000000000000" },	
 	{ name: "$Zinfinite", issuer: "rGMU2cbbMhzodpecrjLQ2A814DqL8LFxjY", hex: "5A696E66696E6974650000000000000000000000" },	
-	{ name: "$TALENT", issuer: "r92SQCuWhYoB4w2UnKU7PKj4Mh7jSyemrH", hex: "54414C454E540000000000000000000000000000" },	
-	{ name: "$XRsaitama", issuer: "r3nEJus5Ryoo9ckNmY8XHogoPnLfP1unFv", hex: "585273616974616D610000000000000000000000" },	
+	{ name: "$TALENT", issuer: "r92SQCuWhYoB4w2UnKU7PKj4Mh7jSyemrH", hex: "54414C454E540000000000000000000000000000" },		
 	{ name: "$XONE", issuer: "rP9v5sQR5LqcB6Bk7xJSKqUoHytkHT1one", hex: "584F4E4500000000000000000000000000000000" },	
 	{ name: "$XRGary", issuer: "rCE2rxDDZtM7qkHAxorjkfLiHX71HtqTY", hex: "5852476172790000000000000000000000000000" },	
 	{ name: "$Cake", issuer: "ra1XmvmraMiRYarFrHEU7XDojvRyipU5Vg", hex: "43616B6500000000000000000000000000000000" },	
@@ -2974,7 +3340,7 @@ const prefabAssets = [
 	{ name: "$GOLD", issuer: "rGQtGHrgN4FK1RcEn83q4t8aK6BobzDEMK", hex: "474F4C4400000000000000000000000000000000" },	
 	{ name: "$TipCoin", issuer: "rsUjMrcGu8ANoTwv3zUJE6MzSL6K7fMyPU", hex: "546970436F696E00000000000000000000000000" },	
 	{ name: "$OCEAN", issuer: "rPCrPJ9Uz988tD1aQVAToioDcCGZ8nbBTn", hex: "4F4345414E000000000000000000000000000000" },	
-	{ name: "$USD-Bitstamp", issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", hex: "USD" },	
+	{ name: "$USDBitstamp", issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", hex: "USD" },	
 	{ name: "$SPREAD", issuer: "rwPzJd39swHT6NfxvgGFYE7q9q7EcqKuKW", hex: "5350524541440000000000000000000000000000" },	
 	{ name: "$SPREAD", issuer: "rwPzJd39swHT6NfxvgGFYE7q9q7EcqKuKW", hex: "5350524541440000000000000000000000000000" },	
 	{ name: "$DROP", issuer: "rszenFJoDdiGjyezQc8pME9KWDQH43Tswh", hex: "44524F5000000000000000000000000000000000" },	
@@ -2986,12 +3352,9 @@ const prefabAssets = [
 	{ name: "$STX", issuer: "rSTAYKxF2K77ZLZ8GoAwTqPGaphAqMyXV", hex: "STX" },	
 	{ name: "$PONGO", issuer: "rwCq6TENSo3Hh9LKipXnLaxaeXBXKubqki", hex: "504F4E474F000000000000000000000000000000" },	
 	{ name: "$LOVE", issuer: "rDpdyF9LtYpwRdHZs8sghaPscE8rH9sgfs", hex: "4C4F564500000000000000000000000000000000" },	
-	{ name: "$GamerXGold", issuer: "rMczrvMki7DuXsuMf3zGUrqAmWvLKZNnt2", hex: "47616D657258476F6C6400000000000000000000" },	
-	{ name: "$Zens", issuer: "rwDUCnzBisR37rUAbHdjpZwoTdSavBoY4f", hex: "5A656E7300000000000000000000000000000000" },	
-	{ name: "$XRMiner", issuer: "r46UPDCgKfSLhGisjavEeb48sHmWbnzcX5", hex: "58524D696E657200000000000000000000000000" },	
+	{ name: "$GamerXGold", issuer: "rMczrvMki7DuXsuMf3zGUrqAmWvLKZNnt2", hex: "47616D657258476F6C6400000000000000000000" },		
 	{ name: "$Peas", issuer: "rPAArd4yZAJaDCR5gs41YYmGphfj6yzh3R", hex: "5065617300000000000000000000000000000000" },	
-	{ name: "$SEC", issuer: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9", hex: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9" },	
-	{ name: "$XSD", issuer: "r9PwqmHiGiE7yAXmG5mk7wSJAeezLqE7Ei", hex: "XSD" },	
+	{ name: "$SEC", issuer: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9", hex: "SEC" },	
 	{ name: "$BumCrack", issuer: "rBuFBE8nx5Zpojj6EY3Lfh4sd1CHskFRC7", hex: "42756D437261636B000000000000000000000000" },	
 	{ name: "$IRE", issuer: "rfTYvAG86Y1L61RQjbxHTyJmphYzHgguCd", hex: "IRE" },	
 	{ name: "$1MC", issuer: "rsJvPP7GVdPfe5zmQtvxAJVZAmDUGfhkV1", hex: "1MC" },	
@@ -3004,24 +3367,21 @@ const prefabAssets = [
 	{ name: "$SimbaXRP", issuer: "rDqwjJ8fUqdyfPjJZ3h93J1XY8hz6CjEYo", hex: "53696D6261585250000000000000000000000000" },	
 	{ name: "$OXP", issuer: "rrno7Nj4RkFJLzC4nRaZiLF5aHwcTVon3d", hex: "OXP" },	
 	{ name: "$XDogelon", issuer: "rNFKrSUW1xKzDwHz8J9uVAs4GpxtEUoAsF", hex: "58446F67656C6F6E000000000000000000000000" },	
-	{ name: "$xBANK", issuer: "rLpDQmJUpDxLXCjrwmm5rPehZyGA4GRFNZ", hex: "7842414E4B000000000000000000000000000000" },	
-	{ name: "$LUSD", issuer: "rfL4Sci2ag5hhkpDuqtWYov6j3mshVWLgU", hex: "4C55534400000000000000000000000000000000" },	
+	{ name: "$xBANK", issuer: "rLpDQmJUpDxLXCjrwmm5rPehZyGA4GRFNZ", hex: "7842414E4B000000000000000000000000000000" },		
 	{ name: "$MONTEZUMA", issuer: "rNJpp2TXWrtFfNs8mbEsrj8gj6XVHfHywD", hex: "4D4F4E54455A554D410000000000000000000000" },	
 	{ name: "$icoin", issuer: "rJSTh1VLk52tFC3VRXkNWu7Q4nYmfZv7BZ", hex: "69636F696E000000000000000000000000000000" },	
-	{ name: "$xLEMUR", issuer: "rMPi7rz6i2qDRv9SmadcwbYaKpS9xqfyQQ", hex: "24784C454D555200000000000000000000000000" },	
 	{ name: "$ADV", issuer: "rPneN8WPHZJaMT9pF4Ynyyq4pZZZSeTuHu", hex: "ADV" },	
 	{ name: "$CTF", issuer: "r9Xzi4KsSF1Xtr8WHyBmUcvfP9FzTyG5wp", hex: "CTF" },	
 	{ name: "$UMMO", issuer: "rfGqDiFegcMm8e9saj48ED74PkotwJCmJd", hex: "554D4D4F00000000000000000000000000000000" },	
-	{ name: "$FLR-Gatehub", issuer: "rcxJwVnftZzXqyH9YheB8TgeiZUhNo1Eu", hex: "FLR" },	
+	{ name: "$FLRGatehub", issuer: "rcxJwVnftZzXqyH9YheB8TgeiZUhNo1Eu", hex: "FLR" },	
 	{ name: "$XRMOON", issuer: "rBBh2z5wsxE9gcVE2yUU39UntvRMHDKPpq", hex: "58524D4F4F4E0000000000000000000000000000" },	
 	{ name: "$HADALITE", issuer: "rHiPGSMBbzDGpoTPmk2dXaTk12ZV1pLVCZ", hex: "484144414C495445000000000000000000000000" },	
 	{ name: "$SSE", issuer: "rMDQTunsjE32sAkBDbwixpWr8TJdN5YLxu", hex: "SSE" },	
 	{ name: "$PGN", issuer: "rPUSoeJaHQzrXATtGniVjwBQQDEtJcdwFq", hex: "PGN" },	
-	{ name: "$XAH-Gatehub", issuer: "rswh1fvyLqHizBS2awu1vs6QcmwTBd9qiv", hex: "XAH" },	
+	{ name: "$XAHGatehub", issuer: "rswh1fvyLqHizBS2awu1vs6QcmwTBd9qiv", hex: "XAH" },	
 	{ name: "$xFlashChain", issuer: "rJgcjY1MZJjw946qRqN57V3TGg9PZEA1bw", hex: "78466C617368436861696E000000000000000000" },	
 	{ name: "$666", issuer: "rhvf9fe6PP3GC8Bku2Ug7iQPjPDxYZfrxN", hex: "666" },
 	{ name: "$Stb", issuer: "rw9kWBD9LwnCrvLEZFDApDDLYfwZFv1dNs", hex: "STB" },
-	{ name: "$DiHands", issuer: "rhohwqLVbQmcmghBiqoEvCEDzMir1oL3hB", hex: "24444948414E4453000000000000000000000000" },
 	{ name: "$MiLady", issuer: "rhPSguKUfFLjELmXxctobqpz4NgPneBXvS", hex: "4D494C4144590000000000000000000000000000" },
 	{ name: "$Burn", issuer: "rwgNTwrsZKPe7xYCy4emjFAYpgnuioHSkd", hex: "4255524E00000000000000000000000000000000" },
 	{ name: "$BUT", issuer: "riQtZKAtGWGRThMNBGz8RtLGAKHd7Za8x", hex: "BUT" },
@@ -3031,17 +3391,26 @@ const prefabAssets = [
 	{ name: "$Xmeme", issuer: "r4UPddYeGeZgDhSGPkooURsQtmGda4oYQW", hex: "584D454D45000000000000000000000000000000" },
 	{ name: "$Ascension", issuer: "r3qWgpz2ry3BhcRJ8JE6rxM8esrfhuKp4R", hex: "ASC" },
 	{ name: "$ARK", issuer: "rf5Jzzy6oAFBJjLhokha1v8pXVgYYjee3b", hex: "ARK" },
-	{ name: "$Pillars", issuer: "rNSYhWLhuHvmURwWbJPBKZMSPsyG5Qek17", hex: "PLR" },
 	{ name: "$Grind", issuer: "rDaDV5smdWjr8QcagD8UhbPZWzJBkdVAnH", hex: "GRD" },
     { name: "$3RDEYE", issuer: "rHjyBqFM5oQvXu1soWtATC4r1V6GBnhCQQ", hex: "3352444559450000000000000000000000000000" },
     { name: "$FWOGXRP", issuer: "rNm3VNJJ2PCmQFVDRpDR6N73UEtZh32HFi", hex: "46574F4758525000000000000000000000000000" },
 	{ name: "$Joey", issuer: "rN6CXs6J7WDh8miq2C2cre6w7jipc55Ut", hex: "4A6F657900000000000000000000000000000000" },
-    { name: "$HAIC", issuer: "rsEXqMHTKDfGzncfJ25XtB9ZY8jayTv7N3", hex: "4841494300000000000000000000000000000000" }
+    { name: "$HAIC", issuer: "rsEXqMHTKDfGzncfJ25XtB9ZY8jayTv7N3", hex: "4841494300000000000000000000000000000000" },
+	{ name: "$BUT", issuer: "riQtZKAtGWGRThMNBGz8RtLGAKHd7Za8x", hex: "2442555400000000000000000000000000000000" },
+	{ name: "$FML", issuer: "rw4tietmzbPG2G66UudSGaQ5uYztNow3gQ", hex: "FML" },
+	{ name: "$OBEY", issuer: "robeyK1nxGh6AKUSSXf3eqyigAWS6Frmw", hex: "4F42455900000000000000000000000000000000" },
+	{ name: "$Bwif", issuer: "r33jHP8k9eFY9Vf1SLU2XKfoQ8A3SkXPEh", hex: "6277696600000000000000000000000000000000" },
+	{ name: "$FARM", issuer: "rPrAEfVATUNDTJm9CUa8tYeD7oJrVdEGhU", hex: "4641524D00000000000000000000000000000000" },
+	{ name: "$XCT", issuer: "r4PQgThiDmTWWYKPKkg5hLxV57ozMU89SW", hex: "XCT" },
+	{ name: "$BuildX", issuer: "r4WzuU4bdTcyUtdSyhC8nsLUhv3Ce2xyDy", hex: "4275696C64580000000000000000000000000000" },
+	{ name: "$Bluminati", issuer: "rwL4XszmjgpmwyLzeapk4F5JiwsuUu6vYF", hex: "426C756D696E6174690000000000000000000000" },
+	{ name: "$TXT", issuer: "rTExTnvBr4Y315ZQDUdmeTitu7iPVqYPg", hex: "TXT" },
+	{ name: "$FPT", issuer: "rBXRBN9gSFE4qL6DGWYHgKCLtoMzUVL5cF", hex: "FPT" },
+	{ name: "$XBF", issuer: "rBoY3bDCRcmycREKuHRq1H7x9ngcVQwG7k", hex: "XBF" },
+	{ name: "$Unite", issuer: "rQKSaCbjYGdYosuPSLLTjzHN19Gwtyx4U6", hex: "554E495445000000000000000000000000000000" },
+	{ name: "$Merch", issuer: "rKmDRyzwwECbys6SQSp75y5SZ1q8mDFoNv", hex: "4D45524348000000000000000000000000000000" },
+	{ name: "$$XRPMAN", issuer: "rpCB8upQziQR6P5YbHnZZAqqTMePQ8pCTR", hex: "245852504D414E00000000000000000000000000" }
 ];
-
-
-
-
 
 let dexSwapDirection = 'sell';
 
@@ -3973,46 +4342,104 @@ async function updateNukeAssetDetails(forceFetch = false) {
 }
 let availableBalanceXrp = 0;
 let globalLPTokens = [];
+
 async function populateAssetDropdowns() {
     if (!prefabAssets || !Array.isArray(prefabAssets)) {
-        log('Error: prefabAssets is not defined or not an array.', 'error');
         return;
     }
     if (!dynamicAssets || !Array.isArray(dynamicAssets)) {
         dynamicAssets = [];
     }
+    if (!globalLPTokens || !Array.isArray(globalLPTokens)) {
+        globalLPTokens = [];
+    }
 
     const combinedAssets = [...prefabAssets, ...dynamicAssets];
     combinedAssets.sort((a, b) => a.name.localeCompare(b.name));
 
+    const lpAssets = globalLPTokens.map(token => ({
+        name: token.lpName,
+        hex: token.currency,
+        issuer: token.issuer,
+        isLP: true
+    }));
+
     const dropdowns = [
-        { id: 'send-asset-dropdown', gridId: 'send-asset-grid', displayId: 'send-asset-display', defaultValue: 'XRP', onchange: selectSendAsset },
-        { id: 'trust-asset-dropdown', gridId: 'trust-asset-grid', displayId: 'trust-asset-display', defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'XRP', onchange: () => selectTrustAsset(true) },
-        { id: 'nuke-asset-dropdown', gridId: 'nuke-asset-grid', displayId: 'nuke-asset-display', defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'XRP', onchange: () => updateNukeAssetDetails(true) },
-        { id: 'swap-input-asset-dropdown', gridId: 'swap-input-asset-grid', displayId: 'swap-input-asset-display', defaultValue: 'XRP', onchange: updateSwapDirection },
-        { id: 'swap-output-asset-dropdown', gridId: 'swap-output-asset-grid', displayId: 'swap-output-asset-display', defaultValue: 'Xoge', onchange: updateSwapDirection },
-        { id: 'lp-asset1-dropdown', gridId: 'lp-asset1-grid', displayId: 'lp-asset1-display', defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'Select Asset', onchange: selectLPAsset },
-        { id: 'lp-asset2-dropdown', gridId: 'lp-asset2-grid', displayId: 'lp-asset2-display', defaultValue: 'XRP', onchange: selectLPAsset }
+        {
+            id: 'send-asset-dropdown',
+            gridId: 'send-asset-grid',
+            displayId: 'send-asset-display',
+            defaultValue: 'XRP',
+            onchange: selectSendAsset,
+            assets: [...combinedAssets, ...lpAssets]
+        },
+        {
+            id: 'trust-asset-dropdown',
+            gridId: 'trust-asset-grid',
+            displayId: 'trust-asset-display',
+            defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'XRP',
+            onchange: () => selectTrustAsset(true),
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        },
+        {
+            id: 'nuke-asset-dropdown',
+            gridId: 'nuke-asset-grid',
+            displayId: 'nuke-asset-display',
+            defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'XRP',
+            onchange: () => updateNukeAssetDetails(true),
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        },
+        {
+            id: 'swap-input-asset-dropdown',
+            gridId: 'swap-input-asset-grid',
+            displayId: 'swap-input-asset-display',
+            defaultValue: 'XRP',
+            onchange: updateSwapDirection,
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        },
+        {
+            id: 'swap-output-asset-dropdown',
+            gridId: 'swap-output-asset-grid',
+            displayId: 'swap-output-asset-display',
+            defaultValue: '$Xoge',
+            onchange: updateSwapDirection,
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        },
+        {
+            id: 'lp-asset1-dropdown',
+            gridId: 'lp-asset1-grid',
+            displayId: 'lp-asset1-display',
+            defaultValue: combinedAssets.length > 0 ? combinedAssets[0].name : 'Select Asset',
+            onchange: selectLPAsset,
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        },
+        {
+            id: 'lp-asset2-dropdown',
+            gridId: 'lp-asset2-grid',
+            displayId: 'lp-asset2-display',
+            defaultValue: 'XRP',
+            onchange: selectLPAsset,
+            assets: combinedAssets.filter(asset => !asset.isLP)
+        }
     ];
 
-    dropdowns.forEach(({ id, gridId, displayId, defaultValue, onchange }) => {
+    dropdowns.forEach(({ id, gridId, displayId, defaultValue, onchange, assets }) => {
         const dropdown = document.getElementById(id);
         const grid = document.getElementById(gridId);
         const display = document.getElementById(displayId);
         if (!dropdown || !grid || !display) {
-            log(`Warning: Dropdown elements for ${id} not found in DOM.`, 'error');
             return;
         }
 
         const currentValue = display.getAttribute('data-value') || defaultValue;
-        const assetsToUse = combinedAssets.filter(asset => !asset.isLP); 
 
+        const sortedAssets = assets.sort((a, b) => a.name.localeCompare(b.name));
         const columns = [];
-        for (let i = 0; i < assetsToUse.length; i += 50) {
-            columns.push(assetsToUse.slice(i, i + 50));
+        for (let i = 0; i < sortedAssets.length; i += 50) {
+            columns.push(sortedAssets.slice(i, i + 50));
         }
-        if (id !== 'trust-asset-dropdown' && id !== 'nuke-asset-dropdown') {
-            columns[0] = [{ name: 'XRP', hex: 'XRP', issuer: '' }].concat(columns[0] || []);
+        if (id !== 'trust-asset-dropdown') {
+            columns[0] = [{ name: 'XRP', hex: 'XRP', issuer: '', isLP: false }, ...columns[0]];
         }
 
         grid.innerHTML = '';
@@ -4024,13 +4451,33 @@ async function populateAssetDropdowns() {
             column.forEach(asset => {
                 const li = document.createElement('li');
                 li.className = 'asset-option';
-                li.textContent = asset.name;
+                const ticker = asset.name.startsWith('$') ? asset.name : `$${asset.name}`;
+                const iconSrc = asset.name === 'XRP' ? './icons/XRP.png' : `./icons/${ticker}-${asset.issuer}.png`;
+                const img = document.createElement('img');
+                img.src = iconSrc;
+                img.alt = asset.name;
+                img.className = 'asset-icon';
+                img.onerror = function() {
+                    this.src = './icons/XRP.png';
+                };
+                li.appendChild(img);
+                const textNode = document.createTextNode(` ${asset.name}`);
+                li.appendChild(textNode);
                 li.dataset.value = asset.name;
                 li.dataset.hex = asset.hex || 'XRP';
                 li.dataset.issuer = asset.issuer || '';
                 li.dataset.isLp = asset.isLP || false;
                 li.onclick = () => {
-                    display.textContent = asset.name;
+                    display.innerHTML = '';
+                    const selectedImg = document.createElement('img');
+                    selectedImg.src = iconSrc;
+                    selectedImg.alt = asset.name;
+                    selectedImg.className = 'asset-icon';
+                    selectedImg.onerror = function() {
+                        this.src = './icons/XRP.png';
+                    };
+                    display.appendChild(selectedImg);
+                    display.appendChild(document.createTextNode(` ${asset.name}`));
                     display.setAttribute('data-value', asset.name);
                     display.setAttribute('data-hex', asset.hex || 'XRP');
                     display.setAttribute('data-issuer', asset.issuer || '');
@@ -4044,15 +4491,30 @@ async function populateAssetDropdowns() {
         });
         grid.appendChild(gridContainer);
 
-        const selectedAsset = assetsToUse.find(a => a.name === currentValue) || 
-                             (currentValue === 'XRP' ? { name: 'XRP', hex: 'XRP', issuer: '' } : 
-                             (currentValue === 'Xoge' ? { name: 'Xoge', hex: '586F676500000000000000000000000000000000', issuer: 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1' } : 
-                             (currentValue === 'Select Asset' ? { name: 'Select Asset', hex: '', issuer: '' } : null)));
-        display.textContent = selectedAsset ? selectedAsset.name : defaultValue;
+        const selectedAsset = sortedAssets.find(a => a.name === currentValue) || 
+                             (currentValue === 'XRP' ? { name: 'XRP', hex: 'XRP', issuer: '', isLP: false } : 
+                             (currentValue === '$Xoge' ? { name: '$Xoge', hex: '586F676500000000000000000000000000000000', issuer: 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1', isLP: false } : 
+                             (currentValue === 'Select Asset' ? { name: 'Select Asset', hex: '', issuer: '', isLP: false } : null)));
+        const selectedTicker = selectedAsset && selectedAsset.name.startsWith('$') ? selectedAsset.name : selectedAsset ? `$${selectedAsset.name}` : '$Xoge';
+        const selectedIconSrc = selectedAsset && selectedAsset.name === 'XRP' ? './icons/XRP.png' : selectedAsset ? `./icons/${selectedTicker}-${selectedAsset.issuer}.png` : './icons/XRP.png';
+        display.innerHTML = '';
+        if (selectedAsset) {
+            const img = document.createElement('img');
+            img.src = selectedIconSrc;
+            img.alt = selectedAsset.name;
+            img.className = 'asset-icon';
+            img.onerror = function() {
+                this.src = './icons/XRP.png';
+            };
+            display.appendChild(img);
+            display.appendChild(document.createTextNode(` ${selectedAsset.name}`));
+        } else {
+            display.textContent = defaultValue;
+        }
         display.setAttribute('data-value', selectedAsset ? selectedAsset.name : defaultValue);
         display.setAttribute('data-hex', selectedAsset ? selectedAsset.hex || 'XRP' : '');
         display.setAttribute('data-issuer', selectedAsset ? selectedAsset.issuer || '' : '');
-        display.setAttribute('data-is-lp', selectedAsset?.isLP || false);
+        display.setAttribute('data-is-lp', selectedAsset ? selectedAsset.isLP || false : false);
     });
 
     selectSendAsset();
@@ -4061,7 +4523,6 @@ async function populateAssetDropdowns() {
     updateSwapDirection();
     selectLPAsset();
 }
-
 
 function selectLPAsset() {
     const asset1Display = document.getElementById('lp-asset1-display');
@@ -4134,9 +4595,12 @@ function getAssetByName(assetName) {
     if (assetName === "XRP") {
         return { name: "XRP", currency: "XRP" };
     }
+    const lpToken = globalLPTokens.find(token => token.lpName === assetName);
+    if (lpToken) {
+        return { name: assetName, hex: lpToken.currency, issuer: lpToken.issuer };
+    }
     const asset = prefabAssets.find(a => a.name === assetName) || dynamicAssets.find(a => a.name === assetName);
     if (!asset) {
-        log(`Error: Asset ${assetName} not found in prefabAssets or dynamicAssets.`);
         return null;
     }
     return asset;
@@ -4300,6 +4764,8 @@ function updateSwapDirection() {
         slider.value = 0;
         percentageDisplay.textContent = '0%';
         swapResult.innerHTML = '<p style="color: #fff;">Swap Result: Select assets and check pool price</p>';
+
+        updateAssetChart();
     }
 
     const swapResult = document.getElementById('swap-result');
@@ -4318,6 +4784,7 @@ function updateSwapDirection() {
 
     updateBalances();
 }
+
 
 async function updateBalances() {
 
@@ -4408,7 +4875,7 @@ async function updateBalances() {
             }
         }
     } catch (error) {
-        log(`Balance update error: ${error.message}`);
+        log(`Balance update error: IF THIS IS A NEW ACCOUNT ~ YOU MUST FUND IT FOR IT TO EXIST ON THE LEDGER AND BE SEEN/EXIST`);
         if (document.getElementById('input-balance')) document.getElementById('input-balance').textContent = 'Balance: -';
         if (document.getElementById('output-balance')) document.getElementById('output-balance').textContent = 'Balance: -';
         const slider = document.getElementById('swap-balance-slider');
@@ -4680,17 +5147,9 @@ function setupDisclaimerPopup() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const welcomePopup = document.getElementById('welcomePopup');
-    if (welcomePopup) {
-        welcomePopup.style.display = 'flex';
-    } else {
-        log('Error: #welcomePopup not found on page load.');
-    }
-    setupDisclaimerPopup();
     randomizeServerSelection();
     populateAssetDropdowns();
 
-    
     setTimeout(() => {
         const trustDisplay = document.getElementById('trust-asset-display');
         if (trustDisplay && !trustDisplay.getAttribute('data-value')) {
@@ -4698,7 +5157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
 
-    
     const ammSwapSection = document.getElementById('amm-swap');
     let hasInitializedAmmSwap = false;
     if (ammSwapSection) {
@@ -4710,6 +5168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (slider) {
                     slider.addEventListener('input', debouncedUpdateSwapAmounts);
                 }
+                await updateAssetChart();
                 hasInitializedAmmSwap = true;
             }
         });
@@ -4724,13 +5183,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (slider) {
                         slider.addEventListener('input', debouncedUpdateSwapAmounts);
                     }
+                    await updateAssetChart();
                     hasInitializedAmmSwap = true;
                 }
             });
         }
     }
 
-    
     const swapAmountInput = document.getElementById('swap-amount');
     if (swapAmountInput) {
         swapAmountInput.addEventListener('input', function(e) {
@@ -4740,9 +5199,6 @@ document.addEventListener('DOMContentLoaded', () => {
         log('Error: #swap-amount input not found on page load.');
     }
 });
-
-
-
 
 function debounce(func, wait) {
     let timeout;

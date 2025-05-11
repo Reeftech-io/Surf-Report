@@ -1,0 +1,300 @@
+0
+
+Volcano Caldera Edge
+
+icons/0.png
+
+1
+
+Glacial Mountain Pass
+
+icons/1.png
+
+2
+
+Grand Canyon Skybridge
+
+icons/2.png
+
+3
+
+Great Plains Thunderstorm
+
+icons/3.png
+
+4
+
+Marshy Swamps of Doom
+
+icons/4.png
+
+5
+
+Crimson Desert Dunes
+
+icons/5.png
+
+6
+
+Jungle Canopy Arena
+
+icons/6.png
+
+7
+
+Frozen Tundra Abyss
+
+icons/7.png
+
+8
+
+Haunted Forest Clearing
+
+icons/8.png
+
+9
+
+Meteor Shower Crater
+
+icons/9.png
+
+10
+
+Pirate Cove Whirlpool
+
+icons/10.png
+
+11
+
+Sky Fortress Ruins
+
+icons/11.png
+
+12
+
+Toxic Wasteland Pits
+
+icons/12.png
+
+13
+
+Ancient Temple Traps
+
+icons/13.png
+
+14
+
+Stormy Ocean Cliff
+
+icons/14.png
+
+15
+
+Crystal Cavern Depths
+
+icons/15.png
+
+16
+
+Blizzard Peak Summit
+
+icons/16.png
+
+17
+
+Abandoned Mine Shaft
+
+icons/17.png
+
+18
+
+Spectral Volcano Rift
+
+icons/18.png
+
+19
+
+Sinking Coral Atoll
+
+icons/19.png
+
+20
+
+Magma-Flooded Colosseum
+
+icons/20.png
+
+21
+
+Eternal Frost Glacier
+
+icons/21.png
+
+22
+
+Canyon of Echoing Winds
+
+icons/22.png
+
+23
+
+Thunderous Savanna
+
+icons/23.png
+
+24
+
+Bog of Eternal Stench
+
+icons/24.png
+
+25
+
+Sahara Mirage Oasis
+
+icons/25.png
+
+26
+
+Rainforest of Venomous Vines
+
+icons/26.png
+
+27
+
+Arctic Iceberg Drift
+
+icons/27.png
+
+28
+
+Wraith-Infested Moor
+
+icons/28.png
+
+29
+
+Asteroid Field Arena
+
+icons/29.png
+
+30
+
+Tsunami-Stricken Beach
+
+icons/30.png
+
+31
+
+Floating Crystal Isles
+
+icons/31.png
+
+32
+
+Acidic Geyser Field
+
+icons/32.png
+
+33
+
+Cursed Pyramid Interior
+
+icons/33.png
+
+34
+
+Hurricane-Ravaged Peninsula
+
+icons/34.png
+
+35
+
+Obsidian Shard Plains
+
+icons/35.png
+
+36
+
+Bioluminescent Reef
+
+icons/36.png
+
+37
+
+Frostbitten Taiga
+
+icons/37.png
+
+38
+
+Phantom Fog Delta
+
+icons/38.png
+
+39
+
+Comet Impact Zone
+
+icons/39.png
+
+40
+
+Monsoon Flooded Valley
+
+icons/40.png
+
+41
+
+Skybound Lightning Spires
+
+icons/41.png
+
+42
+
+Necrotic Marshes
+
+icons/42.png
+
+43
+
+Infernal Forge Ruins
+
+icons/43.png
+
+44
+
+Tidal Maelstrom Bay
+
+icons/44.png
+
+45
+
+Shattered Glass Desert
+
+icons/45.png
+
+46
+
+Venomous Serpent Pit
+
+icons/46.png
+
+47
+
+Polar Vortex Plains
+
+icons/47.png
+
+48
+
+Ethereal Mist Highlands
+
+icons/48.png
+
+49
+
+Raging River Rapids
+
+icons/49.png
+

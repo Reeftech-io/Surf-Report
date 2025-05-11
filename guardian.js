@@ -618,10 +618,9 @@ function startPriceMonitoring() {
 }
 
 function initializeGuardianDropdowns() {
-    
     const prefabAssets = window.prefabAssets || [
-    { name: "$Xoge", issuer: "rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1", hex: "586F676500000000000000000000000000000000" },	
-	{ name: "$RLUSD", issuer: "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De", hex: "524C555344000000000000000000000000000000" },
+	{ name: "$Xoge", issuer: "rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1", hex: "586F676500000000000000000000000000000000" },	
+    { name: "$RLUSD", issuer: "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De", hex: "524C555344000000000000000000000000000000" },
     { name: "$PUPU", issuer: "r4WfqR5DQ7PwPvVJv8Gism5cQBLGtNnvK8", hex: "5055505500000000000000000000000000000000" },
 	{ name: "$Army", issuer: "rGG3wQ4kUzd7Jnmk1n5NWPZjjut62kCBfC", hex: "41524D5900000000000000000000000000000000" },
 	{ name: "$BANANA", issuer: "rpopnahpwzxiwapipm5ehq6kslehvgilqp", hex: "42414e414e410000000000000000000000000000" },
@@ -642,16 +641,14 @@ function initializeGuardianDropdowns() {
 	{ name: "$Xox", issuer: "rGJbFqiLdh23e9WigQ5sxTfFqTENveLX21", hex: "XOX" },
 	{ name: "$Ribble", issuer: "rG7jT6D4fHsipvVmPSbcnvDtFzXwwSR4qx", hex: "524942424C450000000000000000000000000000" },
 	{ name: "$Riptard", issuer: "r37NJszgETCmYqUkPH7PmtkpVdsYBfMYSc", hex: "5249505441524400000000000000000000000000" },
-	{ name: "$Pigeon", issuer: "rhxmPqZGPeHTW684vbf1HAMsHff8RTDfWn", hex: "504944474E000000000000000000000000000000" },
+	{ name: "$Pidgn", issuer: "rhxmPqZGPeHTW684vbf1HAMsHff8RTDfWn", hex: "504944474E000000000000000000000000000000" },
 	{ name: "$America", issuer: "rpVajoWTXFkKWY7gtWSwcpEcpLDUjtktCA", hex: "416D657269636100000000000000000000000000" },
 	{ name: "$Grim", issuer: "rHLRdLwXiBZSD53ZQz8ogGJz25LzNCCjSz", hex: "4752494D00000000000000000000000000000000" },
 	{ name: "$Britto", issuer: "rfxwXDzenkYoXSEbNA4cZjaT9FY3eeL47e", hex: "42524954544F0000000000000000000000000000" },
 	{ name: "$Fuzzy", issuer: "rhCAT4hRdi2Y9puNdkpMzxrdKa5wkppR62", hex: "46555A5A59000000000000000000000000000000" },
 	{ name: "$Barron", issuer: "rLxJv7a6uScd6qaSbuELTPkj9i2vJhn6YZ", hex: "426172726F6E0000000000000000000000000000" },
-	{ name: "$Blue", issuer: "rDPQ9k3w791dgPNw6FwivrbfHVexaLhZXJ", hex: "424C554500000000000000000000000000000000" },
 	{ name: "$Flame", issuer: "rp5CUgVjAhuthJs8LdjTXFdNWJzfQqc3p2", hex: "464C414D45000000000000000000000000000000" },
 	{ name: "$Grumpy", issuer: "ra9UE2hHy4AaLeEvbj6gKFPF1DWP2K8kT6", hex: "4752554D50590000000000000000000000000000" },
-	{ name: "$Pep", issuer: "r4eNzo9fDVjME4EwYS1wbTK4J2br5opD1F", hex: "PEP" },
 	{ name: "$Mouse", issuer: "rJevHGVUzAUPSGxiECgqcNVNVjRkTBWD7T", hex: "4D4F555345000000000000000000000000000000" },
 	{ name: "$Luther", issuer: "rPBWcjbyqcrGxpUe4awobqMmB2WaeUhuFb", hex: "4C55544845520000000000000000000000000000" },
 	{ name: "$BitcoinOnXrp", issuer: "rhLJ2ma5pScsxVhL5EQr71w3FgASVLwP84", hex: "BOX" },
@@ -688,35 +685,28 @@ function initializeGuardianDropdowns() {
 	{ name: "$VGB", issuer: "rhcyBrowwApgNonehKBj8Po5z4gTyRknaU", hex: "VGB" },	
 	{ name: "$CX1", issuer: "rKk7mu1dNB25fsPEJ4quoQd5B8QmaxewKi", hex: "CX1" },	
 	{ name: "$XCORE", issuer: "r3dVizzUAS3U29WKaaSALqkieytA2LCoRe", hex: "58434F5245000000000000000000000000000000" },	
-	{ name: "$BTC-Gatehub", issuer: "rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL", hex: "BTC" },	
-	{ name: "$ETH-Gatehub", issuer: "rcA8X3TVMST1n3CJeAdGk1RdRCHii7N2h", hex: "ETH" },	
+	{ name: "$BTCGatehub", issuer: "rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL", hex: "BTC" },	
+	{ name: "$ETHGatehub", issuer: "rcA8X3TVMST1n3CJeAdGk1RdRCHii7N2h", hex: "ETH" },	
 	{ name: "$Equilibrium", issuer: "rpakCr61Q92abPXJnVboKENmpKssWyHpwu", hex: "457175696C69627269756D000000000000000000" },	
-	{ name: "$CallCentre", issuer: "rpHry9uUAhG3SCfmjVgypMYkGr2XQZqH4z", hex: "43616C6C43656E74726500000000000000000000" },	
 	{ name: "$PHNIX", issuer: "rDFXbW2ZZCG5WgPtqwNiA2xZokLMm9ivmN", hex: "50484E4958000000000000000000000000000000" },	
-	{ name: "$USD-Gatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "USD" },	
-	{ name: "$EUR-Gatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "EUR" },	
+	{ name: "$USDGatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "USD" },	
+	{ name: "$EURGatehub", issuer: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", hex: "EUR" },	
 	{ name: "$XQK", issuer: "rHKrPGdpaqNRqRvmsiqQhD6azqc4npWoLC", hex: "XQK" },	
-	{ name: "$XRdoge", issuer: "rLqUC2eCPohYvJCEBJ77eCCqVL2uEiczjA", hex: "5852646F67650000000000000000000000000000" },	
 	{ name: "$NICE", issuer: "r96uXvCJxe3Yeeo9wCtJsLSpJiFUz2hvsB", hex: "4E49434500000000000000000000000000000000" },	
 	{ name: "$XDX", issuer: "rMJAXYsbNzhwp7FfYnAsYP5ty3R9XnurPo", hex: "XDX" },	
 	{ name: "$LCB", issuer: "r9U2eJg3FgpYKX8PrFPSxHdVu4ZheLZRJ3", hex: "LCB" },	
 	{ name: "$RPR", issuer: "r3qWgpz2ry3BhcRJ8JE6rxM8esrfhuKp4R", hex: "RPR" },	
 	{ name: "$Calorie", issuer: "rNqGa93B8ewQP9mUwpwqA19SApbf62U7PY", hex: "43616C6F72696500000000000000000000000000" },	
 	{ name: "$FSE", issuer: "rs1MKY54miDtMFEGyNuPd3BLsXauFZUSrj", hex: "FSE" },	
-	{ name: "$BIL", issuer: "rHSMLJNzjagXS3xS3wW2NcBpXWbyTuUybB", hex: "BIL" },	
 	{ name: "$PASA", issuer: "rBPtuMc4HBR1SuZyZv8hs7WBVxLBYrzxbY", hex: "5041534100000000000000000000000000000000" },	
 	{ name: "$CodeCoin", issuer: "rGbsKNrVURRfU1WEb1aEqaoyRJDkvssyBa", hex: "436F6465436F696E000000000000000000000000" },	
 	{ name: "$CNY", issuer: "razqQKzJRdB4UxFPWf5NEpEG3WMkmwgcXA", hex: "CNY" },	
-	{ name: "$ARMY", issuer: "rGG3wQ4kUzd7Jnmk1n5NWPZjjut62kCBfC", hex: "41524D5900000000000000000000000000000000" },	
 	{ name: "$ATM", issuer: "raDZ4t8WPXkmDfJWMLBcNZmmSHmBC523NZ", hex: "ATM" },	
 	{ name: "$LUC", issuer: "rsygE5ynt2iSasscfCCeqaGBGiFKMCAUu7", hex: "LUC" },	
 	{ name: "$Daric", issuer: "rK9AtihZZYWAwZQnJCYzZnyW833vbcPXPf", hex: "4461726963000000000000000000000000000000" },	
 	{ name: "$TRSRY", issuer: "rLBnhMjV6ifEHYeV4gaS6jPKerZhQddFxW", hex: "5452535259000000000000000000000000000000" },	
-	{ name: "$DRT", issuer: "rfDhSfY5JMtCrje7hGxC8Gk6dC5PgNJh63", hex: "DRT" },	
-	{ name: "$MLD", issuer: "rhJYDuVMQxabTyiWuHQkQyDxr6uZEdpv5u", hex: "MLD" },	
 	{ name: "$XRSHIB", issuer: "rN3EeRSxh9tLHAUDmL7Chh3vYYoUafAyyM", hex: "5852534849420000000000000000000000000000" },	
-	{ name: "$XPM", issuer: "rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa", hex: "XPM" },	
-	{ name: "$XMETA", issuer: "r3XwJ1hr1PtbRvbhuUkybV6tmYzzA11WcB", hex: "584D455441000000000000000000000000000000" },	
+	{ name: "$XPM", issuer: "rXPMxBeefHGxx2K7g5qmmWq3gFsgawkoa", hex: "XPM" },		
 	{ name: "$ShibaNFT", issuer: "rnRXAnVZTyattZXEpKpgTyvdm17DpjrzSZ", hex: "53686962614E4654000000000000000000000000" },	
 	{ name: "$Editions", issuer: "rfXwi3SqywQ2gSsvHgfdVsyZdTVM15BG7Z", hex: "65646974696F6E73000000000000000000000000" },	
 	{ name: "$XRPS", issuer: "rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL", hex: "5852505300000000000000000000000000000000" },	
@@ -725,11 +715,8 @@ function initializeGuardianDropdowns() {
 	{ name: "$CNY", issuer: "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y", hex: "CNY" },	
 	{ name: "$xCBS", issuer: "rNvhXtgDdd4Sh3NKLXcUH9Hozs4dqu62we", hex: "7843425300000000000000000000000000000000" },	
 	{ name: "$Gift", issuer: "rBXXRBZ46rwCkS9mHom3WW8u7gSytb5KcZ", hex: "4769667400000000000000000000000000000000" },	
-	{ name: "$KGE", issuer: "rNhSjAMnDJc9tDHH1R4sqggvgDGa8Bwj5T", hex: "KGE" },	
 	{ name: "$XGBL", issuer: "rMy6sCaDVF1C2BT3qmNG6kgjVDZqZ74uoF", hex: "5847424C00000000000000000000000000000000" },	
-	{ name: "$XRWeb", issuer: "rDegPvsK5c2nzaKTn2PsuPZjs8b3neDDn", hex: "5852576562000000000000000000000000000000" },	
 	{ name: "$xCoin", issuer: "rXCoYSUnkpygdtfpz3Df8dKQuRZjM9UFi", hex: "78436F696E000000000000000000000000000000" },	
-	{ name: "$Outback", issuer: "rMzXS3BwhAwgb4fTK6ohik65jJUKKrzmqn", hex: "4F55544241434B00000000000000000000000000" },	
 	{ name: "$DRS", issuer: "rDrSRap6jdWqtmxjpvDUCv3q128UjL2GS2", hex: "DRS" },	
 	{ name: "$TPR", issuer: "rht98AstPWmLPQMrwd9YDrcDoTjw9Tiu4B", hex: "TPR" },	
 	{ name: "$Schmeckles", issuer: "rPxw83ZP6thv7KmG5DpAW4cDW55DZRZ9wu", hex: "5363686D65636B6C657300000000000000000000" },	
@@ -741,7 +728,6 @@ function initializeGuardianDropdowns() {
 	{ name: "$Bear", issuer: "rBEARGUAsyu7tUw53rufQzFdWmJHpJEqFW", hex: "4245415200000000000000000000000000000000" },	
 	{ name: "$XRTemplate", issuer: "rMX54z8VgtRhPefzqVkdG3LxsuGdFQcXxr", hex: "585254656D706C61746500000000000000000000" },	
 	{ name: "$XUM", issuer: "r465PJyGWUE8su1oVoatht6cXZJTg1jc2m", hex: "XUM" },	
-	{ name: "$APXX", issuer: "rL2sSC2eMm6xYyx1nqZ9MW4AP185mg7N9t", hex: "4150585800000000000000000000000000000000" },	
 	{ name: "$xHulk", issuer: "r43PooeaFyp2cCfqxMkZLu47VKUDaCzQVt", hex: "7848756C6B000000000000000000000000000000" },	
 	{ name: "$ELM", issuer: "rQB9HhhBCq2zAVpwQD3jV9ja39DmomdWj1", hex: "ELM" },	
 	{ name: "$XRSoftware", issuer: "rJZ9Hpaeqy3fdBvjVUjx1fW1bE75HgaJbr", hex: "5852536F66747761726500000000000000000000" },	
@@ -752,12 +738,11 @@ function initializeGuardianDropdowns() {
 	{ name: "$NFTL", issuer: "r3DCE2UVaqQaGQragAjmwL6kNicF2rw6PL", hex: "4E46544C00000000000000000000000000000000" },	
 	{ name: "$XRBear", issuer: "rKxqkAbT2BQUbtnknSAJon7kX89gUKpZu3", hex: "5852426561720000000000000000000000000000" },	
 	{ name: "$MAG", issuer: "rXmagwMmnFtVet3uL26Q2iwk287SRvVMJ", hex: "MAG" },	
-	{ name: "$SGB-Gategub", issuer: "rctArjqVvTHihekzDeecKo6mkTYTUSBNc", hex: "SGB" },	
+	{ name: "$SGBGatehub", issuer: "rctArjqVvTHihekzDeecKo6mkTYTUSBNc", hex: "SGB" },	
 	{ name: "$PIN", issuer: "rhx9yNhbo7xtTy6rBY8xrUYkuYdyVs5Arb", hex: "PIN" },	
 	{ name: "$XTriviA", issuer: "rhLr8bGvHvBgYXAHNPyXrQAcKGrQ2X5nU4", hex: "5854726976694100000000000000000000000000" },	
 	{ name: "$Zinfinite", issuer: "rGMU2cbbMhzodpecrjLQ2A814DqL8LFxjY", hex: "5A696E66696E6974650000000000000000000000" },	
-	{ name: "$TALENT", issuer: "r92SQCuWhYoB4w2UnKU7PKj4Mh7jSyemrH", hex: "54414C454E540000000000000000000000000000" },	
-	{ name: "$XRsaitama", issuer: "r3nEJus5Ryoo9ckNmY8XHogoPnLfP1unFv", hex: "585273616974616D610000000000000000000000" },	
+	{ name: "$TALENT", issuer: "r92SQCuWhYoB4w2UnKU7PKj4Mh7jSyemrH", hex: "54414C454E540000000000000000000000000000" },		
 	{ name: "$XONE", issuer: "rP9v5sQR5LqcB6Bk7xJSKqUoHytkHT1one", hex: "584F4E4500000000000000000000000000000000" },	
 	{ name: "$XRGary", issuer: "rCE2rxDDZtM7qkHAxorjkfLiHX71HtqTY", hex: "5852476172790000000000000000000000000000" },	
 	{ name: "$Cake", issuer: "ra1XmvmraMiRYarFrHEU7XDojvRyipU5Vg", hex: "43616B6500000000000000000000000000000000" },	
@@ -765,7 +750,7 @@ function initializeGuardianDropdowns() {
 	{ name: "$GOLD", issuer: "rGQtGHrgN4FK1RcEn83q4t8aK6BobzDEMK", hex: "474F4C4400000000000000000000000000000000" },	
 	{ name: "$TipCoin", issuer: "rsUjMrcGu8ANoTwv3zUJE6MzSL6K7fMyPU", hex: "546970436F696E00000000000000000000000000" },	
 	{ name: "$OCEAN", issuer: "rPCrPJ9Uz988tD1aQVAToioDcCGZ8nbBTn", hex: "4F4345414E000000000000000000000000000000" },	
-	{ name: "$USD-Bitstamp", issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", hex: "USD" },	
+	{ name: "$USDBitstamp", issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", hex: "USD" },	
 	{ name: "$SPREAD", issuer: "rwPzJd39swHT6NfxvgGFYE7q9q7EcqKuKW", hex: "5350524541440000000000000000000000000000" },	
 	{ name: "$SPREAD", issuer: "rwPzJd39swHT6NfxvgGFYE7q9q7EcqKuKW", hex: "5350524541440000000000000000000000000000" },	
 	{ name: "$DROP", issuer: "rszenFJoDdiGjyezQc8pME9KWDQH43Tswh", hex: "44524F5000000000000000000000000000000000" },	
@@ -777,12 +762,9 @@ function initializeGuardianDropdowns() {
 	{ name: "$STX", issuer: "rSTAYKxF2K77ZLZ8GoAwTqPGaphAqMyXV", hex: "STX" },	
 	{ name: "$PONGO", issuer: "rwCq6TENSo3Hh9LKipXnLaxaeXBXKubqki", hex: "504F4E474F000000000000000000000000000000" },	
 	{ name: "$LOVE", issuer: "rDpdyF9LtYpwRdHZs8sghaPscE8rH9sgfs", hex: "4C4F564500000000000000000000000000000000" },	
-	{ name: "$GamerXGold", issuer: "rMczrvMki7DuXsuMf3zGUrqAmWvLKZNnt2", hex: "47616D657258476F6C6400000000000000000000" },	
-	{ name: "$Zens", issuer: "rwDUCnzBisR37rUAbHdjpZwoTdSavBoY4f", hex: "5A656E7300000000000000000000000000000000" },	
-	{ name: "$XRMiner", issuer: "r46UPDCgKfSLhGisjavEeb48sHmWbnzcX5", hex: "58524D696E657200000000000000000000000000" },	
+	{ name: "$GamerXGold", issuer: "rMczrvMki7DuXsuMf3zGUrqAmWvLKZNnt2", hex: "47616D657258476F6C6400000000000000000000" },		
 	{ name: "$Peas", issuer: "rPAArd4yZAJaDCR5gs41YYmGphfj6yzh3R", hex: "5065617300000000000000000000000000000000" },	
-	{ name: "$SEC", issuer: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9", hex: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9" },	
-	{ name: "$XSD", issuer: "r9PwqmHiGiE7yAXmG5mk7wSJAeezLqE7Ei", hex: "XSD" },	
+	{ name: "$SEC", issuer: "rKrjzz3fN8inpeG8fZAinuyen7ZRcsRvB9", hex: "SEC" },	
 	{ name: "$BumCrack", issuer: "rBuFBE8nx5Zpojj6EY3Lfh4sd1CHskFRC7", hex: "42756D437261636B000000000000000000000000" },	
 	{ name: "$IRE", issuer: "rfTYvAG86Y1L61RQjbxHTyJmphYzHgguCd", hex: "IRE" },	
 	{ name: "$1MC", issuer: "rsJvPP7GVdPfe5zmQtvxAJVZAmDUGfhkV1", hex: "1MC" },	
@@ -795,24 +777,21 @@ function initializeGuardianDropdowns() {
 	{ name: "$SimbaXRP", issuer: "rDqwjJ8fUqdyfPjJZ3h93J1XY8hz6CjEYo", hex: "53696D6261585250000000000000000000000000" },	
 	{ name: "$OXP", issuer: "rrno7Nj4RkFJLzC4nRaZiLF5aHwcTVon3d", hex: "OXP" },	
 	{ name: "$XDogelon", issuer: "rNFKrSUW1xKzDwHz8J9uVAs4GpxtEUoAsF", hex: "58446F67656C6F6E000000000000000000000000" },	
-	{ name: "$xBANK", issuer: "rLpDQmJUpDxLXCjrwmm5rPehZyGA4GRFNZ", hex: "7842414E4B000000000000000000000000000000" },	
-	{ name: "$LUSD", issuer: "rfL4Sci2ag5hhkpDuqtWYov6j3mshVWLgU", hex: "4C55534400000000000000000000000000000000" },	
+	{ name: "$xBANK", issuer: "rLpDQmJUpDxLXCjrwmm5rPehZyGA4GRFNZ", hex: "7842414E4B000000000000000000000000000000" },		
 	{ name: "$MONTEZUMA", issuer: "rNJpp2TXWrtFfNs8mbEsrj8gj6XVHfHywD", hex: "4D4F4E54455A554D410000000000000000000000" },	
 	{ name: "$icoin", issuer: "rJSTh1VLk52tFC3VRXkNWu7Q4nYmfZv7BZ", hex: "69636F696E000000000000000000000000000000" },	
-	{ name: "$xLEMUR", issuer: "rMPi7rz6i2qDRv9SmadcwbYaKpS9xqfyQQ", hex: "24784C454D555200000000000000000000000000" },	
 	{ name: "$ADV", issuer: "rPneN8WPHZJaMT9pF4Ynyyq4pZZZSeTuHu", hex: "ADV" },	
 	{ name: "$CTF", issuer: "r9Xzi4KsSF1Xtr8WHyBmUcvfP9FzTyG5wp", hex: "CTF" },	
 	{ name: "$UMMO", issuer: "rfGqDiFegcMm8e9saj48ED74PkotwJCmJd", hex: "554D4D4F00000000000000000000000000000000" },	
-	{ name: "$FLR-Gatehub", issuer: "rcxJwVnftZzXqyH9YheB8TgeiZUhNo1Eu", hex: "FLR" },	
+	{ name: "$FLRGatehub", issuer: "rcxJwVnftZzXqyH9YheB8TgeiZUhNo1Eu", hex: "FLR" },	
 	{ name: "$XRMOON", issuer: "rBBh2z5wsxE9gcVE2yUU39UntvRMHDKPpq", hex: "58524D4F4F4E0000000000000000000000000000" },	
 	{ name: "$HADALITE", issuer: "rHiPGSMBbzDGpoTPmk2dXaTk12ZV1pLVCZ", hex: "484144414C495445000000000000000000000000" },	
 	{ name: "$SSE", issuer: "rMDQTunsjE32sAkBDbwixpWr8TJdN5YLxu", hex: "SSE" },	
 	{ name: "$PGN", issuer: "rPUSoeJaHQzrXATtGniVjwBQQDEtJcdwFq", hex: "PGN" },	
-	{ name: "$XAH-Gatehub", issuer: "rswh1fvyLqHizBS2awu1vs6QcmwTBd9qiv", hex: "XAH" },	
+	{ name: "$XAHGatehub", issuer: "rswh1fvyLqHizBS2awu1vs6QcmwTBd9qiv", hex: "XAH" },	
 	{ name: "$xFlashChain", issuer: "rJgcjY1MZJjw946qRqN57V3TGg9PZEA1bw", hex: "78466C617368436861696E000000000000000000" },	
 	{ name: "$666", issuer: "rhvf9fe6PP3GC8Bku2Ug7iQPjPDxYZfrxN", hex: "666" },
 	{ name: "$Stb", issuer: "rw9kWBD9LwnCrvLEZFDApDDLYfwZFv1dNs", hex: "STB" },
-	{ name: "$DiHands", issuer: "rhohwqLVbQmcmghBiqoEvCEDzMir1oL3hB", hex: "24444948414E4453000000000000000000000000" },
 	{ name: "$MiLady", issuer: "rhPSguKUfFLjELmXxctobqpz4NgPneBXvS", hex: "4D494C4144590000000000000000000000000000" },
 	{ name: "$Burn", issuer: "rwgNTwrsZKPe7xYCy4emjFAYpgnuioHSkd", hex: "4255524E00000000000000000000000000000000" },
 	{ name: "$BUT", issuer: "riQtZKAtGWGRThMNBGz8RtLGAKHd7Za8x", hex: "BUT" },
@@ -822,12 +801,25 @@ function initializeGuardianDropdowns() {
 	{ name: "$Xmeme", issuer: "r4UPddYeGeZgDhSGPkooURsQtmGda4oYQW", hex: "584D454D45000000000000000000000000000000" },
 	{ name: "$Ascension", issuer: "r3qWgpz2ry3BhcRJ8JE6rxM8esrfhuKp4R", hex: "ASC" },
 	{ name: "$ARK", issuer: "rf5Jzzy6oAFBJjLhokha1v8pXVgYYjee3b", hex: "ARK" },
-	{ name: "$Pillars", issuer: "rNSYhWLhuHvmURwWbJPBKZMSPsyG5Qek17", hex: "PLR" },
 	{ name: "$Grind", issuer: "rDaDV5smdWjr8QcagD8UhbPZWzJBkdVAnH", hex: "GRD" },
     { name: "$3RDEYE", issuer: "rHjyBqFM5oQvXu1soWtATC4r1V6GBnhCQQ", hex: "3352444559450000000000000000000000000000" },
     { name: "$FWOGXRP", issuer: "rNm3VNJJ2PCmQFVDRpDR6N73UEtZh32HFi", hex: "46574F4758525000000000000000000000000000" },
 	{ name: "$Joey", issuer: "rN6CXs6J7WDh8miq2C2cre6w7jipc55Ut", hex: "4A6F657900000000000000000000000000000000" },
-    { name: "$HAIC", issuer: "rsEXqMHTKDfGzncfJ25XtB9ZY8jayTv7N3", hex: "4841494300000000000000000000000000000000" }
+    { name: "$HAIC", issuer: "rsEXqMHTKDfGzncfJ25XtB9ZY8jayTv7N3", hex: "4841494300000000000000000000000000000000" },
+	{ name: "$BUT", issuer: "riQtZKAtGWGRThMNBGz8RtLGAKHd7Za8x", hex: "2442555400000000000000000000000000000000" },
+	{ name: "$FML", issuer: "rw4tietmzbPG2G66UudSGaQ5uYztNow3gQ", hex: "FML" },
+	{ name: "$OBEY", issuer: "robeyK1nxGh6AKUSSXf3eqyigAWS6Frmw", hex: "4F42455900000000000000000000000000000000" },
+	{ name: "$Bwif", issuer: "r33jHP8k9eFY9Vf1SLU2XKfoQ8A3SkXPEh", hex: "6277696600000000000000000000000000000000" },
+	{ name: "$FARM", issuer: "rPrAEfVATUNDTJm9CUa8tYeD7oJrVdEGhU", hex: "4641524D00000000000000000000000000000000" },
+	{ name: "$XCT", issuer: "r4PQgThiDmTWWYKPKkg5hLxV57ozMU89SW", hex: "XCT" },
+	{ name: "$BuildX", issuer: "r4WzuU4bdTcyUtdSyhC8nsLUhv3Ce2xyDy", hex: "4275696C64580000000000000000000000000000" },
+	{ name: "$Bluminati", issuer: "rwL4XszmjgpmwyLzeapk4F5JiwsuUu6vYF", hex: "426C756D696E6174690000000000000000000000" },
+	{ name: "$TXT", issuer: "rTExTnvBr4Y315ZQDUdmeTitu7iPVqYPg", hex: "TXT" },
+	{ name: "$FPT", issuer: "rBXRBN9gSFE4qL6DGWYHgKCLtoMzUVL5cF", hex: "FPT" },
+	{ name: "$XBF", issuer: "rBoY3bDCRcmycREKuHRq1H7x9ngcVQwG7k", hex: "XBF" },
+	{ name: "$Unite", issuer: "rQKSaCbjYGdYosuPSLLTjzHN19Gwtyx4U6", hex: "554E495445000000000000000000000000000000" },
+	{ name: "$Merch", issuer: "rKmDRyzwwECbys6SQSp75y5SZ1q8mDFoNv", hex: "4D45524348000000000000000000000000000000" },
+	{ name: "$$XRPMAN", issuer: "rpCB8upQziQR6P5YbHnZZAqqTMePQ8pCTR", hex: "245852504D414E00000000000000000000000000" }
     ];
     const dynamicAssets = window.dynamicAssets || [];
 
@@ -843,16 +835,19 @@ function initializeGuardianDropdowns() {
             id: 'guardian-asset2-dropdown',
             gridId: 'guardian-asset2-grid',
             displayId: 'guardian-asset2-display',
-            defaultValue: 'Xoge',
+            defaultValue: '$Xoge',
             onchange: updateGuardianAssetPair
         }
     ];
 
     const combinedAssets = [...prefabAssets, ...dynamicAssets];
-    
+
     if (combinedAssets.length === 0) {
         logGuardian('Warning: No assets available for dropdowns.');
+        return;
     }
+
+    logGuardian(`Populating Guardian dropdowns with ${combinedAssets.length} assets.`);
 
     dropdowns.forEach(({ id, gridId, displayId, defaultValue, onchange }) => {
         const dropdown = document.getElementById(id);
@@ -864,11 +859,12 @@ function initializeGuardianDropdowns() {
         }
 
         const currentValue = display.getAttribute('data-value') || defaultValue;
+        const sortedAssets = combinedAssets.sort((a, b) => a.name.localeCompare(b.name));
         const columns = [];
-        for (let i = 0; i < combinedAssets.length; i += 50) {
-            columns.push(combinedAssets.slice(i, i + 50));
+        for (let i = 0; i < sortedAssets.length; i += 50) {
+            columns.push(sortedAssets.slice(i, i + 50));
         }
-        columns[0] = [{ name: 'XRP', hex: 'XRP', issuer: '' }].concat(columns[0] || []);
+        columns[0] = [{ name: 'XRP', hex: 'XRP', issuer: '', isLP: false }].concat(columns[0] || []);
 
         grid.innerHTML = '';
         const gridContainer = document.createElement('div');
@@ -879,16 +875,38 @@ function initializeGuardianDropdowns() {
             column.forEach(asset => {
                 const li = document.createElement('li');
                 li.className = 'asset-option';
-                li.textContent = asset.name;
+                const ticker = asset.name.startsWith('$') ? asset.name : `$${asset.name}`;
+                const iconSrc = asset.name === 'XRP' ? './icons/XRP.png' : `./icons/${ticker}-${asset.issuer}.png`;
+                const img = document.createElement('img');
+                img.src = iconSrc;
+                img.alt = asset.name;
+                img.className = 'asset-icon';
+                img.onerror = function() {
+                    this.src = './icons/XRP.png';
+                };
+                li.appendChild(img);
+                const textNode = document.createTextNode(` ${asset.name}`);
+                li.appendChild(textNode);
                 li.dataset.value = asset.name;
                 li.dataset.hex = asset.hex || 'XRP';
                 li.dataset.issuer = asset.issuer || '';
+                li.dataset.isLp = asset.isLP || false;
                 li.onclick = () => {
-                    display.textContent = asset.name;
+                    display.innerHTML = '';
+                    const selectedImg = document.createElement('img');
+                    selectedImg.src = iconSrc;
+                    selectedImg.alt = asset.name;
+                    selectedImg.className = 'asset-icon';
+                    selectedImg.onerror = function() {
+                        this.src = './icons/XRP.png';
+                    };
+                    display.appendChild(selectedImg);
+                    display.appendChild(document.createTextNode(` ${asset.name}`));
                     display.setAttribute('data-value', asset.name);
                     display.setAttribute('data-hex', asset.hex || 'XRP');
                     display.setAttribute('data-issuer', asset.issuer || '');
-                    document.getElementById(`${id.replace('-dropdown', '-panel')}`).style.display = 'none';
+                    const panel = document.getElementById(`${id.replace('-dropdown', '-panel')}`);
+                    if (panel) panel.style.display = 'none';
                     onchange();
                 };
                 columnUl.appendChild(li);
@@ -897,15 +915,32 @@ function initializeGuardianDropdowns() {
         });
         grid.appendChild(gridContainer);
 
-        const selectedAsset = combinedAssets.find(a => a.name === currentValue) ||
-                             (currentValue === 'XRP' ? { name: 'XRP', hex: 'XRP', issuer: '' } :
-                             (currentValue === 'Xoge' ? { name: 'Xoge', hex: '586F676500000000000000000000000000000000', issuer: 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1' } : null));
-        display.textContent = selectedAsset ? selectedAsset.name : defaultValue;
+        const selectedAsset = sortedAssets.find(a => a.name === currentValue) ||
+                             (currentValue === 'XRP' ? { name: 'XRP', hex: 'XRP', issuer: '', isLP: false } :
+                             (currentValue === '$Xoge' ? { name: '$Xoge', hex: '586F676500000000000000000000000000000000', issuer: 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1', isLP: false } : null));
+        const selectedTicker = selectedAsset && selectedAsset.name.startsWith('$') ? selectedAsset.name : selectedAsset ? `$${selectedAsset.name}` : '$Xoge';
+        const selectedIconSrc = selectedAsset && selectedAsset.name === 'XRP' ? './icons/XRP.png' : selectedAsset ? `./icons/${selectedTicker}-${selectedAsset.issuer}.png` : './icons/$Xoge-rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1.png';
+        display.innerHTML = '';
+        if (selectedAsset) {
+            const img = document.createElement('img');
+            img.src = selectedIconSrc;
+            img.alt = selectedAsset.name;
+            img.className = 'asset-icon';
+            img.onerror = function() {
+                this.src = './icons/XRP.png';
+            };
+            display.appendChild(img);
+            display.appendChild(document.createTextNode(` ${selectedAsset.name}`));
+        } else {
+            display.textContent = defaultValue;
+        }
         display.setAttribute('data-value', selectedAsset ? selectedAsset.name : defaultValue);
         display.setAttribute('data-hex', selectedAsset ? selectedAsset.hex || 'XRP' : 'XRP');
         display.setAttribute('data-issuer', selectedAsset ? selectedAsset.issuer || '' : '');
- 
+        display.setAttribute('data-is-lp', selectedAsset ? selectedAsset.isLP || false : false);
     });
+
+    logGuardian('Guardian dropdowns populated successfully.');
 }
 function updateGuardianAssetPair() {
     const asset1Display = document.getElementById('guardian-asset1-display');
@@ -923,11 +958,23 @@ function updateGuardianAssetPair() {
 
     if (asset1 && asset2 && asset1 === asset2) {
         const availableAssets = ['XRP', ...prefabAssets.map(a => a.name)].filter(a => a !== asset1);
-        const otherAsset = availableAssets.find(a => a !== 'XRP') || 'Xoge';
-        asset2Display.textContent = otherAsset;
+        const otherAsset = availableAssets.find(a => a !== 'XRP') || '$Xoge';
+        const otherAssetData = prefabAssets.find(a => a.name === otherAsset) || { name: '$Xoge', hex: '586F676500000000000000000000000000000000', issuer: 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1' };
+        const ticker = otherAsset.startsWith('$') ? otherAsset : `$${otherAsset}`;
+        const iconSrc = otherAsset === 'XRP' ? './pages/icons/XRP.png' : `./pages/icons/${ticker}-${otherAssetData.issuer}.png`;
+        asset2Display.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = iconSrc;
+        img.alt = otherAsset;
+        img.className = 'asset-icon';
+        img.onerror = function() {
+            this.src = './pages/icons/XRP.png';
+        };
+        asset2Display.appendChild(img);
+        asset2Display.appendChild(document.createTextNode(` ${otherAsset}`));
         asset2Display.setAttribute('data-value', otherAsset);
-        asset2Display.setAttribute('data-hex', prefabAssets.find(a => a.name === otherAsset)?.hex || '586F676500000000000000000000000000000000');
-        asset2Display.setAttribute('data-issuer', prefabAssets.find(a => a.name === otherAsset)?.issuer || 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1');
+        asset2Display.setAttribute('data-hex', otherAssetData.hex || '586F676500000000000000000000000000000000');
+        asset2Display.setAttribute('data-issuer', otherAssetData.issuer || 'rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1');
         logGuardian(`Adjusted Asset 2 to ${otherAsset} to avoid duplicate selection.`);
     }
 
