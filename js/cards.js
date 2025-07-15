@@ -20,6 +20,20 @@ const cardImages = [
 '17.jfif',
 '18.jfif',
 '19.jfif',
+'20.mp4',
+'21.jfif',
+'22.mp4',
+'23.mp4',
+'24.mp4',
+'25.jpg',
+'26.jpg',
+'27.jpg',
+'28.jpg',
+'29.mp4',
+'30.jpg',
+'31.mp4',
+'32.jpg',
+'33.jpg',
 ];
 
 function getRandomCardImage() {

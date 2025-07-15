@@ -1,35 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="icon" type="image/png" href="styles/test-tube-cursor.png">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Mad Lab</title>
-    <link rel="stylesheet" href="Styles.css">
-    <script src="xrpl.js"></script>
+    <link rel="stylesheet" href="Styles/Xoge.css" id="theme-stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="js/xrpl.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/argon2-bundled.min.js"></script>
     <script src="js/argon2cypher.js"></script>
 </head>
+
+
+
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+  "symbols": [
+    {
+      "proName": "BITSTAMP:XRPUSD",
+      "title": "XRP"
+    },
+    {
+      "proName": "BITSTAMP:XDCUSD",
+      "title": "XDC"
+    },
+    {
+      "proName": "COINBASE:XLMUSD",
+      "title": "XLM"
+    },
+    {
+      "proName": "COINBASE:ALGOUSD",
+      "title": "ALGO"
+    },
+    {
+      "proName": "CRYPTO:RUNEUSD",
+      "title": "Thor.Rune"
+    },
+    {
+      "proName": "BYBIT:HBARUSDT",
+      "title": "Hbar"
+    },
+    {
+      "proName": "BINANCE:BNBUSD",
+      "title": "BNB"
+    },
+    {
+      "proName": "COINBASE:ADAUSD",
+      "title": "ADA"
+    },
+    {
+      "proName": "COINBASE:AVAXUSD",
+      "title": "AVAX"
+    },
+    {
+      "proName": "BITSTAMP:BTCUSD",
+      "title": "BTC"
+    },
+    {
+      "proName": "COINBASE:LTCUSD",
+      "title": "LTC"
+    },
+    {
+      "proName": "BITSTAMP:ETHUSD",
+      "title": "ETH"
+    },
+    {
+      "proName": "TVC:GOLD",
+      "title": "Gold"
+    },
+    {
+      "proName": "TVC:SILVER",
+      "title": "Silver"
+    }
+  ],
+  "colorTheme": "dark",
+  "locale": "en",
+  "largeChartUrl": "",
+  "isTransparent": false,
+  "showSymbolLogo": true,
+  "displayMode": "adaptive"
+}
+  </script>
+</div>
+
+
+
+
 <body>
-    <div class="container">
-        
-        <div class="sidebar-left-container">
-            <div class="sidebar-left" id="account-overview">
-                <div class="section-header" onclick="toggleSection('account-overview')">
-                    <h2>Account Overview</h2>
-                    <button class="toggle-btn">▼</button>
-                </div>
-                <div class="section-content">
-                    <p id="account-address">Address: -</p>
-                    <div class="asset-grid" id="asset-grid"></div>
-                </div>
-            </div>
-            <div class="emergency-clear-container">
-                <button class="red-black-btn emergency-btn" id="emergency-clear-queue" onclick="emergencyClearQueue()">☢️☢️Emergency Clear Queue☢️☢️</button>
-                <hr class="divider-line">
-                <button class="red-black-btn emergency-btn" onclick="resetAllWalletData()">Clean Out All Wallet Data From The Lab</button>
-            </div>
-        </div>
+		<div class="container">
+			<div class="sidebar-left-container">
+				<div class="sidebar-left" id="account-overview">
+		<div class="section-header" onclick="toggleSection('account-overview')">
+			<h2>Account Overview</h2>
+			<button class="toggle-btn">▼</button>
+		</div>
+		<div class="section-content">
+			<p id="account-address">Address: -</p>
+			<div class="asset-grid" id="asset-grid"></div>
+		</div>
+		</div>
+
+        <div class="emergency-clear-container">
+			<button class="red-black-btn emergency-btn" id="emergency-clear-queue" onclick="emergencyClearQueue()">Clear Queue</button>
+			
+			<button class="red-black-btn emergency-btn" onclick="copyAccountAddress()">Copy Address</button>
+		</div>
+		 
+     	 
+		 <div class="emergency-clear-container">
+		  <div class="donation-section">
+		  <h3>Donate to Mad Lab</h3>
+				<button class="red-black-btn" onclick="prepareDonation(2, 'madlab')">2 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(5, 'madlab')">5 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(10, 'madlab')">10 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(20, 'madlab')">20 XRP</button>
+		</div>
+		</div> 
+		<div class="emergency-clear-container">
+		 <div class="giveaway-section">
+		 <h3>Community Aid Fund</h3>
+			    <button class="red-black-btn" onclick="prepareDonation(2, 'giveaway')">2 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(5, 'giveaway')">5 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(10, 'giveaway')">10 XRP</button>
+                <button class="red-black-btn" onclick="prepareDonation(20, 'giveaway')">20 XRP</button>
+		</div>
+		 	</div>
+		 
+		 
+            
+			<link rel="stylesheet" type="text/css" href="https://letsexchange.io/widget_lets.css">
+			<div class="lets-widget-container" style="margin: 10px 0; width: 100%; max-width: 480px;">
+				<div class="lets-widget" id="lets_widget_l5MhgUKY2cCgkx2J" style="max-width: 480px; height: 480px; width: 100%; box-sizing: border-box;">
+					<iframe src="https://letsexchange.io/v2/widget?affiliate_id=l5MhgUKY2cCgkx2J&is_iframe=true" width="100%" height="100%" frameBorder="0" allow="clipboard-read; clipboard-write"></iframe>
+				</div>
+			</div>
+			<iframe id="simpleswap-frame" name="SimpleSwap Widget" width="288px" height="392px" src="https://simpleswap.io/widget/2b2a2a11-c1d8-414b-9aeb-0e513619799d" frameborder="0"></iframe>
+		</div>
+			
+			
+			
+			<script src="https://letsexchange.io/init_widget.js"></script>
 
         <div class="sidebar-right-container">
             <div class="sidebar-right" id="connection-details">
@@ -39,10 +155,12 @@
                 </div>
                 <div class="section-content">
                     <select id="wss-server">
-                        <option value="wss://bold-nameless-theorem.xrp-mainnet.quiknode.pro/18a6ef4d73ae74bbe1ebaac14ed720eb5460c1e6/">Xoge MadLab Net 1</option>
-                        <option value="wss://red-alien-sheet.xrp-mainnet.quiknode.pro/e94ba53bef6b2794664278cdf61c1f12a201dd0b/">Xoge MadLab Net 2</option>
+                        <!-- <option value="wss://bold-nameless-theorem.xrp-mainnet.quiknode.pro/18a6ef4d73ae74bbe1ebaac14ed720eb5460c1e6/">Xoge MadLab Net 1</option>
+                        <option value="wss://red-alien-sheet.xrp-mainnet.quiknode.pro/e94ba53bef6b2794664278cdf61c1f12a201dd0b/">Xoge MadLab Net 2</option> -->
                         <option value="wss://s1.ripple.com">Ripple Server 1</option>
                         <option value="wss://s2.ripple.com">Ripple Server 2</option>
+						
+						
                     </select>
                     <div class="button-group">
                         <button class="green-btn" onclick="connectWebSocket()">Connect</button>
@@ -80,24 +198,34 @@
         </div>
 
         <div class="header">
-            <h1>🧪 The Mad Lab 🧪</h1>
-            <nav class="nav-bar">
-                <a href="#wallet-management" onclick="expandSection('wallet-management')">Wallet Management</a>
-                <a href="#send-transactions" onclick="expandSection('send-transactions')">Send Transactions</a>
-                <a href="#amm-swap" onclick="expandSection('amm-swap')">AMM Swap</a>
-                <a href="#trustline-management" onclick="expandSection('trustline-management')">Trustline Management</a>
-                <a href="#domain-management" onclick="expandSection('domain-management')">Domain Management</a>
-                <a href="#account-deletion" onclick="expandSection('account-deletion')">Account Deletion</a>
-                <a href="#set-regular-key" onclick="expandSection('set-regular-key')">Set Regular Key</a>
-                <a href="#escrow-transactions" onclick="expandSection('escrow-transactions')">Escrow Transactions</a>
-                <a href="#minting" onclick="expandSection('minting')">Minting</a>
-                <a href="#network-stats" onclick="expandSection('network-stats')">Network Stats</a>
-                <a href="#guardian-tools" onclick="expandSection('guardian-tools')">Guardian Tools</a>
-                <a href="#wallet-battle" onclick="expandSection('wallet-battle')">Wallet Battle</a>
-                <a href="#vanity-wallet-generator" onclick="expandSection('vanity-wallet-generator')">Vanity Wallet Generator</a>
-                <a href="#admin-tools" onclick="expandSection('admin-tools')">Admin Tools</a>
-            </nav>
-        </div>
+    <h1>🧪 The Mad Lab V9🧪</h1>
+   <nav class="nav-bar">
+    <a href="#wallet-management" onclick="expandSection('wallet-management')">Wallet Management</a>
+    <a href="#send-transactions" onclick="expandSection('send-transactions')">Send Transactions</a>
+    <a href="#amm-swap" onclick="expandSection('amm-swap')">AMM Swap</a>
+    <a href="#thorchain-swap" onclick="expandSection('thorchain-swap')">THORChain Swap</a>
+    <a href="#trustline-management" onclick="expandSection('trustline-management')">Trustline Management</a>
+    <a href="#golem" onclick="expandSection('golem')">Golem</a>
+	<a href="#heatmaps" onclick="expandSection('heatmaps')">Heatmaps</a>
+    <a href="#guardian-tools" onclick="expandSection('guardian-tools')">Guardian</a>
+    <a href="#wallet-history" onclick="expandSection('wallet-history')">Wallet History</a>
+    <a href="#domain-management" onclick="expandSection('domain-management')">Domain Management</a>
+    <a href="#account-deletion" onclick="expandSection('account-deletion')">Account Deletion</a>
+    <a href="#set-regular-key" onclick="expandSection('set-regular-key')">Set Regular Key</a>
+    <a href="#small-airdrop-transactions" onclick="expandSection('small-airdrop-transactions')">Small Airdrop</a>
+    <a href="#airdrop-transactions" onclick="expandSection('airdrop-transactions')">Large Airdrop</a>
+    <a href="#escrow-transactions" onclick="expandSection('escrow-transactions')">Escrow Transactions</a>
+    <a href="#minting" onclick="expandSection('minting')">Minting</a>
+    <a href="#admin-tools" onclick="expandSection('admin-tools')">Admin Tools</a>
+    <a href="#network-stats" onclick="expandSection('network-stats')">Network Stats</a>
+    <a href="#wallet-battle" onclick="expandSection('wallet-battle')">Wallet Battle</a>
+    <a href="#vanity-wallet-generator" onclick="expandSection('vanity-wallet-generator')">Vanity Wallet Generator</a>
+    <a href="#amazon-store" onclick="expandSection('amazon-store')">Amazon Affiliate Store</a>
+</nav>
+
+<label>I take a highly selective approach to fees, ensuring none are imposed across ML services—beyond minimal requirements from external providers. This includes no charges for our AMM, swaps, asset or account creation, or administrative controls. Instead of extra percentages that can erode your gains on other platforms or wallets, I encourage voluntary donations to support my work. I do earn a commission via the Amazon store, without affecting your purchase price. Your interests always come first: by avoiding typical 1% swap fees and enjoying optimal slippage, you retain more of your profits—and may choose to contribute from those savings. Even in tougher trading moments, our fee-free model respects your risks and rewards. For instance, a 1% fee on a 10% gain trade claims 10% of your profit—details like this drive our commitment to zero fees, extending even to cross-chain bridges via Thorchain. Thank you for any support you provide.</label>
+
+
 
 
         <div class="password-modal-overlay" id="passwordModal" style="display: none;">
@@ -178,107 +306,141 @@
             </div>
         </div>
 
-        <div class="section minimized" id="send-transactions">
-            <div class="section-header" onclick="toggleSection('send-transactions')">
-                <h2>Send Transactions</h2>
-                <button class="toggle-btn">▼</button>
-            </div>
-            <div class="section-content">
-                <div class="section-description">
-                    <h3 style="color: #00cc00;">Send Transactions Overview</h3>
-                    <p>You may perform normal sending operations in this section. Send is a single transaction and megasend is there just for fun, but will send 5 times the exactly set transaction details. Megasend is fairly useless unless you want to be sure the counterparty notices the transaction and memo, just be sure to split the value you aim to send to 20% of the total intended.</p>
-                </div>
-                <hr class="divider-line">
-                <div class="transaction-options">
-                    <h3>Transaction Details</h3>
-                    <div class="input-group">
-                        <label for="send-asset-dropdown">Asset to Send:</label>
-                        <div class="custom-dropdown" id="send-asset-dropdown">
-                            <div class="dropdown-trigger" onclick="toggleDropdown('send-asset-dropdown')">
-                                <span id="send-asset-display">Select Asset</span>
-                                <span class="dropdown-arrow">▼</span>
-                            </div>
-                            <div class="dropdown-panel" id="send-asset-panel" style="display: none;">
-                                <div class="asset-grid" id="send-asset-grid"></div>
-                            </div>
-                        </div>
+<div class="section minimized" id="send-transactions">
+    <div class="section-header" onclick="toggleSection('send-transactions')">
+        <h2>Send Transactions</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Send Transactions Overview</h3>
+            <p>You may perform normal sending operations in this section. Send is a single transaction and megasend is there just for fun, but will send 5 times the exactly set transaction details. Megasend is fairly useless unless you want to be sure the counterparty notices the transaction and memo, just be sure to split the value you aim to send to 20% of the total intended.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="transaction-options">
+            <h3>Transaction Details</h3>
+            <div class="input-group">
+                <label for="send-asset-dropdown">Asset to Send:</label>
+                <div class="custom-dropdown" id="send-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('send-asset-dropdown')">
+                        <span id="send-asset-display">Select Asset</span>
+                        <span class="dropdown-arrow">▼</span>
                     </div>
-                    <div class="input-group">
-                        <label for="send-destination">Destination Address:</label>
-                        <input type="text" id="send-destination" placeholder="Destination Address (e.g., r...)">
+                    <div class="dropdown-panel" id="send-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="send-asset-grid"></div>
                     </div>
-                    <div class="input-group">
-                        <label for="send-amount">Amount:</label>
-                        <input type="text" id="send-amount" placeholder="Amount (e.g., 200 or 1.134891)">
-                        
-                        <div class="percentage-buttons">
-                            <button class="percentage-btn" onclick="setSendPercentage(10)">10%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(20)">20%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(30)">30%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(40)">40%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(50)">50%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(60)">60%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(70)">70%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(80)">80%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(90)">90%</button>
-                            <button class="percentage-btn" onclick="setSendPercentage(100)">100%</button>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="send-memo">Memo (Optional):</label>
-                        <input type="text" id="send-memo" placeholder="Memo (optional)">
-                    </div>
-                    <div class="input-group">
-                        <label for="send-destination-tag">Destination Tag (Optional):</label>
-                        <input type="number" id="send-destination-tag" placeholder="Destination Tag (e.g., 123456)" min="0" max="4294967295">
-                    </div>
-                    <div class="token-row">
-                        <input type="checkbox" id="schedule-tx-transactions" onchange="toggleScheduleOptions('schedule-tx-transactions', 'schedule-delay-transactions')">
-                        <label for="schedule-tx-transactions">Schedule Transaction</label>
-                        <input type="number" id="schedule-delay-transactions" placeholder="Delay (minutes)" disabled>
-                    </div>
-                    <div class="button-group">
-                        <button class="red-black-btn" id="send-tx-btn" onclick="queueTransaction()">Send</button>
-                        <button class="red-black-btn" id="mega-send-btn" onclick="queueMegaTransaction()">Mega Send x5</button>
-                        <button class="red-black-btn" onclick="checkBalance()">Check Balance</button>
-                    </div>
-                    <div class="donation-link">
-                        <p>The Mad Lab is free, will remain free forever. You may choose to donate if you feel like it.</p>
-                        <a href="#" onclick="populateDonation('rnzr1LEkDktS4N9zccNQZtMZxfWrTz4RHw'); return false;">Click Here to Send Donation to The Mad Lab!</a>
-                    </div>
-                    <p id="address-error-transactions" class="error-message"></p>
-                    <div id="transaction-queue-transactions" class="transaction-queue">
-                        <p>Transaction Queue:</p>
-                        <p>No transactions in queue.</p>
-                    </div>
-                </div>
-                <hr class="divider-line">
-                <h3>To Enable sending LP tokens: You must select the LP asset from the dropdown above in send transactions: Do not fill out any other data in send transactions, next click the button here. This will establish a trustline with the LPool. This must be done on both accounts. Once done, you may share them between the accounts with the use of the send transactions section normally.</h3> 
-                <button class="red-black-btn" onclick="enableLPReceiving()">Enable LP Transactions</button>
-                <hr class="divider-line">
-                <div class="nuke-trustline">
-                    <h3>☢️ Nuke Trustline Zone ☢️</h3>
-                    <p class="instruction-text nuke-warning">
-                        💥 <strong>DANGER:</strong> Removes trustlines by sending all balances to the issuer and setting the limit to 0. Ideal for tiny balances. <strong>XRP cannot be nuked.</strong> Use cautiously!
-                    </p>
-                    <div class="input-group">
-                        <label for="nuke-asset-dropdown">Trustline Asset to Nuke:</label>
-                        <div class="custom-dropdown" id="nuke-asset-dropdown">
-                            <div class="dropdown-trigger" onclick="toggleDropdown('nuke-asset-dropdown')">
-                                <span id="nuke-asset-display">Select Asset</span>
-                                <span class="dropdown-arrow">▼</span>
-                            </div>
-                            <div class="dropdown-panel" id="nuke-asset-panel" style="display: none;">
-                                <div class="asset-grid" id="nuke-asset-grid"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <p id="nuke-asset-balance" class="instruction-text">Current Balance: -</p>
-                    <button class="red-black-btn nuke-btn" onclick="queueNukeTrustline()">💥 Nuke Trustline 💥</button>
-                    <p id="address-error-nuke" class="error-message"></p>
                 </div>
             </div>
-        </div>        
+            <div class="input-group">
+                <label for="send-destination">Destination Address:</label>
+                <input type="text" id="send-destination" placeholder="Destination Address (e.g., r...)">
+            </div>
+            <div class="input-group">
+                <label for="send-amount">Amount:</label>
+                <input type="text" id="send-amount" placeholder="Amount (e.g., 200 or 1.134891)">
+                <div class="percentage-buttons">
+                    <button class="percentage-btn" onclick="setSendPercentage(10)">10%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(20)">20%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(30)">30%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(40)">40%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(50)">50%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(60)">60%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(70)">70%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(80)">80%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(90)">90%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(100)">100%</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="send-memo">Memo (Optional):</label>
+                <input type="text" id="send-memo" placeholder="Memo (optional)">
+            </div>
+            <div class="input-group">
+                <label for="send-destination-tag">Destination Tag (Optional):</label>
+                <input type="number" id="send-destination-tag" placeholder="Destination Tag (e.g., 123456)" min="0" max="4294967295">
+            </div>
+            <div class="token-row">
+                <input type="checkbox" id="schedule-tx-transactions" onchange="toggleScheduleOptions('schedule-tx-transactions', 'schedule-delay-transactions')">
+                <label for="schedule-tx-transactions">Schedule Transaction</label>
+                <input type="number" id="schedule-delay-transactions" placeholder="Delay (minutes)" disabled>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" id="send-tx-btn" onclick="queueTransaction()">Send</button>
+                <button class="red-black-btn" id="mega-send-btn" onclick="queueMegaTransaction()">Mega Send x5</button>
+                <button class="red-black-btn" onclick="checkBalance()">Check Balance</button>
+            </div>
+            <div class="donation-link">
+                <p>The Mad Lab is free, will remain free forever. You may choose to donate if you feel like it.</p>
+                <a href="#" onclick="populateDonation('rpnD69VR4imKrNFvQyTfz9vq25ZpPYn63A'); return false;">Click Here to Send Donation to The Mad Lab!</a>
+            </div>
+            <p id="address-error-transactions" class="error-message"></p>
+            <div id="transaction-queue-transactions" class="transaction-queue">
+                <p>Transaction Queue:</p>
+                <p>No transactions in queue.</p>
+            </div>
+        </div>
+        <hr class="divider-line">
+        <h3>To Enable sending LP tokens: You must select the LP asset from the dropdown above in send transactions: Do not fill out any other data in send transactions, next click the button here. This will establish a trustline with the LPool. This must be done on both accounts. Once done, you may share them between the accounts with the use of the send transactions section normally.</h3>
+        <button class="red-black-btn" onclick="enableLPReceiving()">Enable LP Transactions</button>
+        <hr class="divider-line">
+        <h3>To Disable sending LP tokens: Select the LP asset from the dropdown above, then click the button below to remove the trustline. Ensure any remaining LP tokens are withdrawn, TL will only close when tokens are fully drained from your amm position.</h3>
+        <button class="red-black-btn" onclick="disableLPReceiving()">Disable LP Transactions</button>
+        <hr class="divider-line">
+        <div class="nuke-trustline">
+            <h3>☢️ Nuke Trustline Zone ☢️</h3>
+            <p class="instruction-text nuke-warning">
+                💥 <strong>DANGER:</strong> Removes trustlines by sending all balances to the issuer and setting the limit to 0. Ideal for tiny balances. <strong>XRP cannot be nuked.</strong> Use cautiously!
+            </p>
+            <div class="input-group">
+                <label for="nuke-asset-dropdown">Trustline Asset to Nuke:</label>
+                <div class="custom-dropdown" id="nuke-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('nuke-asset-dropdown')">
+                        <span id="nuke-asset-display">Select Asset</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="nuke-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="nuke-asset-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <p id="nuke-asset-balance" class="instruction-text">Current Balance: -</p>
+            <button class="red-black-btn nuke-btn" onclick="queueNukeTrustline()">💥 Nuke Trustline 💥</button>
+            <p id="address-error-nuke" class="error-message"></p>
+        </div>
+    </div>
+</div>      
+
+		<div class="section minimized" id="amazon-store">
+    <div class="section-header" onclick="toggleSection('amazon-store')">
+        <h2>Amazon Affiliate Store</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Amazon Blockchain Store Overview</h3>
+            <p>Explore blockchain and crypto-related products across various categories. Click on product links to visit Amazon and make purchases. Powered by affiliate links to support The Mad Lab.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="amazon-store-controls">
+            <h3>Product Categories</h3>
+            <div class="category-tabs">
+				<button class="category-tab" onclick="showCategory('wallet')">Wallet Security</button>
+				<button class="category-tab" onclick="showCategory('hardware')">Hardware</button>
+                <button class="category-tab" onclick="showCategory('sfe')">Survival/Fitness/Everyday Carry(EDC)</button>
+				<button class="category-tab" onclick="showCategory('xrp')">Xrp</button>
+				<button class="category-tab" onclick="showCategory('toys')">Toys</button>
+				<button class="category-tab active" onclick="showCategory('xoge')">Xoge</button>
+				<button class="category-tab" onclick="showCategory('sigma')">Sigma</button>
+				<button class="category-tab" onclick="showCategory('xmojis')">Xmojis</button>
+                
+            </div>
+            <div id="amazon-products" class="product-grid">
+                
+            </div>
+            <p id="amazon-error" class="error-message"></p>
+        </div>
+			</div>
+				</div>
 
         <div class="section minimized" id="amm-swap">
             <div class="section-header" onclick="toggleSection('amm-swap')">
@@ -429,24 +591,27 @@
                         </div>
                     </div>
                     <div class="lp-subsection" id="lp-withdraw">
-                        <div class="lp-subsection-header" onclick="toggleLPSection('lp-withdraw')">
-                            <h4>Withdraw from Pool</h4>
-                            <button class="toggle-btn">▼</button>
-                        </div>
-                        <div class="lp-subsection-content">
-                            <p class="lp-description">Remove your share from the pool. Adjust the slider to set the number of LP tokens to withdraw. The pool will return assets in a balanced 50/50 value split.</p>
-                            <div class="input-group">
-                                <label for="lp-amount-withdraw">LP Tokens to Withdraw:</label>
-                                <input type="text" id="lp-amount-withdraw" placeholder="0" readonly>
-                            </div>
-                            <div class="input-group">
-                                <label for="lp-withdraw-slider">Withdraw Percentage:</label>
-                                <input type="range" id="lp-withdraw-slider" min="0" max="100" value="0">
-                                <span id="lp-withdraw-percentage">0%</span>
-                            </div>
-                            <button class="red-black-btn lp-action-btn" onclick="queueLPWithdraw()">Withdraw</button>
-                        </div>
-                    </div>
+						<div class="lp-subsection-header" onclick="toggleSubsection('lp-withdraw')">
+							<h4>Withdraw from Pool</h4>
+							<button class="toggle-btn">▼</button>
+						</div>
+						<div class="lp-subsection-content">
+							<p class="lp-description">Remove your share from the pool. Adjust the slider to set the number of LP tokens to withdraw. The pool will return assets in a balanced 50/50 value split. Use 'Withdraw All' to redeem all LP tokens and close your position.</p>
+							<div class="input-group">
+								<label for="lp-amount-withdraw">LP Tokens to Withdraw:</label>
+								<input type="text" id="lp-amount-withdraw" placeholder="0" readonly>
+							</div>
+							<div class="input-group">
+								<label for="lp-withdraw-slider">Withdraw Percentage:</label>
+								<input type="range" id="lp-withdraw-slider" min="0" max="100" value="0">
+								<span id="lp-withdraw-percentage">0%</span>
+							</div>
+							<div class="button-group">
+								<button class="red-black-btn lp-action-btn" onclick="queueLPWithdraw()">Withdraw</button>
+								<button class="red-black-btn lp-action-btn" onclick="queueLPWithdrawAll()">Withdraw All</button>
+							</div>
+						</div>
+					</div>
                     <div class="lp-subsection" id="lp-vote">
                         <div class="lp-subsection-header" onclick="toggleLPSection('lp-vote')">
                             <h4>Vote on Trading Fee</h4>
@@ -474,79 +639,280 @@
                 </div>
             </div>
         </div>
-
-        <div class="section minimized" id="guardian-tools">
-            <div class="section-header" onclick="toggleSection('guardian-tools')">
-                <h2>Guardian Tools</h2>
-                <button class="toggle-btn">▼</button>
-            </div>
-            <div class="section-content">
-                <div class="section-description">
-                    <h3 style="color: #00cc00;">Guardian Tools Overview</h3>
-                    <p>Monitor asset pairs and automatically sell Asset A to buy Asset B when the price of Asset B relative to Asset A changes by the specified percentage (e.g., -0.01% for a slight price drop). Set the balance to swap and slippage tolerance. Guardian checks prices every 60 seconds and queues transactions when conditions are met. Results are logged below and persist until page reload.</p>
-                </div>
-                <hr class="divider-line">
-                <div class="guardian-controls">
-                    <h3>Configure Guardian Rule</h3>
-                    <div class="input-group">
-                        <label>Asset A:</label>
-                        <div class="custom-dropdown" id="guardian-asset1-dropdown">
-                            <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset1-dropdown')">
-                                <span id="guardian-asset1-display">XRP</span>
-                                <span class="dropdown-arrow">▼</span>
-                            </div>
-                            <div class="dropdown-panel" id="guardian-asset1-panel" style="display: none;">
-                                <div class="asset-grid" id="guardian-asset1-grid"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Asset B:</label>
-                        <div class="custom-dropdown" id="guardian-asset2-dropdown">
-                            <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset2-dropdown')">
-                                <span id="guardian-asset2-display">Xoge</span>
-                                <span class="dropdown-arrow">▼</span>
-                            </div>
-                            <div class="dropdown-panel" id="guardian-asset2-panel" style="display: none;">
-                                <div class="asset-grid" id="guardian-asset2-grid"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-group">
-                        <button class="red-black-btn" onclick="guardianCheckPoolPrice()">Get Current Price</button>
-                    </div>
-                    <div id="guardian-pool-info" class="swap-info">
-                        <p>Current Price: -</p>
-                        <p>Starting Price: -</p>
-                    </div>
-                    <div class="input-group">
-                        <label>Price Change of Asset B (%):</label>
-                        <input type="range" id="guardian-price-slider" min="-10" max="10" step="0.01" value="0" oninput="updateGuardianPriceDisplay()">
-                        <span id="guardian-price-percentage">0.00%</span>
-                    </div>
-                    <div class="input-group">
-                        <label>Balance to Swap (%):</label>
-                        <input type="range" id="guardian-balance-slider" min="0" max="100" value="0" oninput="updateGuardianBalanceDisplay()">
-                        <span id="guardian-balance-percentage">0%</span>
-                    </div>
-                    <div class="input-group">
-                        <label>Slippage Tolerance (%):</label>
-                        <input type="range" id="guardian-slippage-slider" min="0.1" max="5" step="0.1" value="1" oninput="updateGuardianSlippageDisplay()">
-                        <span id="guardian-slippage-percentage">1.00%</span>
-                    </div>
-                    <div class="button-group">
-                        <button class="green-btn" onclick="addGuardianRule()">Confirm Rule</button>
-                    </div>
-                    <p id="guardian-error" class="error-message"></p>
-                    <div id="guardian-queue" class="transaction-queue">
-                        <p>Watched Assets:</p>
-                        <p>No assets being watched.</p>
-                    </div>
-                    <hr class="divider-line">
-                    <div class="guardian-output" id="guardian-output"></div>
-                </div>
-            </div>
+<section id="wallet-history" class="section minimized">
+    <div class="section-header" onclick="toggleSection('wallet-history')">
+        <h2>Wallet History</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <p class="section-description">View transaction history for your wallet or any XRPL address. Transactions link to XRPSCAN. Mad Lab: No Fees, We're the Good Guys!</p>
+        <div class="wallet-history-controls">
+            <label for="history-address">XRPL Address:</label>
+            <input type="text" id="history-address" placeholder="Enter XRPL address" value="">
+            <button class="green-btn" onclick="loadMyAddress()">Load My Address</button>
         </div>
+        <div class="button-group">
+            <button class="green-btn" onclick="fetchTransactionHistory()">Fetch History</button>
+            <button class="red-black-btn" onclick="clearTransactionHistory()">Clear</button>
+        </div>
+        <p id="address-error-history" class="error-message"></p>
+        <div id="transaction-history-legend" class="wallet-history-legend">
+            <p>Legend: <span class="legend-xrp">XRP (Multicolor)</span> | <span class="legend-asset">Tokens (Green)</span> | <span class="legend-trustline">Trustlines (Orange)</span> | <span class="legend-escrow">Escrow (Purple)</span> | <span class="legend-amm">AMM (Teal)</span> | <span class="legend-unclassified">Other (Gray)</span></p>
+            <p>Notation: +IN/-OUT indicates direction, +asset/-asset shows net change.</p>
+        </div>
+        <div id="account-summary" class="wallet-history-summary">
+            <h3>Account Summary</h3>
+            <p><strong>Xaman Fees Paid:</strong> 0.0 XRP</p>
+            <p><strong>Ledger Fees Paid:</strong> 0.001168 XRP</p>
+            <p><strong>Current Balance of Service Fees Account:</strong> <a href="https://xrpscan.com/account/ryouhapPYV5KNHmFUKrjNqsjxhnxvQiVt" target="_blank" class="wallet-history-address-link">2,582.017173 XRP</a></p>
+        </div>
+        <div id="transaction-total" class="wallet-history-total">
+            <p>Total to ryouhapPYV5KNHmFUKrjNqsjxhnxvQiVt: 0 XRP</p>
+        </div>
+        <div id="transaction-history" class="wallet-history-transactions">
+            <p>No transaction history loaded.</p>
+        </div>
+        <div id="service-fees-summary" class="wallet-history-fees">
+            <p>Total Fees: 0 XRP (as of 10:58 PM PDT, 06/20/2025)</p>
+        </div>
+    </div>
+</section>
+
+
+<div class="section minimized" id="golem">
+    <div class="section-header" onclick="toggleSection('golem')">
+        <h2>Golem</h2>
+        <button type="button" class="toggle-btn" aria-label="Toggle Golem section">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Golem Price Tracker Overview</h3>
+            <p>Track up to 10 XRPL token pairs with real-time AMM pool data, including price, TVL, and reserves. Monitor XRP/RLUSD for USD value. View trends, % changes, and charts. Sound alerts for price movements.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="golem-controls">
+            <h3>Add Token Pair to Track</h3>
+            <div class="input-group asset-selection">
+                <label for="golem-base-asset-display">Base Asset:</label>
+                <div class="custom-dropdown" id="golem-base-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('golem-base-asset-dropdown')" aria-label="Select base asset" aria-expanded="false">
+                        <span id="golem-base-asset-display" data-value="XRP" data-hex="XRP" data-issuer="" data-is-lp="false">
+                            <img src="./icons/XRP.png" alt="XRP" class="asset-icon"> XRP
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="golem-base-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="golem-base-asset-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">No assets available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group asset-selection">
+                <label for="golem-quote-asset-display">Quote Asset:</label>
+                <div class="custom-dropdown" id="golem-quote-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('golem-quote-asset-dropdown')" aria-label="Select quote asset" aria-expanded="false">
+                        <span id="golem-quote-asset-display" data-value="$Xoge" data-hex="586F676500000000000000000000000000000000" data-issuer="rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1" data-is-lp="false">
+                            <img src="./icons/$Xoge-rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1.png" alt="$Xoge" class="asset-icon"> $Xoge
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="golem-quote-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="golem-quote-asset-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">No assets available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="alert-threshold">Price Alert Threshold (%):</label>
+                <input type="number" id="alert-threshold" min="0.001" max="10" step="0.001" value="1.00" placeholder="0.001 to 10" aria-label="Price alert threshold percentage">
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="handleAddGolemPair()" aria-label="Add token pair">Add Pair</button>
+                <button type="button" class="red-black-btn" onclick="startGolemTracking()" aria-label="Start price tracking">Start Tracking</button>
+                <button type="button" class="red-black-btn" onclick="stopGolemTracking()" aria-label="Stop price tracking">Stop Tracking</button>
+                <button type="button" class="red-black-btn" onclick="clearGolemHistory()" aria-label="Clear tracking history">Clear History</button>
+                <button type="button" class="red-black-btn" onclick="addAccountAssetsToGolem()" aria-label="Add account assets to tracking">Add Account Assets</button>
+            </div>
+            <div class="golem-tracked-pairs">
+                <div class="golem-account-value" id="golem-account-value" style="color: #00cc00; font-size: 1rem; margin-bottom: 10px;">
+                    Current Account Value: Will populate after golem starts to work on various assets
+                </div>
+                <div class="golem-account-assets" id="golem-account-assets" style="color: #00cc00; font-size: 1rem; margin-bottom: 10px;">
+                </div>
+                <h3>Tracked Pairs</h3>
+                <div class="pair-headers">
+                    <div class="pair-header">Pair</div>
+                    <div class="pair-header">Price</div>
+                    <div class="pair-header">% Change (Initial)</div>
+                    <div class="pair-header">% Change (Last)</div>
+                    <div class="pair-header">TVL (USD)</div>
+                    <div class="pair-header">Pool Reserves</div>
+                    <div class="pair-header">Actions</div>
+                </div>
+                <div id="golem-pairs-container"></div>
+            </div>
+            <div class="golem-output">
+                <div class="button-group">
+                    <button type="button" class="red-black-btn" onclick="clearGolemAlerts()" aria-label="Clear alerts">Clear Alerts</button>
+                </div>
+                <div class="output-box" id="golem-log"></div>
+            </div>
+            <p id="golem-error" class="error-message"></p>
+        </div>
+    </div>
+</div>
+
+
+		<div class="section minimized" id="heatmaps">
+    <div class="section-header" onclick="toggleSection('heatmaps')">
+        <h2>Heatmaps</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Heatmaps Overview</h3>
+            <p>View various market heatmaps from TradingView, including Stock, ETF, Forex, and Crypto, along with real-time economic data from usdebtclock.org.</p>
+        </div>
+        
+        <h3>Crypto Coins Heatmap</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js" async>
+            {
+                "dataSource": "Crypto",
+                "blockSize": "market_cap_calc",
+                "blockColor": "24h_close_change|5",
+                "locale": "en",
+                "symbolUrl": "",
+                "colorTheme": "dark",
+                "hasTopBar": false,
+                "isDataSetEnabled": false,
+                "isZoomEnabled": true,
+                "hasSymbolTooltip": true,
+                "isMonoSize": false,
+                "width": "100%",
+                "height": "400"
+            }
+            </script>
+        </div>
+        <hr>
+
+        <h3>ETF Heatmap</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-etf-heatmap.js" async>
+            {
+                "dataSource": "AllUSEtf",
+                "blockSize": "volume",
+                "blockColor": "change",
+                "grouping": "asset_class",
+                "locale": "en",
+                "symbolUrl": "",
+                "colorTheme": "dark",
+                "hasTopBar": false,
+                "isDataSetEnabled": false,
+                "isZoomEnabled": true,
+                "hasSymbolTooltip": true,
+                "isMonoSize": false,
+                "width": "100%",
+                "height": "400"
+            }
+            </script>
+        </div>
+        <hr>
+
+        <h3>Stock Heatmap</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
+            {
+                "dataSource": "SPX500",
+                "blockSize": "market_cap_basic",
+                "blockColor": "change",
+                "grouping": "sector",
+                "locale": "en",
+                "symbolUrl": "",
+                "colorTheme": "dark",
+                "exchanges": [],
+                "hasTopBar": false,
+                "isDataSetEnabled": false,
+                "isZoomEnabled": true,
+                "hasSymbolTooltip": true,
+                "isMonoSize": false,
+                "width": "100%",
+                "height": "400"
+            }
+            </script>
+        </div>
+        <hr>
+
+        <h3>Forex Cross Rates</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js" async>
+            {
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "locale": "en",
+                "currencies": [
+                    "EUR",
+                    "USD",
+                    "JPY",
+                    "GBP",
+                    "CHF",
+                    "AUD",
+                    "CAD",
+                    "NZD",
+                    "CNY"
+                ],
+                "backgroundColor": "#0F0F0F",
+                "width": "100%",
+                "height": "400"
+            }
+            </script>
+        </div>
+        <hr>
+
+        <h3>Forex Heat Map</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-heat-map.js" async>
+            {
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "locale": "en",
+                "currencies": [
+                    "EUR",
+                    "USD",
+                    "JPY",
+                    "GBP",
+                    "CHF",
+                    "AUD",
+                    "CAD",
+                    "NZD",
+                    "CNY"
+                ],
+                "backgroundColor": "#0F0F0F",
+                "width": "100%",
+                "height": "400"
+            }
+            </script>
+        </div>
+        <hr>
+
+        <h3>U.S. National Debt Clock</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget">
+                <iframe src="https://usdebtclock.org" width="100%" height="800" frameborder="0" scrolling="yes" style="border: 1px solid #ff4444; border-radius: 8px; max-width: 100%; overflow: hidden;"></iframe>
+            </div>
+            <p style="color: #ccc; font-size: 0.8rem;">Note: This iframe displays real-time economic data from usdebtclock.org, including national debt and related metrics. Content is scaled to fit and may require scrolling if content exceeds the frame.</p>
+        </div>
+    </div>
+</div>
+
+
 
         <div class="section minimized" id="trustline-management">
             <div class="section-header" onclick="toggleSection('trustline-management')">
@@ -625,6 +991,76 @@
                 </div>
             </div>
         </div>
+
+		
+<div class="section minimized" id="thorchain-swap">
+    <div class="section-header" onclick="toggleSection('thorchain-swap')">
+        <h2>THORChain Swap</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">THORChain Swap Overview</h3>
+            <p>Bridge XRP to other chains via THORChain. Select a buy asset, and fetch a quote. Check the destination chain's wallet to confirm funds arrival.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="swap-tokens">
+            <h3>Swap Details</h3>
+            <div class="input-group">
+                <label for="thorchain_source_address">Source Address (XRP):</label>
+                <input type="text" id="thorchain_source_address" placeholder="Enter XRP Address (e.g., r...)">
+                <button class="green-btn" onclick="thorchain_loadMyAddress()">Load My Address</button>
+            </div>
+            <div class="input-group">
+                <label for="thorchain_destination_address">Destination Address:</label>
+                <input type="text" id="thorchain_destination_address" placeholder="Enter Destination Address (e.g., bc1q... for BTC)">
+            </div>
+           <div class="input-group">
+                <label for="thorchain_buy_asset">Buy Asset:</label>
+                <select id="thorchain_buy_asset">
+                    <option value="">Select Asset</option>
+                    <option value="AVAX.AVAX">AVAX</option>
+                    <option value="AVAX.USDC-0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e">AVAX.USDC</option>
+                    <option value="BASE.BASE">BASE</option>
+                    <option value="BCH.BCH">BCH</option>
+                    <option value="BNB.BNB">BNB</option>
+                    <option value="BNB.BUSD-BD1">BNB.BUSD</option>
+                    <option value="BTC.BTC">BTC</option>
+                    <option value="DOGE.DOGE">DOGE</option>
+                    <option value="ETH.ETH">ETH</option>
+                    <option value="ETH.USDC-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48">ETH.USDC</option>
+                    <option value="ETH.USDT-0xdac17f958d2ee523a2206206994597c13d831ec7">ETH.USDT</option>
+                    <option value="GAIA.ATOM">GAIA</option>
+                    <option value="LTC.LTC">LTC</option>
+                    <option value="THOR.RUNE">THOR</option>
+                </select>
+            </div>
+
+
+            <div class="input-group">
+                <label for="thorchain_sell_amount">Sell Amount (XRP):</label>
+                <input type="number" id="thorchain_sell_amount" placeholder="e.g., 10" min="0" step="any">
+            </div>
+            <div class="token-row">
+                <input type="checkbox" id="thorchain_include_tx" checked>
+                <label for="thorchain_include_tx">Include Transaction Details</label>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="thorchain_fetchQuote()">Fetch Quote</button>
+                <button class="red-black-btn" id="thorchain_execute_btn" onclick="thorchain_executeSwap()" disabled>Execute Swap</button>
+                <button class="red-black-btn" onclick="checkBalance()">Check Balance</button>
+            </div>
+            <div id="thorchain_quote_result" class="swap-result">
+                <p>Quote Result: -</p>
+            </div>
+            <p id="thorchain_error" class="error-message"></p>
+            <div id="thorchain_queue" class="transaction-queue">
+                <p>Transaction Queue:</p>
+                <p>No transactions in queue.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
         <div class="section minimized" id="account-deletion">
             <div class="section-header" onclick="toggleSection('account-deletion')">
@@ -746,7 +1182,7 @@
 
         <div class="section minimized" id="wallet-battle">
             <div class="section-header" onclick="toggleSection('wallet-battle', event)">
-                <h2>💥 Wallet Battle Simulator 💥</h2>
+                <h2>Battle</h2>
                 <button class="toggle-btn">▼</button>
             </div>
             <div class="section-content">
@@ -839,7 +1275,8 @@
                 <p id="address-error-battle" class="error-message"></p>
             </div>
         </div>
-        
+		
+				
         <div class="section minimized" id="vanity-wallet-generator">
             <div class="section-header" onclick="toggleSection('vanity-wallet-generator', event)">
                 <h2>Vanity Wallet Generator</h2>
@@ -862,8 +1299,8 @@
                         </label>
                     </div>
                     <div class="input-group" onclick="event.stopPropagation()">
-                        <label for="speed-input">Generation Speed (ms, default 50):</label>
-                        <input type="number" id="speed-input" value="50" min="1" max="5000">
+                        <label for="speed-input">Generation Speed (ms, default 20):</label>
+                        <input type="number" id="speed-input" value="20" min="1" max="5000">
                     </div>
                     <div class="button-group">
                         <button class="red-black-btn" onclick="generateVanityWallets()">Generate Wallets (10)</button>
@@ -883,7 +1320,575 @@
                 <p id="address-error-vanity" class="error-message"></p>
             </div>
         </div>
+
+
+
+
+<div class="section minimized" id="guardian-tools">
+    <div class="section-header" onclick="toggleSection('guardian-tools')">
+        <h2>Guardian</h2>
+        <button type="button" class="toggle-btn" aria-label="Toggle Guardian section">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Guardian Overview</h3>
+            <p>Set stop losses and take profit limits for XRPL token pairs using real-time AMM pool data. Monitor price changes and automatically queue swaps when thresholds are met.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="guardian-controls">
+            <h3>Set Guardian Rule</h3>
+            <div class="input-group asset-selection">
+                <label for="guardian-asset1-display">Asset to Sell (Input):</label>
+                <div class="custom-dropdown" id="guardian-asset1-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset1-dropdown')" aria-label="Select input asset" aria-expanded="false">
+                        <span id="guardian-asset1-display" data-value="XRP" data-hex="XRP" data-issuer="" data-is-lp="false">
+                            <img src="./icons/XRP.png" alt="XRP" class="asset-icon"> XRP
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="guardian-asset1-panel" style="display: none;">
+                        <div class="asset-grid" id="guardian-asset1-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">No assets available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group asset-selection">
+                <label for="guardian-asset2-display">Asset to Buy (Output):</label>
+                <div class="custom-dropdown" id="guardian-asset2-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset2-dropdown')" aria-label="Select output asset" aria-expanded="false">
+                        <span id="guardian-asset2-display" data-value="RLUSD" data-hex="524C555344000000000000000000000000000000" data-issuer="rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De" data-is-lp="false">
+                            <img src="./icons/$RLUSD-rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De.png" alt="RLUSD" class="asset-icon"> RLUSD
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="guardian-asset2-panel" style="display: none;">
+                        <div class="asset-grid" id="guardian-asset2-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">No assets available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="guardianCheckPoolPrice()" aria-label="Check pool price">Check Pool Price</button>
+            </div>
+            <div id="guardian-pool-info">
+                <p>Current Price: -</p>
+                <p>Starting Price: -</p>
+            </div>
+            <div class="input-group">
+                <label for="guardian-price-slider">Price Change Threshold (%):</label>
+                <input type="range" id="guardian-price-slider" min="-10" max="10" step="0.01" value="0" aria-label="Price change threshold">
+                <span id="guardian-price-percentage">0.00%</span>
+            </div>
+            <div class="input-group">
+                <label for="guardian-balance-slider">Balance Percentage to Sell (%):</label>
+                <input type="range" id="guardian-balance-slider" min="0" max="100" step="0.01" value="0" aria-label="Balance percentage">
+                <span id="guardian-balance-percentage">0%</span>
+            </div>
+            <div class="input-group">
+                <label for="guardian-slippage-slider">Slippage Tolerance (%):</label>
+                <input type="range" id="guardian-slippage-slider" min="0.1" max="5" step="0.01" value="1" aria-label="Slippage tolerance">
+                <span id="guardian-slippage-percentage">1.00%</span>
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="addGuardianRule()" aria-label="Add guardian rule">Add Rule</button>
+            </div>
+            <div id="guardian-queue">
+                <p>Watched Assets:</p>
+                <p>No assets being watched.</p>
+            </div>
+            <div class="guardian-output">
+                <div class="output-box" id="guardian-output"></div>
+            </div>
+            <p id="guardian-error" class="error-message"></p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="section minimized" id="small-airdrop-transactions">
+    <div class="section-header" onclick="toggleSection('small-airdrop-transactions')">
+        <h2>Small Airdrop ~ UNDER 3,000 Transactions to process // Uses loaded account to deploy</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Small Airdrop Overview</h3>
+            <p>Distribute XRP or tokens to up to 3,000 trustline holders using your master wallet directly, without temporary accounts. This is optimized for smaller airdrops to reduce setup costs and encryption overhead.</p>
+            <p style="color: #ff4444;"><strong>Important:</strong> Transactions are sent in batches of 100 to minimize browser lag from Argon2 encryption/decryption. Ensure your wallet has sufficient XRP for fees (0.00001 XRP per transaction).</p>
+            <ol style="text-align: left; font-size: 0.7rem; color: #ccc;">
+                <li><strong>Step 1</strong>: In "Build Trustline List," select one or two tokens to scan their trustlines and download a single CSV file containing all trustline holders.</li>
+                <li><strong>Step 2</strong>: In "Execute Small Airdrop," select the asset to airdrop, load the CSV file, configure the amount (flat or percentage-based), and start the airdrop. Transactions will be sent from your master wallet in batches.</li>
+                <li><strong>Step 3</strong>: Monitor progress and download results when complete.</li>
+            </ol>
+        </div>
+        <hr class="divider-line">
+        <div class="lp-subsection minimized" id="small-airdrop-build-trustlines">
+            <div class="lp-subsection-header" onclick="toggleSubsection('small-airdrop-build-trustlines')">
+                <h4>Build Trustline List</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p>Select one or two tokens to scan their issuers’ trustlines and download a single CSV file listing all trustline holders and their balances. Use the second token (optional) to filter for addresses holding trustlines to both tokens. Select XRP in the second dropdown to revert to single-token scanning.</p>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-trustline-asset-dropdown">Primary Token to Scan Trustlines:</label>
+                    <div class="custom-dropdown" id="small-airdrop-trustline-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-trustline-asset-dropdown')">
+                            <span id="small-airdrop-trustline-asset-display">Select Token</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-trustline-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-trustline-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-trustline-asset-dropdown-2">Secondary Token to Scan Trustlines (Optional):</label>
+                    <div class="custom-dropdown" id="small-airdrop-trustline-asset-dropdown-2">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-trustline-asset-dropdown-2')">
+                            <span id="small-airdrop-trustline-asset-display-2">XRP</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-trustline-asset-panel-2" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-trustline-asset-grid-2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-recipients">Trustline Holders (Total: <span id="small-trustline-count">0</span>):</label>
+                    <textarea id="small-airdrop-recipients" rows="5" readonly placeholder="Click 'Fetch Trustlines' to populate..."></textarea>
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-fetch-progress">Progress: -</p>
+                    <div class="progress-bar" id="small-airdrop-progress-bar">
+                        <div class="progress-bar-fill" id="small-airdrop-progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-fetch-trustlines-btn" onclick="fetchSmallAirdropTrustlines()">
+                        <span id="small-fetch-trustlines-text">Fetch Trustlines</span>
+                        <span id="small-fetch-trustlines-spinner" style="display: none;">⏳</span>
+                    </button>
+                    <button class="red-black-btn" id="small-remove-zero-balance-btn" onclick="removeSmallZeroBalanceTrustlines()" disabled>Remove 0-Balance Trustlines</button>
+                    <button class="red-black-btn" id="small-download-trustline-csv-btn" onclick="downloadSmallTrustlineCSV()" disabled>Download Trustline CSV</button>
+                    <button class="red-black-btn" id="small-download-trustline-csv-with-zeros-btn" onclick="downloadSmallFullTrustlineCSV()" disabled>Download Trustline CSV (With 0s)</button>
+                </div>
+                <p id="small-address-error-build-trustlines" class="error-message"></p>
+                <div class="trustline-stats">
+                    <h4>Token Distribution Stats</h4>
+                    <div class="top-holders">
+                        <h5>Top 10 Holders (Primary Token)</h5>
+                        <ul id="small-top-holders-list">
+                            <li>No data available yet. Fetch trustlines to see the top holders.</li>
+                        </ul>
+                        <p id="small-top-10-percentage" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart">
+                        <h5>Distribution Pie Chart (Primary Token)</h5>
+                        <canvas id="small-trustline-distribution-chart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="small-top-holders-secondary" style="display: none;">
+                        <h5>Top 10 Holders (Secondary Token)</h5>
+                        <ul id="small-top-holders-list-secondary">
+                            <li>No secondary token selected.</li>
+                        </ul>
+                        <p id="small-top-10-percentage-secondary" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart" id="small-distribution-chart-secondary" style="display: none;">
+                        <h5>Distribution Pie Chart (Secondary Token)</h5>
+                        <canvas id="small-trustline-distribution-chart-secondary" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="small-top-holders-merged" style="display: none;">
+                        <h5>Top 10 Holders (Merged Trustlines)</h5>
+                        <ul id="small-top-holders-list-merged">
+                            <li>No merged data available.</li>
+                        </ul>
+                        <p id="small-top-10-percentage-merged" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart" id="small-distribution-chart-merged" style="display: none;">
+                        <h5>Distribution Pie Chart (Merged Trustlines)</h5>
+                        <canvas id="small-trustline-distribution-chart-merged" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lp-subsection minimized" id="small-airdrop-execute">
+            <div class="lp-subsection-header" onclick="toggleSubsection('small-airdrop-execute')">
+                <h4>Execute Small Airdrop</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p style="color: #ff4444;"><strong>Warnings:</strong></p>
+                    <ul style="text-align: left; color: #ff4444; font-size: 0.7rem;">
+                        <li><strong>Browser Performance:</strong> Transactions are sent in batches of 100 to reduce lag from encryption/decryption. Avoid running other heavy tasks in the browser during the airdrop.</li>
+                        <li><strong>Trustlines Required:</strong> For token airdrops, recipients must have trustlines to the asset, or transactions will fail.</li>
+                        <li><strong>Master Wallet Security:</strong> Your master wallet’s seed is used securely and cleared after each batch to prevent exposure.</li>
+                    </ul>
+                    <p>Select the asset to airdrop, load the trustline CSV file, configure the amount, and start the airdrop. Transactions will be sent from your master wallet in batches of 100.</p>
+                    <p style="color: #00cc00;"><strong>Note:</strong> For percentage-based airdrops, the percentage is calculated using the balance of the primary token selected in "Build Trustline List."</p>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-asset-dropdown">Asset to Airdrop:</label>
+                    <div class="custom-dropdown" id="small-airdrop-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-asset-dropdown')">
+                            <span id="small-airdrop-asset-display">Select Asset</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-asset-balance">Balance: -</p>
+                </div>
+                <div class="input-group">
+                    <label>Load Trustline CSV File:</label>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('small-airdrop-csv-file').click()">Load CSV</button>
+                        <input type="file" id="small-airdrop-csv-file" accept=".csv" onchange="loadSmallAirdropCSV(event)" style="display: none;">
+                        <span id="small-airdrop-csv-file-name" class="file-name">No file chosen</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Distribution Method:</label>
+                    <div class="token-row">
+                        <input type="radio" id="small-airdrop-flat" name="small-airdrop-method" value="flat" checked>
+                        <label for="small-airdrop-flat">Flat Amount (e.g., 10 XRP or tokens)</label>
+                        <input type="radio" id="small-airdrop-percentage" name="small-airdrop-method" value="percentage">
+                        <label for="small-airdrop-percentage">Percentage-Based (e.g., 100% of primary token balances)</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-amount">Amount per Address (or Percentage):</label>
+                    <input type="text" id="small-airdrop-amount" placeholder="e.g., 10 or 100">
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-memo">Memo (Optional):</label>
+                    <input type="text" id="small-airdrop-memo" placeholder="Memo (optional)">
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-destination-tag">Destination Tag (Optional):</label>
+                    <input type="number" id="small-airdrop-destination-tag" placeholder="Destination Tag (e.g., 123456)" min="0" max="4294967295">
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-cost">Total Cost: -</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-queue-airdrop-btn" onclick="queueSmallAirdropTransactions()" disabled>Start Airdrop</button>
+                    <button class="red-black-btn" id="small-stop-airdrop-btn" onclick="stopSmallAirdrop()" disabled>Stop Airdrop</button>
+                    <button class="red-black-btn" onclick="checkBalance()">Check Balance</button>
+                </div>
+                <p id="small-address-error-execute-airdrop" class="error-message"></p>
+                <div id="small-airdrop-queue" class="transaction-queue">
+                    <p>Transaction Queue:</p>
+                    <p>No transactions in queue.</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-download-results-btn" onclick="downloadSmallAirdropResults()" disabled>Download Airdrop Results</button>
+                    <button class="red-black-btn" id="small-download-details-btn" onclick="downloadSmallAirdropDetails()" disabled>Download Airdrop Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
         
+<div class="section minimized" id="airdrop-transactions">
+    <div class="section-header" onclick="toggleSection('airdrop-transactions')">
+		<h2>Large Airdrop ~ OVER 3,000 Transactions to process // Uses temporary accounts to deploy</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Advanced-Airdrop 3,000+ Trustlines</h3>
+            
+			<p></p>
+			<p style="color: #880808;">Warning: Take this seriously, ensure you are on a private unlimited WSS you control or a Ripple WSS when exceeding 5,000 Trustlines as the quicknode free wss tend to disconnect around 6,000 Trustlines and cause for incomplete distributions. In time, with funding Mad Lab may have unlimited WSS, be sure to help by doing donations when you can ~ funding aids in making the backend.</p>
+			<p></p>
+			
+			<p>Distribute XRP or tokens to trustline holders using 5 temporary accounts for parallel processing. Follow these steps:</p>
+            <ol style="text-align: left; font-size: 0.7rem; color: #ccc;">
+                <li><strong>Step 1</strong>: In "Build Trustline List," select one or two tokens to scan their trustlines and download 5 CSV files, each containing 1/5th of the trustline holders.</li>
+                <li><strong>Step 2</strong>: In "Execute Airdrop," select the asset to airdrop, load the 5 trustline CSV files, configure the amount (flat or percentage of trustline balances), and start the airdrop. Temporary accounts will be created, funded, and used to process the airdrop in parallel.</li>
+                <li><strong>Step 3</strong>: Monitor the progress of each temporary account. Once complete, accounts will self-delete, returning remaining XRP to your wallet.</li>
+            </ol>
+        </div>
+        <hr class="divider-line">
+        <div class="lp-subsection minimized" id="airdrop-build-trustlines">
+            <div class="lp-subsection-header" onclick="toggleSubsection('airdrop-build-trustlines')">
+                <h4>Build Trustline List</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p>Select one or two tokens to scan their issuers’ trustlines and download 5 CSV files, each listing 1/5th of the trustline holders and their balances. Use the second token (optional) to filter for addresses holding trustlines to both tokens. Select XRP in the second dropdown to deselect and revert to single-token scanning.</p>
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-trustline-asset-dropdown">Primary Token to Scan Trustlines:</label>
+                    <div class="custom-dropdown" id="airdrop-trustline-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-trustline-asset-dropdown')">
+                            <span id="airdrop-trustline-asset-display">Select Token</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="airdrop-trustline-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="airdrop-trustline-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-trustline-asset-dropdown-2">Secondary Token to Scan Trustlines (Optional):</label>
+                    <div class="custom-dropdown" id="airdrop-trustline-asset-dropdown-2">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-trustline-asset-dropdown-2')">
+                            <span id="airdrop-trustline-asset-display-2">XRP</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="airdrop-trustline-asset-panel-2" style="display: none;">
+                            <div class="asset-grid" id="airdrop-trustline-asset-grid-2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-recipients">Trustline Holders (Total: <span id="trustline-count">0</span>):</label>
+                    <textarea id="airdrop-recipients" rows="5" readonly placeholder="Click 'Fetch Trustlines' to populate..."></textarea>
+                </div>
+                <div class="input-group">
+                    <p id="airdrop-fetch-progress">Progress: -</p>
+                    <div class="progress-bar" id="airdrop-progress-bar">
+                        <div class="progress-bar-fill" id="airdrop-progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="fetch-trustlines-btn" onclick="fetchTrustlines()">
+                        <span id="fetch-trustlines-text">Fetch Trustlines</span>
+                        <span id="fetch-trustlines-spinner" style="display: none;">⏳</span>
+                    </button>
+                    <button class="red-black-btn" id="remove-zero-balance-btn" onclick="removeZeroBalanceTrustlines()" disabled>Remove 0-Balance Trustlines</button>
+                    <button class="red-black-btn" id="download-trustline-csv-btn" onclick="downloadTrustlineCSV()" disabled>Download 5 Trustline CSVs</button>
+                    <button class="red-black-btn" id="download-trustline-csv-with-zeros-btn" onclick="downloadFullTrustlineCSV()" disabled>Download 5 Trustline CSVs (With 0s)</button>
+                </div>
+                <p id="address-error-build-trustlines" class="error-message"></p>
+                <div class="trustline-stats">
+                    <h4>Token Distribution Stats</h4>
+                    <div class="top-holders">
+                        <h5>Top 10 Holders (Primary Token)</h5>
+                        <ul id="top-holders-list">
+                            <li>No data available yet. Fetch trustlines to see the top holders.</li>
+                        </ul>
+                        <p id="top-10-percentage" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart">
+                        <h5>Distribution Pie Chart (Primary Token)</h5>
+                        <canvas id="trustline-distribution-chart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="top-holders-secondary" style="display: none;">
+                        <h5>Top 10 Holders (Secondary Token)</h5>
+                        <ul id="top-holders-list-secondary">
+                            <li>No secondary token selected.</li>
+                        </ul>
+                        <p id="top-10-percentage-secondary" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart" id="distribution-chart-secondary" style="display: none;">
+                        <h5>Distribution Pie Chart (Secondary Token)</h5>
+                        <canvas id="trustline-distribution-chart-secondary" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="top-holders-merged" style="display: none;">
+                        <h5>Top 10 Holders (Merged Trustlines)</h5>
+                        <ul id="top-holders-list-merged">
+                            <li>No merged data available.</li>
+                        </ul>
+                        <p id="top-10-percentage-merged" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Total % Held by Top 10 Holders: -</p>
+                    </div>
+                    <div class="distribution-chart" id="distribution-chart-merged" style="display: none;">
+                        <h5>Distribution Pie Chart (Merged Trustlines)</h5>
+                        <canvas id="trustline-distribution-chart-merged" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lp-subsection minimized" id="airdrop-execute">
+            <div class="lp-subsection-header" onclick="toggleSubsection('airdrop-execute')">
+                <h4>Execute Airdrop</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p style="color: #ff4444;"><strong>Warnings:</strong></p>
+                    <ul style="text-align: left; color: #ff4444; font-size: 0.7rem;">
+                        <li><strong>Account Maturity:</strong> Temporary accounts must be mature (used in enough transactions, typically after 256 ledgers) to delete. Small airdrops may not generate enough activity, leaving accounts undeletable until matured later.</li>
+                        <li><strong>Small Airdrop Risk:</strong> Airdrops with fewer than 3,000 trustlines may result in stale accounts*USE THE SMALL TOOL*, each costing 1+ XRP to maintain. Consider this tool for larger airdrops to ensure cost-effectiveness.</li>
+                        <li><strong>Asset Selection:</strong> Select the correct asset to airdrop and clean up its trustlines during deletion. Incorrect selection may leave trustlines active, preventing account deletion.</li>
+                    </ul>
+                    <p>Select the asset to airdrop, load the 5 trustline CSV files, configure the amount, and start the airdrop. Five temporary accounts will process the airdrop in parallel.</p>
+                    <p style="color: #ff4444;"><strong>Important:</strong> This process requires a minimum balance of 12 XRP in your wallet. 10 XRP will be used to create and fund 5 temporary accounts (2 XRP each), with an additional 2 XRP buffer for fees. Most of this XRP will be refunded to your wallet after the temporary accounts are deleted.</p>
+                    <p style="color: #00cc00;"><strong>Note:</strong> For percentage-based airdrops, the percentage is calculated using the balance of the primary token selected in "Build Trustline List."</p>
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-asset-dropdown">Asset to Airdrop:</label>
+                    <div class="custom-dropdown" id="airdrop-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-asset-dropdown')">
+                            <span id="airdrop-asset-display">Select Asset</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="airdrop-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="airdrop-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <p id="airdrop-asset-balance">Balance: -</p>
+                </div>
+                <div class="input-group">
+                    <label>Load 5 Trustline CSV Files:</label>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-1').click()">Load CSV 1</button>
+                        <input type="file" id="airdrop-csv-file-1" accept=".csv" onchange="loadAirdropCSV(event, 1)" style="display: none;">
+                        <span id="airdrop-csv-file-name-1" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-2').click()">Load CSV 2</button>
+                        <input type="file" id="airdrop-csv-file-2" accept=".csv" onchange="loadAirdropCSV(event, 2)" style="display: none;">
+                        <span id="airdrop-csv-file-name-2" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-3').click()">Load CSV 3</button>
+                        <input type="file" id="airdrop-csv-file-3" accept=".csv" onchange="loadAirdropCSV(event, 3)" style="display: none;">
+                        <span id="airdrop-csv-file-name-3" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-4').click()">Load CSV 4</button>
+                        <input type="file" id="airdrop-csv-file-4" accept=".csv" onchange="loadAirdropCSV(event, 4)" style="display: none;">
+                        <span id="airdrop-csv-file-name-4" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-5').click()">Load CSV 5</button>
+                        <input type="file" id="airdrop-csv-file-5" accept=".csv" onchange="loadAirdropCSV(event, 5)" style="display: none;">
+                        <span id="airdrop-csv-file-name-5" class="file-name">No file chosen</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Distribution Method:</label>
+                    <div class="token-row">
+                        <input type="radio" id="airdrop-flat" name="airdrop-method" value="flat" checked>
+                        <label for="airdrop-flat">Flat Amount (e.g., 10 XRP or tokens)</label>
+                        <input type="radio" id="airdrop-percentage" name="airdrop-method" value="percentage">
+                        <label for="airdrop-percentage">Percentage-Based (e.g., 100% of primary token balances)</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-amount">Amount per Address (or Percentage):</label>
+                    <input type="text" id="airdrop-amount" placeholder="e.g., 10 or 100">
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-memo">Memo (Optional):</label>
+                    <input type="text" id="airdrop-memo" placeholder="Memo (optional)">
+                </div>
+                <div class="input-group">
+                    <label for="airdrop-destination-tag">Destination Tag (Optional):</label>
+                    <input type="number" id="airdrop-destination-tag" placeholder="Destination Tag (e.g., 123456)" min="0" max="4294967295">
+                </div>
+                <div class="input-group">
+                    <p id="airdrop-cost">Total Cost: -</p>
+                    <p id="airdrop-additional-cost">Additional Cost: ~1.25 XRP for creating/deleting 5 temporary accounts</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="queue-airdrop-btn" onclick="queueAirdropTransactions()" disabled>Start Airdrop</button>
+                    <button class="red-black-btn" id="stop-airdrop-btn" onclick="stopAirdrop()" disabled>Stop Airdrop</button>
+                    <button class="red-black-btn" onclick="checkBalance()">Check Balance</button>
+                </div>
+                <p id="address-error-execute-airdrop" class="error-message"></p>
+                <div class="temp-accounts">
+                    <h4>Temporary Accounts</h4>
+                    <div class="temp-account" id="temp-account-1">
+                        <h5>Account 1</h5>
+                        <p><strong>Address:</strong> <span id="temp-account-address-1">-</span></p>
+                        <p><strong>Seed:</strong> <span id="temp-account-seed-1">-</span></p>
+                        <div id="temp-account-qr-1" style="margin: 10px 0;"></div>
+                        <p><strong>Progress:</strong> <span id="temp-account-progress-1">Not started</span></p>
+                        <p><strong>Final Report:</strong> <span id="temp-account-report-1">-</span></p>
+                    </div>
+                    <div class="temp-account" id="temp-account-2">
+                        <h5>Account 2</h5>
+                        <p><strong>Address:</strong> <span id="temp-account-address-2">-</span></p>
+                        <p><strong>Seed:</strong> <span id="temp-account-seed-2">-</span></p>
+                        <div id="temp-account-qr-2" style="margin: 10px 0;"></div>
+                        <p><strong>Progress:</strong> <span id="temp-account-progress-2">Not started</span></p>
+                        <p><strong>Final Report:</strong> <span id="temp-account-report-2">-</span></p>
+                    </div>
+                    <div class="temp-account" id="temp-account-3">
+                        <h5>Account 3</h5>
+                        <p><strong>Address:</strong> <span id="temp-account-address-3">-</span></p>
+                        <p><strong>Seed:</strong> <span id="temp-account-seed-3">-</span></p>
+                        <div id="temp-account-qr-3" style="margin: 10px 0;"></div>
+                        <p><strong>Progress:</strong> <span id="temp-account-progress-3">Not started</span></p>
+                        <p><strong>Final Report:</strong> <span id="temp-account-report-3">-</span></p>
+                    </div>
+                    <div class="temp-account" id="temp-account-4">
+                        <h5>Account 4</h5>
+                        <p><strong>Address:</strong> <span id="temp-account-address-4">-</span></p>
+                        <p><strong>Seed:</strong> <span id="temp-account-seed-4">-</span></p>
+                        <div id="temp-account-qr-4" style="margin: 10px 0;"></div>
+                        <p><strong>Progress:</strong> <span id="temp-account-progress-4">Not started</span></p>
+                        <p><strong>Final Report:</strong> <span id="temp-account-report-4">-</span></p>
+                    </div>
+                    <div class="temp-account" id="temp-account-5">
+                        <h5>Account 5</h5>
+                        <p><strong>Address:</strong> <span id="temp-account-address-5">-</span></p>
+                        <p><strong>Seed:</strong> <span id="temp-account-seed-5">-</span></p>
+                        <div id="temp-account-qr-5" style="margin: 10px 0;"></div>
+                        <p><strong>Progress:</strong> <span id="temp-account-progress-5">Not started</span></p>
+                        <p><strong>Final Report:</strong> <span id="temp-account-report-5">-</span></p>
+                    </div>
+                </div>
+                <div id="airdrop-queue" class="transaction-queue">
+                    <p>Transaction Queue:</p>
+                    <p>No transactions in queue.</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="download-results-btn" onclick="downloadAirdropResults()" disabled>Download Airdrop Results</button>
+                    <button class="red-black-btn" id="download-details-btn" onclick="downloadAirdropDetails()" disabled>Download Airdrop Details</button>
+                </div>
+                <p style="color: #ff4444;"><strong>Important:</strong> If the airdrop fails, you may load the accounts here to clean them out/delete them for the account delete refunds. Ensure the correct asset is selected at the top to clean up trustlines before deletion.</p>
+                <div class="input-group">
+                    <label>Load 5 Temporary Account JSON Files:</label>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-1').click()">Load JSON 1</button>
+                        <input type="file" id="temp-account-json-1" accept=".json" onchange="loadTempAccountJSON(event, 1)" style="display: none;">
+                        <span id="temp-account-json-name-1" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-2').click()">Load JSON 2</button>
+                        <input type="file" id="temp-account-json-2" accept=".json" onchange="loadTempAccountJSON(event, 2)" style="display: none;">
+                        <span id="temp-account-json-name-2" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-3').click()">Load JSON 3</button>
+                        <input type="file" id="temp-account-json-3" accept=".json" onchange="loadTempAccountJSON(event, 3)" style="display: none;">
+                        <span id="temp-account-json-name-3" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-4').click()">Load JSON 4</button>
+                        <input type="file" id="temp-account-json-4" accept=".json" onchange="loadTempAccountJSON(event, 4)" style="display: none;">
+                        <span id="temp-account-json-name-4" class="file-name">No file chosen</span>
+                    </div>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-5').click()">Load JSON 5</button>
+                        <input type="file" id="temp-account-json-5" accept=".json" onchange="loadTempAccountJSON(event, 5)" style="display: none;">
+                        <span id="temp-account-json-name-5" class="file-name">No file chosen</span>
+                    </div>
+                </div>
+                <button class="red-black-btn" id="shred-accounts-btn" onclick="shredAccounts()">Shred Accounts</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+		
         <div class="section minimized" id="escrow-transactions">
             <div class="section-header" onclick="toggleSection('escrow-transactions')">
                 <h2>Self-Escrow</h2>
@@ -1097,7 +2102,63 @@
                 <div id="admin-queue" class="transaction-queue"></div>
             </div>
         </div>
+			
+						
+			<div class="tradingview-widget-container">
+			  <div class="tradingview-widget-container__widget"></div>
+			  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+			  {
+			  "lineWidth": 2,
+			  "lineType": 0,
+			  "chartType": "area",
+			  "fontColor": "rgb(106, 109, 120)",
+			  "gridLineColor": "rgba(242, 242, 242, 0.06)",
+			  "volumeUpColor": "rgba(34, 171, 148, 0.5)",
+			  "volumeDownColor": "rgba(247, 82, 95, 0.5)",
+			  "backgroundColor": "#0F0F0F",
+			  "widgetFontColor": "#DBDBDB",
+			  "upColor": "#22ab94",
+			  "downColor": "#f7525f",
+			  "borderUpColor": "#22ab94",
+			  "borderDownColor": "#f7525f",
+			  "wickUpColor": "#22ab94",
+			  "wickDownColor": "#f7525f",
+			  "colorTheme": "dark",
+			  "isTransparent": false,
+			  "locale": "en",
+			  "chartOnly": false,
+			  "scalePosition": "right",
+			  "scaleMode": "Normal",
+			  "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+			  "valuesTracking": "1",
+			  "changeMode": "price-and-percent",
+			  "symbols": [
+				[
+				  "COINBASE:XRPUSD|1M"
+				]
+			  ],
+			  "dateRanges": [
+				"1d|1",
+				"1m|30",
+				"3m|60",
+				"12m|1D",
+				"60m|1W",
+				"all|1M"
+			  ],
+			  "fontSize": "10",
+			  "headerFontSize": "medium",
+			  "autosize": true,
+			  "width": "100%",
+			  "height": "400",
+			  "noTimeScale": false,
+			  "hideDateRanges": false,
+			  "hideMarketStatus": false,
+			  "hideSymbolLogo": false
+			}
+			  </script>
+			</div>
 
+			
         <footer class="footer">
             <p>
                 🧪 <strong>The Mad Lab</strong> is a powerful, free tool for managing XRPL wallets, sending transactions, performing AMM swaps, managing trustlines, minting tokens, and more. Created by <a href="https://x.com/ClassyXoge" target="_blank">@ClassyXoge with help from the XRPL memespace.</a> on X.com for the XRPL, the tools are designed for the mad lads of the memespace but available to all with no terms—use it as you wish.<br><br>
@@ -1107,17 +2168,23 @@
             <a href="https://www.freecounterstat.com" title="web counter code"><img src="https://counter4.optistats.ovh/private/freecounterstat.php?c=uztwrewy8g6gpuk7yw96uxhfmxjchmut" border="0" title="web counter code" alt="web counter code"></a>
         </footer>
     </div>
-
-    <script src="script.js?v=5"></script>
-    <script src="extendedscripts.js?v=5"></script>
-    <script src="lp.js"></script>
-    <script src="escrow.js"></script>
-    <script src="minting.js"></script>
-    <script src="admin.js"></script>
-    <script src="guardian.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/chart.js"></script>
+	<script src="js/extendedscripts.js?v=5"></script>
+    <script src="js/lp.js"></script>
+    <script src="js/escrow.js"></script>
+    <script src="js/minting.js"></script>
+    <script src="js/admin.js"></script>
+	<script src="js/golem.js"></script>
     <script src="js/battle.js"></script>
 	<script src="js/cards.js"></script>
-    <script src="vanity.js"></script>
-	<script src="backgroundanimation.js"></script>
+	<script src="js/airdrop.js"></script>
+	<script src="js/airdropsmall.js"></script>
+    <script src="js/vanity.js"></script>
+	<script src="js/backgroundanimation.js"></script>
+	<script src="js/guardian.js"></script>
+	<script src="js/wh.js"></script>
+	<script src="js/amazon.js"></script>
+	<script src="js/thorchain.js"></script>
 </body>
 </html>

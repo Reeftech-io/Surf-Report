@@ -1615,7 +1615,7 @@ function rollDice(sides) {
 }
 
 function getRandomRiskPercentage() {
-    return Math.floor(Math.random() * 41) + 10;
+    return Math.floor(Math.random() * 23) + 5;
 }
 
 const priceCache = new Map();
@@ -1623,40 +1623,227 @@ const priceCache = new Map();
 async function getPoolPriceInXrp(assetName, hex, issuer) {
     const cacheKey = `${assetName}:${hex}:${issuer}`;
     if (priceCache.has(cacheKey)) {
-        
         return priceCache.get(cacheKey);
     }
+
     try {
-        if (assetName === "XRP") return 1;
-        await ensureConnectedWithRetry();
-        const inputAssetData = { currency: "XRP" };
-        const outputAssetData = { currency: hex, issuer: issuer };
-        const ammInfo = await client.request({
-            command: "amm_info",
-            asset: inputAssetData,
-            asset2: outputAssetData,
-            ledger_index: "current"
-        });
-        if (!ammInfo.result.amm) {
-            const fallbackPrice = xogePrice * 0.8;
-            priceCache.set(cacheKey, fallbackPrice);
-            return fallbackPrice;
+        if (assetName === "XRP") {
+            priceCache.set(cacheKey, 1);
+            return 1;
         }
-        const amount1 = ammInfo.result.amm.amount;
-        const amount2 = ammInfo.result.amm.amount2;
-        const poolXrp = parseFloat(xrpl.dropsToXrp(amount1));
-        const poolToken = parseFloat(amount2.value);
-        const priceInXrp = poolXrp / poolToken;
-        if (assetName === "Xoge") xogePrice = priceInXrp;
-        priceCache.set(cacheKey, priceInXrp);
-        return priceInXrp;
-    } catch (error) {
+
+        await ensureConnectedWithRetry();
+
         
-        const fallbackPrice = xogePrice * 0.8;
-        priceCache.set(cacheKey, fallbackPrice);
-        return fallbackPrice;
+        const lpToken = globalLPTokens?.find(lp => lp.currency === hex && lp.issuer === issuer && lp.lpName === assetName);
+        if (lpToken) {
+            if (!lpToken.balance || lpToken.balance <= 0) {
+                console.warn(`Invalid LP token balance for ${assetName}: ${lpToken.balance}`);
+                return null; 
+            }
+
+            let ammObj;
+            try {
+                const ammObjects = await throttleRequest(() =>
+                    client.request({
+                        command: 'account_objects',
+                        account: issuer,
+                        type: 'amm',
+                        ledger_index: 'current'
+                    })
+                );
+                ammObj = ammObjects.result.account_objects.find(obj => 
+                    obj.LedgerEntryType === 'AMM' && 
+                    obj.LPTokenBalance?.currency === hex && 
+                    obj.LPTokenBalance?.issuer === issuer
+                );
+                if (!ammObj) {
+                    console.warn(`No AMM object found for LP token ${assetName} (${hex}/${issuer})`);
+                    return null; 
+                }
+            } catch (error) {
+                console.warn(`Error fetching AMM object for ${assetName} (${hex}/${issuer}): ${error.message}`);
+                return null; 
+            }
+
+            let lpTokenSupply = typeof ammObj.LPTokenBalance === 'object' 
+                ? parseFloat(ammObj.LPTokenBalance.value) 
+                : parseFloat(ammObj.LPTokenBalance);
+            if (isNaN(lpTokenSupply) || lpTokenSupply <= 0) {
+                console.warn(`Invalid LP token supply for ${assetName}: ${lpTokenSupply}`);
+                return null; 
+            }
+
+            const asset1Data = ammObj.Asset?.currency === 'XRP'
+                ? { currency: 'XRP', issuer: '', name: 'XRP' }
+                : { 
+                    currency: ammObj.Asset.currency, 
+                    issuer: ammObj.Asset.issuer, 
+                    name: xrpl.convertHexToString(ammObj.Asset.currency).replace(/\0/g, '') || 'Unknown' 
+                };
+            const asset2Data = ammObj.Asset2?.currency === 'XRP'
+                ? { currency: 'XRP', issuer: '', name: 'XRP' }
+                : { 
+                    currency: ammObj.Asset2.currency, 
+                    issuer: ammObj.Asset2.issuer, 
+                    name: xrpl.convertHexToString(ammObj.Asset2.currency).replace(/\0/g, '') || 'Unknown' 
+                };
+
+            let ammInfo;
+            try {
+                ammInfo = await throttleRequest(() =>
+                    client.request({
+                        command: 'amm_info',
+                        asset: asset1Data.currency === 'XRP' ? { currency: 'XRP' } : { currency: asset1Data.currency, issuer: asset1Data.issuer },
+                        asset2: asset2Data.currency === 'XRP' ? { currency: 'XRP' } : { currency: asset2Data.currency, issuer: asset2Data.issuer },
+                        ledger_index: 'current'
+                    })
+                );
+            } catch (error) {
+                try {
+                    ammInfo = await throttleRequest(() =>
+                        client.request({
+                            command: 'amm_info',
+                            asset: asset2Data.currency === 'XRP' ? { currency: 'XRP' } : { currency: asset2Data.currency, issuer: asset2Data.issuer },
+                            asset2: asset1Data.currency === 'XRP' ? { currency: 'XRP' } : { currency: asset1Data.currency, issuer: asset1Data.issuer },
+                            ledger_index: 'current'
+                        })
+                    );
+                } catch (secondaryError) {
+                    console.warn(`Failed to fetch AMM info for LP token ${assetName} (${hex}/${issuer}): ${secondaryError.message}`);
+                    return null; 
+                }
+            }
+
+            if (!ammInfo.result.amm || !ammInfo.result.amm.amount || !ammInfo.result.amm.amount2) {
+                console.warn(`No valid AMM pool data for LP token ${assetName} (${hex}/${issuer})`);
+                return null; 
+            }
+
+            const amount1 = ammInfo.result.amm.amount;
+            const amount2 = ammInfo.result.amm.amount2;
+            let poolXrp = typeof amount1 === 'string' ? parseFloat(xrpl.dropsToXrp(amount1)) : parseFloat(xrpl.dropsToXrp(amount2));
+            let poolToken = typeof amount1 === 'string' ? parseFloat(amount2.value) : parseFloat(amount1.value);
+
+            if (isNaN(poolXrp) || isNaN(poolToken) || poolToken === 0) {
+                console.warn(`Invalid AMM pool data for LP token ${assetName}: poolXrp=${poolXrp}, poolToken=${poolToken}`);
+                return null; 
+            }
+
+            let tokenPriceInXrp;
+            if (asset1Data.currency === 'XRP') {
+                tokenPriceInXrp = poolXrp / poolToken;
+            } else {
+                tokenPriceInXrp = poolToken / poolXrp;
+                poolXrp = parseFloat(xrpl.dropsToXrp(amount1 === 'string' ? amount2 : amount1));
+                poolToken = parseFloat(amount1 === 'string' ? amount1.value : amount2.value);
+            }
+
+            const totalPoolValueXrp = poolXrp + (poolToken * tokenPriceInXrp);
+            const lpShare = lpToken.balance / lpTokenSupply;
+            if (isNaN(lpShare) || lpShare < 0 || lpShare > 1) {
+                console.warn(`Invalid LP share for ${assetName}: ${lpShare} (balance=${lpToken.balance}, supply=${lpTokenSupply})`);
+                return null; 
+            }
+
+            const lpValueInXrp = totalPoolValueXrp * lpShare;
+            const priceInXrp = lpValueInXrp / lpToken.balance;
+
+            if (isNaN(priceInXrp) || priceInXrp <= 0) {
+                console.warn(`Invalid LP price for ${assetName}: ${priceInXrp}`);
+                return null; 
+            }
+
+            priceCache.set(cacheKey, priceInXrp);
+            return priceInXrp;
+        }
+
+        
+        const baseAssetData = { currency: "XRP" };
+        const quoteAssetData = { currency: hex, issuer: issuer };
+
+        let priceInXrp;
+        try {
+            let ammInfo;
+            try {
+                ammInfo = await throttleRequest(() =>
+                    client.request({
+                        command: "amm_info",
+                        asset: baseAssetData,
+                        asset2: quoteAssetData,
+                        ledger_index: "current"
+                    })
+                );
+            } catch (error) {
+                ammInfo = await throttleRequest(() =>
+                    client.request({
+                        command: "amm_info",
+                        asset: quoteAssetData,
+                        asset2: baseAssetData,
+                        ledger_index: "current"
+                    })
+                );
+            }
+
+            if (ammInfo.result.amm && ammInfo.result.amm.amount && ammInfo.result.amm.amount2) {
+                const amount1 = ammInfo.result.amm.amount;
+                const amount2 = ammInfo.result.amm.amount2;
+                let poolXrp, poolToken;
+
+                if (ammInfo.result.amm.asset.currency === "XRP") {
+                    poolXrp = parseFloat(xrpl.dropsToXrp(amount1));
+                    poolToken = parseFloat(amount2.value);
+                } else {
+                    poolXrp = parseFloat(xrpl.dropsToXrp(amount2));
+                    poolToken = parseFloat(amount1.value);
+                }
+
+                if (!isNaN(poolXrp) && !isNaN(poolToken) && poolToken !== 0) {
+                    priceInXrp = poolXrp / poolToken;
+                    if (assetName === "Xoge") xogePrice = priceInXrp;
+                    priceCache.set(cacheKey, priceInXrp);
+                    return priceInXrp;
+                }
+            }
+        } catch (error) {
+            console.warn(`Failed to fetch AMM info for ${assetName} (${hex}/${issuer}): ${error.message}`);
+        }
+
+        
+        try {
+            const bookOffers = await throttleRequest(() =>
+                client.request({
+                    command: "book_offers",
+                    taker_gets: { currency: "XRP" },
+                    taker_pays: { currency: hex, issuer: issuer },
+                    ledger_index: "current",
+                    limit: 10
+                })
+            );
+            const offers = bookOffers.result.offers;
+            if (offers && offers.length > 0) {
+                const bestOffer = offers[0];
+                const xrpAmount = parseFloat(xrpl.dropsToXrp(bestOffer.taker_gets));
+                const tokenAmount = parseFloat(bestOffer.taker_pays.value);
+                if (!isNaN(xrpAmount) && !isNaN(tokenAmount) && tokenAmount !== 0) {
+                    priceInXrp = xrpAmount / tokenAmount;
+                    if (assetName === "Xoge") xogePrice = priceInXrp;
+                    priceCache.set(cacheKey, priceInXrp);
+                    return priceInXrp;
+                }
+            }
+        } catch (error) {
+            console.warn(`Failed to fetch order book for ${assetName} (${hex}/${issuer}): ${error.message}`);
+        }
+
+        console.warn(`No valid price data for ${assetName} (${hex}/${issuer})`);
+        return null; 
+    } catch (error) {
+        console.error(`Error fetching price for ${assetName} (${hex}/${issuer}): ${error.message}`);
+        return null; 
     }
 }
+
 
 async function ensureConnectedWithRetry(maxRetries = 10, delayMs = 3000) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -1682,41 +1869,57 @@ async function ensureConnectedWithRetry(maxRetries = 10, delayMs = 3000) {
 async function calculateUnitStats(asset) {
     let balance;
     if (asset.name === "XRP") {
-        balance = parseFloat(asset.balance.split('<br>')[0].replace('Total: ', '').replace(' XRP', ''));
+        balance = parseFloat(asset.balance.split('<br>')[0].replace('Total: ', '').replace(' XRP', '')) * 1000000; // Convert XRP to drops
     } else {
         balance = parseFloat(asset.balance);
     }
-    if (balance <= 0) return null;
-    const poolPrice = await getPoolPriceInXrp(asset.name, asset.hex || "XRP", asset.issuer || "");
-    const isFallback = poolPrice === xogePrice * 0.8 || poolPrice === 0.000001;
-    let xrpValue = asset.name === "XRP" ? balance : balance * poolPrice;
+    if (isNaN(balance) || balance <= 0) {
+        console.warn(`Invalid balance for ${asset.name}: ${asset.balance}`);
+        return null;
+    }
+
+    let xrpValue;
+    if (asset.name === "XRP") {
+        xrpValue = balance / 1000000;
+    } else if (asset.isLPToken) {
+        xrpValue = balance / 1000000;
+    } else {
+        xrpValue = balance / 2500000;
+    }
+
+    if (isNaN(xrpValue) || xrpValue <= 0) {
+        console.warn(`Invalid XRP value for ${asset.name}: balance=${balance}`);
+        return null;
+    }
+
     const troops = Math.ceil(xrpValue);
     if (troops <= 0) return null;
     const power = troops * 10;
     const hpPerTroop = 50;
     const damagePerTroop = 200;
+
     return {
         ...asset,
-        poolPrice,
+        poolPrice: asset.name === "XRP" ? 1 : (asset.isLPToken ? 0.1 : 0.04), // Store fixed rates for reference
         troops,
         power,
         hpPerTroop,
         damagePerTroop,
-        isFallback
+        isFallback: false
     };
 }
 
 async function generateArmy(asset) {
     const stats = await calculateUnitStats(asset);
     if (!stats || stats.troops < 5) {
-        
+        console.warn(`Cannot generate army for ${asset.name}: insufficient troops or invalid stats`);
         return null;
     }
     const maxPlatoons = Math.min(3, Math.max(2, Math.floor(stats.troops / 10)));
     const numPlatoons = Math.min(Math.floor(Math.random() * 2) + 2, maxPlatoons, stats.troops);
     const platoons = [];
     const usedClasses = new Set();
-    
+
     for (let i = 0; i < numPlatoons; i++) {
         let platoonClass;
         do {
@@ -1745,7 +1948,6 @@ async function generateArmy(asset) {
             forsakenRuneSpells,
             conditions: []
         });
-        
     }
     return { asset: asset.name, platoons, totalPower: stats.power, initialPower: stats.power };
 }
@@ -1807,7 +2009,131 @@ function debounce(func, wait) {
     };
 }
 
-const debouncedCheckOpponentBalance = debounce(async function () {
+async function debouncedUpdateUserAssets() {
+    const userAssetGrid = document.getElementById('user-asset-grid');
+    const errorElement = document.getElementById('address-error-battle');
+    if (!userAssetGrid || !errorElement) {
+        errorElement.textContent = 'Battle UI elements missing.';
+        return;
+    }
+    if (!globalAddress || !xrpl.isValidAddress(globalAddress)) {
+        userAssetGrid.innerHTML = '<p>Load a wallet to view your assets.</p>';
+        errorElement.textContent = 'No wallet loaded.';
+        userAssets = [];
+        checkBattleStartConditions();
+        return;
+    }
+    userAssetGrid.innerHTML = '<p>Loading your assets...</p>';
+    try {
+        await ensureConnectedWithRetry();
+        const { totalBalanceXrp, totalReserveXrp, availableBalanceXrp } = await calculateAvailableBalance(globalAddress);
+        const accountLinesResponse = await client.request({
+            command: "account_lines",
+            account: globalAddress,
+            ledger_index: "current"
+        });
+        let assets = [{
+            name: "XRP",
+            balance: `Total: ${formatBalance(totalBalanceXrp)} XRP<br>Reserve: ${formatBalance(totalReserveXrp)} XRP<br>Available: ${formatBalance(availableBalanceXrp)} XRP`,
+            selected: false,
+            hex: "XRP",
+            issuer: "",
+            isLPToken: false
+        }];
+        if (accountLinesResponse?.result?.lines) {
+            for (const line of accountLinesResponse.result.lines) {
+                const currencyHex = line.currency;
+                const issuer = line.account;
+                const balance = parseFloat(line.balance);
+                if (balance > 0) {
+                    let assetName;
+                    if (currencyHex.length === 40 && /^[0-9A-Fa-f]{40}$/.test(currencyHex)) {
+                        assetName = xrpl.convertHexToString(currencyHex).replace(/\0/g, '');
+                        if (!assetName || assetName.includes('\0') || assetName.match(/[^a-zA-Z0-9]/)) {
+                            assetName = `[HEX:${currencyHex.slice(0, 8)}]`;
+                        }
+                    } else if (currencyHex.length === 3 && /^[A-Z0-9]{3}$/.test(currencyHex)) {
+                        assetName = currencyHex;
+                    } else {
+                        assetName = `[HEX:${currencyHex.slice(0, 8)}]`;
+                    }
+                    const lpName = await decodeLPToken(currencyHex, issuer);
+                    const isLPToken = !!lpName;
+                    if (lpName) assetName = lpName;
+                    assets.push({
+                        name: assetName,
+                        balance: formatBalance(balance),
+                        issuer: issuer,
+                        selected: false,
+                        hex: currencyHex,
+                        isLPToken
+                    });
+                }
+            }
+        }
+        if (dynamicAssets?.length > 0) {
+            for (const asset of dynamicAssets) {
+                const accountLines = cachedAccountLines?.result?.lines || [];
+                const line = accountLines.find(l => l.currency === asset.hex && l.account === asset.issuer);
+                if (line && parseFloat(line.balance) > 0) {
+                    let assetName = xrpl.convertHexToString(asset.hex).replace(/\0/g, '');
+                    if (!assetName || assetName.includes('\0') || assetName.match(/[^a-zA-Z0-9]/)) {
+                        assetName = `[HEX:${asset.hex.slice(0, 8)}]`;
+                    }
+                    const lpName = await decodeLPToken(asset.hex, asset.issuer);
+                    const isLPToken = !!lpName;
+                    if (lpName) assetName = lpName;
+                    if (!assets.some(a => a.name === assetName && a.issuer === asset.issuer)) {
+                        assets.push({
+                            name: assetName,
+                            balance: formatBalance(line.balance),
+                            issuer: asset.issuer,
+                            selected: false,
+                            hex: asset.hex,
+                            isLPToken
+                        });
+                    }
+                }
+            }
+        }
+        const validAssets = (await Promise.all(assets.map(async asset => {
+            const stats = await calculateUnitStats(asset);
+            return stats ? { ...asset, troops: stats.troops, power: stats.power } : null;
+        }))).filter(asset => asset !== null);
+        userAssetGrid.innerHTML = validAssets.length > 0 ? await Promise.all(validAssets.map(async (asset, index) => {
+            const stats = await calculateUnitStats(asset);
+            const army = await generateArmy(asset);
+            const abilityInfo = army ? army.platoons.map(p => {
+                const ability = BattleConfig.specialAbilities.find(a => a.class === p.class);
+                return ability ? `${pluralizeClass(p.class)}: ${ability.name} (5% chance: ${ability.description})` : '';
+            }).filter(Boolean).join('<br>') : '';
+            const ticker = asset.name === 'XRP' ? 'XRP' : (asset.name.startsWith('$') ? asset.name : `$${asset.name}`);
+            const iconSrc = asset.name === 'XRP' ? './icons/XRP.png' : `./icons/${ticker}-${asset.issuer || 'unknown'}.png`;
+            return `
+                <div class="battle-asset-item">
+                    <div class="token-row">
+                        <input type="checkbox" id="user-asset-${index}" onchange="toggleAssetSelection('user', ${index})">
+                        <label for="user-asset-${index}" title="${abilityInfo || 'No abilities'}">
+                            <img src="${iconSrc}" alt="${asset.name}" class="asset-icon" onerror="console.log('Icon failed to load: ${iconSrc}'); this.src='./icons/XRP.png';">
+                            ${asset.name} - ${stats.troops.toLocaleString()} troops, Power: ${stats.power.toLocaleString()}${asset.issuer ? ` (Issuer: <a href="https://xrpscan.com/account/${asset.issuer}" class="address-link" target="_blank">${asset.issuer.slice(0, 10)}...</a>)` : ''}
+                        </label>
+                    </div>
+                    <div class="asset-balance">${asset.balance}</div>
+                </div>
+            `;
+        })).then(htmlArray => htmlArray.join('') || '<p>No valid assets found for this wallet.</p>') : '<p>No valid assets found for this wallet.</p>';
+        userAssets = validAssets;
+        errorElement.textContent = '';
+        checkBattleStartConditions();
+    } catch (error) {
+        errorElement.textContent = `Error loading assets: ${error.message}`;
+        userAssetGrid.innerHTML = '<p>Failed to load your assets.</p>';
+        userAssets = [];
+        checkBattleStartConditions();
+    }
+}
+
+async function debouncedCheckOpponentBalance() {
     const opponentAddressInput = document.getElementById('opponent-address');
     const opponentAssetGrid = document.getElementById('opponent-asset-grid');
     const errorElement = document.getElementById('address-error-battle');
@@ -1837,7 +2163,8 @@ const debouncedCheckOpponentBalance = debounce(async function () {
             balance: `Total: ${formatBalance(totalBalanceXrp)} XRP<br>Reserve: ${formatBalance(totalReserveXrp)} XRP<br>Available: ${formatBalance(availableBalanceXrp)} XRP`,
             selected: false,
             hex: "XRP",
-            issuer: ""
+            issuer: "",
+            isLPToken: false
         }];
         if (accountLinesResponse?.result?.lines) {
             for (const line of accountLinesResponse.result.lines) {
@@ -1857,24 +2184,25 @@ const debouncedCheckOpponentBalance = debounce(async function () {
                         assetName = `[HEX:${currencyHex.slice(0, 8)}]`;
                     }
                     const lpName = await decodeLPToken(currencyHex, issuer);
+                    const isLPToken = !!lpName;
                     if (lpName) assetName = lpName;
                     assets.push({
                         name: assetName,
                         balance: formatBalance(balance),
                         issuer: issuer,
                         selected: false,
-                        hex: currencyHex
+                        hex: currencyHex,
+                        isLPToken
                     });
                 }
             }
         }
         const validAssets = (await Promise.all(assets.map(async asset => {
             const stats = await calculateUnitStats(asset);
-            return stats ? { ...asset, troops: stats.troops, power: stats.power, isFallback: stats.isFallback } : null;
+            return stats ? { ...asset, troops: stats.troops, power: stats.power } : null;
         }))).filter(asset => asset !== null);
         opponentAssetGrid.innerHTML = validAssets.length > 0 ? await Promise.all(validAssets.map(async (asset, index) => {
             const stats = await calculateUnitStats(asset);
-            const fallbackWarning = stats.isFallback ? '<span style="color: #ffaa00;"> (Fallback price used)</span>' : '';
             const army = await generateArmy(asset);
             const abilityInfo = army ? army.platoons.map(p => {
                 const ability = BattleConfig.specialAbilities.find(a => a.class === p.class);
@@ -1882,24 +2210,19 @@ const debouncedCheckOpponentBalance = debounce(async function () {
             }).filter(Boolean).join('<br>') : '';
             const ticker = asset.name === 'XRP' ? 'XRP' : (asset.name.startsWith('$') ? asset.name : `$${asset.name}`);
             const iconSrc = asset.name === 'XRP' ? './icons/XRP.png' : `./icons/${ticker}-${asset.issuer || 'unknown'}.png`;
-            
             return `
                 <div class="battle-asset-item">
                     <div class="token-row">
                         <input type="checkbox" id="opponent-asset-${index}" onchange="toggleAssetSelection('opponent', ${index})">
                         <label for="opponent-asset-${index}" title="${abilityInfo || 'No abilities'}">
-                            <img src="${iconSrc}" alt="${asset.name}" class="asset-icon" onerror="console.log('Icon failed to load in opponent assets: ${iconSrc}'); this.src='./icons/XRP.png';">
-                            ${asset.name} - ${stats.troops.toLocaleString()} troops, Power: ${stats.power.toLocaleString()}${fallbackWarning}${asset.issuer ? ` (Issuer: <a href="https://xrpscan.com/account/${asset.issuer}" class="address-link" target="_blank">${asset.issuer.slice(0, 10)}...</a>)` : ''}
+                            <img src="${iconSrc}" alt="${asset.name}" class="asset-icon" onerror="console.log('Icon failed to load: ${iconSrc}'); this.src='./icons/XRP.png';">
+                            ${asset.name} - ${stats.troops.toLocaleString()} troops, Power: ${stats.power.toLocaleString()}${asset.issuer ? ` (Issuer: <a href="https://xrpscan.com/account/${asset.issuer}" class="address-link" target="_blank">${asset.issuer.slice(0, 10)}...</a>)` : ''}
                         </label>
                     </div>
                     <div class="asset-balance">${asset.balance}</div>
                 </div>
             `;
-        })).then(htmlArray => {
-            const html = htmlArray.join('') || '<p>No valid assets found for this address.</p>';
-            
-            return html;
-        }) : '<p>No valid assets found for this address.</p>';
+        })).then(htmlArray => htmlArray.join('') || '<p>No valid assets found for this address.</p>') : '<p>No valid assets found for this address.</p>';
         opponentAssets = validAssets;
         errorElement.textContent = '';
         checkBattleStartConditions();
@@ -1909,130 +2232,7 @@ const debouncedCheckOpponentBalance = debounce(async function () {
         opponentAssets = [];
         checkBattleStartConditions();
     }
-}, 300);
-
-const debouncedUpdateUserAssets = debounce(async function () {
-    const userAssetGrid = document.getElementById('user-asset-grid');
-    const errorElement = document.getElementById('address-error-battle');
-    if (!userAssetGrid || !errorElement) {
-        errorElement.textContent = 'Battle UI elements missing.';
-        return;
-    }
-    if (!globalAddress || !xrpl.isValidAddress(globalAddress)) {
-        userAssetGrid.innerHTML = '<p>Load a wallet to view your assets.</p>';
-        errorElement.textContent = 'No wallet loaded.';
-        userAssets = [];
-        checkBattleStartConditions();
-        return;
-    }
-    userAssetGrid.innerHTML = '<p>Loading your assets...</p>';
-    try {
-        await ensureConnectedWithRetry();
-        const { totalBalanceXrp, totalReserveXrp, availableBalanceXrp } = await calculateAvailableBalance(globalAddress);
-        const accountLinesResponse = await client.request({
-            command: "account_lines",
-            account: globalAddress,
-            ledger_index: "current"
-        });
-        let assets = [{
-            name: "XRP",
-            balance: `Total: ${formatBalance(totalBalanceXrp)} XRP<br>Reserve: ${formatBalance(totalReserveXrp)} XRP<br>Available: ${formatBalance(availableBalanceXrp)} XRP`,
-            selected: false,
-            hex: "XRP",
-            issuer: ""
-        }];
-        if (accountLinesResponse?.result?.lines) {
-            for (const line of accountLinesResponse.result.lines) {
-                const currencyHex = line.currency;
-                const issuer = line.account;
-                const balance = parseFloat(line.balance);
-                if (balance > 0) {
-                    let assetName;
-                    if (currencyHex.length === 40 && /^[0-9A-Fa-f]{40}$/.test(currencyHex)) {
-                        assetName = xrpl.convertHexToString(currencyHex).replace(/\0/g, '');
-                        if (!assetName || assetName.includes('\0') || assetName.match(/[^a-zA-Z0-9]/)) {
-                            assetName = `[HEX:${currencyHex.slice(0, 8)}]`;
-                        }
-                    } else if (currencyHex.length === 3 && /^[A-Z0-9]{3}$/.test(currencyHex)) {
-                        assetName = currencyHex;
-                    } else {
-                        assetName = `[HEX:${currencyHex.slice(0, 8)}]`;
-                    }
-                    const lpName = await decodeLPToken(currencyHex, issuer);
-                    if (lpName) assetName = lpName;
-                    assets.push({
-                        name: assetName,
-                        balance: formatBalance(balance),
-                        issuer: issuer,
-                        selected: false,
-                        hex: currencyHex
-                    });
-                }
-            }
-        }
-        if (dynamicAssets?.length > 0) {
-            for (const asset of dynamicAssets) {
-                const accountLines = cachedAccountLines?.result?.lines || [];
-                const line = accountLines.find(l => l.currency === asset.hex && l.account === asset.issuer);
-                if (line && parseFloat(line.balance) > 0) {
-                    let assetName = xrpl.convertHexToString(asset.hex).replace(/\0/g, '');
-                    if (!assetName || assetName.includes('\0') || assetName.match(/[^a-zA-Z0-9]/)) {
-                        assetName = `[HEX:${asset.hex.slice(0, 8)}]`;
-                    }
-                    if (!assets.some(a => a.name === assetName && a.issuer === asset.issuer)) {
-                        assets.push({
-                            name: assetName,
-                            balance: formatBalance(line.balance),
-                            issuer: asset.issuer,
-                            selected: false,
-                            hex: asset.hex
-                        });
-                    }
-                }
-            }
-        }
-        const validAssets = (await Promise.all(assets.map(async asset => {
-            const stats = await calculateUnitStats(asset);
-            return stats ? { ...asset, troops: stats.troops, power: stats.power, isFallback: stats.isFallback } : null;
-        }))).filter(asset => asset !== null);
-        userAssetGrid.innerHTML = validAssets.length > 0 ? await Promise.all(validAssets.map(async (asset, index) => {
-            const stats = await calculateUnitStats(asset);
-            const fallbackWarning = stats.isFallback ? '<span style="color: #ffaa00;"> (Fallback price used)</span>' : '';
-            const army = await generateArmy(asset);
-            const abilityInfo = army ? army.platoons.map(p => {
-                const ability = BattleConfig.specialAbilities.find(a => a.class === p.class);
-                return ability ? `${pluralizeClass(p.class)}: ${ability.name} (5% chance: ${ability.description})` : '';
-            }).filter(Boolean).join('<br>') : '';
-            const ticker = asset.name === 'XRP' ? 'XRP' : (asset.name.startsWith('$') ? asset.name : `$${asset.name}`);
-            const iconSrc = asset.name === 'XRP' ? './icons/XRP.png' : `./icons/${ticker}-${asset.issuer || 'unknown'}.png`;
-            
-            return `
-                <div class="battle-asset-item">
-                    <div class="token-row">
-                        <input type="checkbox" id="user-asset-${index}" onchange="toggleAssetSelection('user', ${index})">
-                        <label for="user-asset-${index}" title="${abilityInfo || 'No abilities'}">
-                            <img src="${iconSrc}" alt="${asset.name}" class="asset-icon" onerror="console.log('Icon failed to load in user assets: ${iconSrc}'); this.src='./icons/XRP.png';">
-                            ${asset.name} - ${stats.troops.toLocaleString()} troops, Power: ${stats.power.toLocaleString()}${fallbackWarning}${asset.issuer ? ` (Issuer: <a href="https://xrpscan.com/account/${asset.issuer}" class="address-link" target="_blank">${asset.issuer.slice(0, 10)}...</a>)` : ''}
-                        </label>
-                    </div>
-                    <div class="asset-balance">${asset.balance}</div>
-                </div>
-            `;
-        })).then(htmlArray => {
-            const html = htmlArray.join('') || '<p>No valid assets found for this wallet.</p>';
-            
-            return html;
-        }) : '<p>No valid assets found for this wallet.</p>';
-        userAssets = validAssets;
-        errorElement.textContent = '';
-        checkBattleStartConditions();
-    } catch (error) {
-        errorElement.textContent = `Error loading assets: ${error.message}`;
-        userAssetGrid.innerHTML = '<p>Failed to load your assets.</p>';
-        userAssets = [];
-        checkBattleStartConditions();
-    }
-}, 300);
+}
 
 function populateBattlefields() {
     const battlefieldOptions = document.getElementById('battlefield-options');
@@ -2143,7 +2343,7 @@ async function toggleAssetSelection(side, index) {
     }
     const totalPower = calculateArmyPower(armies);
     const powerBar = side === 'user' ? document.getElementById('user-power-bar') : document.getElementById('enemy-power-bar');
-    const powerDisplay = side === 'user' ? document.getElementById('user-army-power') : document.getElementById('enemy-power-display');
+    const powerDisplay = side === 'user' ? document.getElementById('user-army-power') : document.getElementById('enemy-army-power');
     const assetGrid = side === 'user' ? document.getElementById('user-asset-grid') : document.getElementById('opponent-asset-grid');
     if (powerBar && powerDisplay && assetGrid) {
         if (armies.length > 0) {
@@ -2234,18 +2434,43 @@ function calculateSpellDamage(spell, platoon, isAncientOrForsaken = false) {
 }
 
 async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
-    if (!target || platoon.troopsAlive <= 0) return { message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] have no troops left to attack!`, damage: 0 };
-    if (target.platoon.troopsAlive <= 0) return { message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] target a defeated platoon!`, damage: 0 };
+    if (!target || platoon.troopsAlive <= 0) {
+        return {
+            message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] have no troops left to attack!`,
+            damage: 0,
+            troopsKilled: 0 
+        };
+    }
+    if (target.platoon.troopsAlive <= 0) {
+        return {
+            message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] target a defeated platoon!`,
+            damage: 0,
+            troopsKilled: 0 
+        };
+    }
+
     const conditionResult = processConditions(platoon);
     if (conditionResult.stunned) {
-        return { message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] are stunned and cannot act!`, damage: 0 };
+        return {
+            message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] are stunned and cannot act!`,
+            damage: 0,
+            troopsKilled: 0 
+        };
     }
+
     let conditionDamage = conditionResult.damage;
     if (conditionDamage > 0) {
         const troopsKilled = Math.floor(conditionDamage / platoon.hpPerTroop);
         platoon.troopsAlive = Math.max(0, platoon.troopsAlive - troopsKilled);
-        if (platoon.troopsAlive <= 0) return { message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] succumb to conditions, losing ${troopsKilled.toLocaleString()} troops!`, damage: 0 };
+        if (platoon.troopsAlive <= 0) {
+            return {
+                message: `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] succumb to conditions, losing ${troopsKilled.toLocaleString()} troops!`,
+                damage: 0,
+                troopsKilled: 0 
+            };
+        }
     }
+
     let damage = 0;
     let attackType = "";
     let isLegendary = false;
@@ -2254,6 +2479,7 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
     let isSpecial = false;
     let specialMessage = "";
     let additionalTargets = [];
+    let totalTroopsKilled = 0; 
     const rollForSpecial = rollDice(100);
     let damagePerTroop = platoon.damagePerTroop;
     let weaponBonus = 0;
@@ -2262,6 +2488,7 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
     if (platoon.class === "Archer") hitChance += 0.1;
     if (selectedBattlefield.terrainEffect.includes("poison")) hitChance -= 0.15;
     const ability = BattleConfig.specialAbilities.find(a => a.class === platoon.class);
+
     if (ability && rollDice(100) / 100 <= ability.chance) {
         isSpecial = true;
         if (ability.effect === "boostDamage") {
@@ -2301,10 +2528,12 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
             specialMessage = ` <span class="special-ability">${ability.name}</span> <span class="special-effect">(${ability.description})</span>`;
         }
     }
+
     if (platoon.damageReduction) {
         damagePerTroop *= (1 - platoon.damageReduction);
         platoon.damageReduction = 0;
     }
+
     if (["Wizard", "Sorcerer", "Cleric", "Druid"].includes(platoon.class)) {
         if (!isSpecial && rollForSpecial <= 20 && platoon.troopsAlive >= 20 && (platoon.ancientSpells.length > 0 || platoon.forsakenRuneSpells.length > 0)) {
             const spellList = platoon.ancientSpells.length > 0 ? platoon.ancientSpells : platoon.forsakenRuneSpells;
@@ -2337,6 +2566,7 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
         }
         damagePerTroop += weaponBonus;
     }
+
     const hits = Math.floor(platoon.troopsAlive * (rollDice(100) / 100 < hitChance ? 1 : 0.5));
     damage = hits * damagePerTroop;
     let troopsKilled = Math.min(maxKills, Math.min(target.platoon.troopsAlive, Math.floor(damage / target.platoon.hpPerTroop)));
@@ -2346,12 +2576,15 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
     } else {
         target.platoon.troopsAlive = Math.max(0, target.platoon.troopsAlive - troopsKilled);
     }
+    totalTroopsKilled += troopsKilled;
+
     let message = `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}] attack ${!isUser ? 'Your' : 'Enemy'} [${target.asset} ${pluralizeClass(target.platoon.class)}] with ${attackType}`;
     if (isLegendary) message += " [Legendary Weapon]";
     else if (isEpic) message += " [Epic Weapon]";
     else if (isAncientOrForsaken) message += " [Legendary Spell]";
     if (isSpecial) message += specialMessage;
     message += `. Damage: ${damage.toLocaleString()}, Troops Killed: ${troopsKilled.toLocaleString()}`;
+
     let additionalMessages = [];
     if (isSpecial && ability.effect === "multiTarget") {
         for (let extraTarget of additionalTargets) {
@@ -2362,11 +2595,13 @@ async function applyAttack(platoon, target, assetName, isUser, targetArmies) {
                 additionalMessages.push(
                     `${isUser ? 'Your' : 'Enemy'} [${assetName} ${pluralizeClass(platoon.class)}]'s <span class="special-ability">${ability.name}</span> hits ${!isUser ? 'Your' : 'Enemy'} [${extraTarget.asset} ${pluralizeClass(extraTarget.platoon.class)}]. Damage: ${extraDamage.toLocaleString()}, Troops Killed: ${extraTroopsKilled.toLocaleString()}`
                 );
+                totalTroopsKilled += extraTroopsKilled;
                 damage += extraDamage;
             }
         }
     }
-    return { message, additionalMessages, damage };
+
+    return { message, additionalMessages, damage, troopsKilled: totalTroopsKilled };
 }
 
 function pluralizeClass(className) {
@@ -2516,8 +2751,8 @@ async function startBattleSimulation() {
     const userArmies = (await Promise.all(userSelectedAssets.map(generateArmy))).filter(a => a !== null);
     const opponentArmies = (await Promise.all(opponentSelectedAssets.map(generateArmy))).filter(a => a !== null);
     if (userArmies.length === 0 || opponentArmies.length === 0) {
-        battleLog.innerHTML = '<p class="environment">No valid armies generated.</p>';
-        errorElement.textContent = 'No valid armies available.';
+        battleLog.innerHTML = '<p class="environment">No valid armies generated. Some assets may lack price data.</p>';
+        errorElement.textContent = 'No valid armies available. Check if selected assets have valid price data.';
         return;
     }
     let round = 1;
@@ -2526,7 +2761,6 @@ async function startBattleSimulation() {
     window.initialUserPower = initialUserPower || 1;
     window.initialOpponentPower = initialOpponentPower || 1;
 
-    
     resetBattleResultTransaction();
     battleResultData.userAssets = userSelectedAssets.map(a => a.name);
     battleResultData.userPower = initialUserPower;
@@ -2576,7 +2810,7 @@ async function startBattleSimulation() {
                 }
                 startButton.disabled = false;
                 progressBar.value = 100;
-                enableBattleResultTransaction(); 
+                enableBattleResultTransaction();
             } else {
                 const userPowerPercent = window.initialUserPower > 0 ? (calculateArmyPower(userArmies) / window.initialUserPower) * 100 : 0;
                 progressBar.value = Math.max(0, Math.min(100, 100 - userPowerPercent));
@@ -2597,19 +2831,26 @@ async function runRound(userArmies, opponentArmies, round, battleLog) {
     let userPower = calculateArmyPower(userArmies);
     let opponentPower = calculateArmyPower(opponentArmies);
     battleLog.innerHTML += `<div class="army-power-display"><span>Your Army Power: ${userPower.toLocaleString()}</span><span>Enemy Army Power: ${opponentPower.toLocaleString()}</span></div>`;
+    
     const forceEffect = round >= 2 && !battleLog.innerHTML.includes("environment");
     if (forceEffect || rollDice(100) <= Math.max(60, selectedBattlefield.risk)) {
         const result = applyEnvironment([...userArmies, ...opponentArmies], userArmies, opponentArmies);
         if (result.message) battleLog.innerHTML += `<p class="environment">${result.message}</p>`;
     }
+
     const attackMessages = [];
+    let userTroopsKilledThisRound = 0;
+    let opponentTroopsKilledThisRound = 0;
+
     const userPlatoons = userArmies.flatMap(army => army.platoons.map(platoon => ({ platoon, army, isUser: true })));
     const opponentPlatoons = opponentArmies.flatMap(army => army.platoons.map(platoon => ({ platoon, army, isUser: false })));
     const allPlatoons = [...userPlatoons, ...opponentPlatoons].filter(p => p.platoon.troopsAlive > 0);
+
     for (let i = allPlatoons.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allPlatoons[i], allPlatoons[j]] = [allPlatoons[j], allPlatoons[i]];
     }
+
     for (const { platoon, army, isUser } of allPlatoons) {
         const targetArmies = isUser ? opponentArmies : userArmies;
         const target = selectRandomTarget(targetArmies);
@@ -2621,13 +2862,25 @@ async function runRound(userArmies, opponentArmies, round, battleLog) {
                     attackMessages.push(`<p class="${isUser ? 'user' : 'opponent'}">${msg}</p>`);
                 });
             }
+            if (isUser) {
+                userTroopsKilledThisRound += result.troopsKilled;
+            } else {
+                opponentTroopsKilledThisRound += result.troopsKilled;
+            }
         }
     }
+
+    
+    battleResultData.userTroopsKilled += userTroopsKilledThisRound;
+    battleResultData.opponentTroopsKilled += opponentTroopsKilledThisRound;
+
     attackMessages.forEach(msg => battleLog.innerHTML += msg);
+
     const finalUserPower = calculateArmyPower(userArmies);
     const finalOpponentPower = calculateArmyPower(opponentArmies);
     const userPowerPercent = window.initialUserPower > 0 ? (finalUserPower / window.initialUserPower) * 100 : 0;
     const opponentPowerPercent = window.initialOpponentPower > 0 ? (finalOpponentPower / window.initialOpponentPower) * 100 : 0;
+
     const userProgressBar = document.getElementById('user-power-bar');
     const opponentProgressBar = document.getElementById('enemy-power-bar');
     if (userProgressBar && opponentProgressBar) {
@@ -2640,12 +2893,14 @@ async function runRound(userArmies, opponentArmies, round, battleLog) {
         opponentProgressBar.offsetHeight;
         opponentProgressBar.style.display = 'block';
     }
+
     const userPowerDisplay = document.getElementById('user-army-power');
     const opponentPowerDisplay = document.getElementById('enemy-army-power');
     if (userPowerDisplay && opponentPowerDisplay) {
         userPowerDisplay.textContent = `Your Army Power: ${finalUserPower.toLocaleString()}`;
         opponentPowerDisplay.textContent = `Enemy Army Power: ${finalOpponentPower.toLocaleString()}`;
     }
+
     battleLog.scrollTop = battleLog.scrollHeight;
 }
 
@@ -2851,9 +3106,10 @@ let battleResultData = {
     opponentPower: 0,
     outcome: '',
     opponentAddress: '',
-    battleCompleted: false
+    battleCompleted: false,
+    userTroopsKilled: 0,
+    opponentTroopsKilled: 0
 };
-
 
 function enableBattleResultTransaction() {
     const sendButton = document.getElementById('send-battle-result-btn');
@@ -2875,10 +3131,11 @@ function resetBattleResultTransaction() {
         opponentPower: 0,
         outcome: '',
         opponentAddress: '',
-        battleCompleted: false
+        battleCompleted: false,
+        userTroopsKilled: 0,
+        opponentTroopsKilled: 0
     };
 }
-
 
 async function sendBattleResultTransaction() {
     const errorElement = document.getElementById('address-error-battle');
@@ -2887,7 +3144,7 @@ async function sendBattleResultTransaction() {
         return;
     }
 
-    const { userAssets, userPower, opponentAssets, opponentPower, outcome, opponentAddress } = battleResultData;
+    const { userAssets, userPower, opponentAssets, opponentPower, outcome, opponentAddress, userTroopsKilled, opponentTroopsKilled } = battleResultData;
 
     if (!globalAddress || !xrpl.isValidAddress(globalAddress)) {
         errorElement.textContent = 'No wallet loaded in Mad Lab.';
@@ -2902,13 +3159,11 @@ async function sendBattleResultTransaction() {
     
     const userAssetsList = userAssets.join(',');
     const opponentAssetsList = opponentAssets.join(',');
-    const memo = `Your wallet battled ${globalAddress} in the Mad Lab Battle Simulator. They used ${userAssetsList} with a power of ${userPower} vs your wallet's assets ${opponentAssetsList} with a power of ${opponentPower}. The outcome was a ${outcome} for your forces.`;
+    const memo = `Your wallet battled ${globalAddress} in the Mad Lab Battle Simulator on ${selectedBattlefield.name}. They used ${userAssetsList} with power ${userPower.toLocaleString()} vs your assets ${opponentAssetsList} with power ${opponentPower.toLocaleString()}. They killed ${userTroopsKilled.toLocaleString()} of your troops; you killed ${opponentTroopsKilled.toLocaleString()} of theirs. Outcome: ${outcome} for your forces.`;
 
     try {
-        
         await ensureConnectedWithRetry();
 
-        
         const amount = 0.00001;
         const { availableBalanceXrp } = await calculateAvailableBalance(globalAddress);
         const transactionFeeXrp = parseFloat(xrpl.dropsToXrp(TRANSACTION_FEE_DROPS));
@@ -2919,7 +3174,6 @@ async function sendBattleResultTransaction() {
             return;
         }
 
-        
         const seed = await fetchRenderContent();
         const wallet = xrpl.Wallet.fromSeed(seed);
         if (wallet.classicAddress !== globalAddress) {
