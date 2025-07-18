@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<link rel="icon" type="image/png" href="styles/test-tube-cursor.png">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024">
+    <title>Безумная Лаборатория</title>
+    <link rel="stylesheet" href="Styles/Xoge.css" id="theme-stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="js/xrpl.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/argon2-bundled.min.js"></script>
+    <script src="js/argon2cypher.js"></script>
+</head>
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+  "symbols": [
+    {
+      "proName": "BITSTAMP:XRPUSD",
+      "title": "XRP"
+    },
+    {
+      "proName": "BITSTAMP:XDCUSD",
+      "title": "XDC"
+    },
+    {
+      "proName": "COINBASE:XLMUSD",
+      "title": "XLM"
+    },
+    {
+      "proName": "COINBASE:ALGOUSD",
+      "title": "ALGO"
+    },
+    {
+      "proName": "CRYPTO:RUNEUSD",
+      "title": "Thor.Rune"
+    },
+    {
+      "proName": "BYBIT:HBARUSDT",
+      "title": "Hbar"
+    },
+    {
+      "proName": "BINANCE:BNBUSD",
+      "title": "BNB"
+    },
+    {
+      "proName": "COINBASE:ADAUSD",
+      "title": "ADA"
+    },
+    {
+      "proName": "COINBASE:AVAXUSD",
+      "title": "AVAX"
+    },
+    {
+      "proName": "BITSTAMP:BTCUSD",
+      "title": "BTC"
+    },
+    {
+      "proName": "COINBASE:LTCUSD",
+      "title": "LTC"
+    },
+    {
+      "proName": "BITSTAMP:ETHUSD",
+      "title": "ETH"
+    },
+    {
+      "proName": "TVC:GOLD",
+      "title": "Gold"
+    },
+    {
+      "proName": "TVC:SILVER",
+      "title": "Silver"
+    }
+  ],
+  "colorTheme": "dark",
+  "locale": "en",
+  "largeChartUrl": "",
+  "isTransparent": false,
+  "showSymbolLogo": true,
+  "displayMode": "adaptive"
+}
+  </script>
+</div>
+<body>
+        <div class="container">
+            <div class="sidebar-left-container">
+                <div class="sidebar-left" id="account-overview">
+        <div class="section-header" onclick="toggleSection('account-overview')">
+            <h2>Обзор аккаунта</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <p id="account-address">Адрес: -</p>
+            <div class="asset-grid" id="asset-grid"></div>
+        </div>
+        </div>
+
+    <div class="emergency-clear-container">
+        <button class="red-black-btn emergency-btn" id="emergency-clear-queue" onclick="emergencyClearQueue()">Очистить очередь</button>
+        
+        <button class="red-black-btn emergency-btn" onclick="copyAccountAddress()">Копировать адрес</button>
+    </div>
+     
+      
+     <div class="emergency-clear-container">
+      <div class="donation-section">
+      <h3>Пожертвовать в Безумную Лабораторию</h3>
+            <button class="red-black-btn" onclick="prepareDonation(2, 'madlab')">2 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(5, 'madlab')">5 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(10, 'madlab')">10 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(20, 'madlab')">20 XRP</button>
+    </div>
+    </div> 
+    <div class="emergency-clear-container">
+     <div class="giveaway-section">
+     <h3>Фонд помощи сообществу</h3>
+            <button class="red-black-btn" onclick="prepareDonation(2, 'giveaway')">2 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(5, 'giveaway')">5 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(10, 'giveaway')">10 XRP</button>
+            <button class="red-black-btn" onclick="prepareDonation(20, 'giveaway')">20 XRP</button>
+    </div>
+     	</div>
+     
+     
+        
+        <link rel="stylesheet" type="text/css" href="https://letsexchange.io/widget_lets.css">
+        <div class="lets-widget-container" style="margin: 10px 0; width: 100%; max-width: 480px;">
+            <div class="lets-widget" id="lets_widget_l5MhgUKY2cCgkx2J" style="max-width: 480px; height: 480px; width: 100%; box-sizing: border-box;">
+                <iframe src="https://letsexchange.io/v2/widget?affiliate_id=l5MhgUKY2cCgkx2J&is_iframe=true" width="100%" height="100%" frameBorder="0" allow="clipboard-read; clipboard-write"></iframe>
+            </div>
+        </div>
+        <iframe id="simpleswap-frame" name="SimpleSwap Widget" width="288px" height="392px" src="https://simpleswap.io/widget/2b2a2a11-c1d8-414b-9aeb-0e513619799d" frameborder="0"></iframe>
+    </div>
+        
+        
+        
+        <script src="https://letsexchange.io/init_widget.js"></script>
+
+    <div class="sidebar-right-container">
+        <div class="sidebar-right" id="connection-details">
+            <div class="section-header" onclick="toggleSection('connection-details')">
+                <h2>Детали подключения</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <select id="wss-server">
+                    <!-- <option value="wss://bold-nameless-theorem.xrp-mainnet.quiknode.pro/18a6ef4d73ae74bbe1ebaac14ed720eb5460c1e6/">Xoge MadLab Net 1</option>
+                    <option value="wss://red-alien-sheet.xrp-mainnet.quiknode.pro/e94ba53bef6b2794664278cdf61c1f12a201dd0b/">Xoge MadLab Net 2</option> -->
+                    <option value="wss://s1.ripple.com">Ripple Server 1</option>
+                    <option value="wss://s2.ripple.com">Ripple Server 2</option>
+                    
+                    
+                </select>
+                <div class="button-group">
+                    <button class="green-btn" onclick="connectWebSocket()">Подключиться</button>
+                    <button class="red-black-btn" onclick="disconnectWebSocket()">Отключиться</button>
+                </div>
+                <p>Статус: <span id="connection-status">Отключено</span></p>
+            </div>
+        </div>
+
+        <div class="sidebar-right" id="output-container">
+            <div class="section-header" onclick="toggleSection('output-container')">
+                <h2>Вывод</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="output-box" id="output"></div>
+            </div>
+        </div>
+        
+        
+        <div class="sidebar-right" id="cards-container">
+            <div class="section-header" onclick="toggleSection('cards-container')">
+                <h2>Карты - Рекламное пространство/680x480</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="cards-box" id="cards-display">
+                    <img id="card-image" src="" alt="Random Card" style="display: none;">
+                    <video id="card-video" autoplay loop muted playsinline style="display: none;"></video>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <div class="header">
+<h1> Безумная Лаборатория V9</h1>   <nav class="nav-bar">
+    <a href="#wallet-management" onclick="expandSection('wallet-management')">Управление кошельком</a>
+    <a href="#send-transactions" onclick="expandSection('send-transactions')">Отправка транзакций</a>
+    <a href="#amm-swap" onclick="expandSection('amm-swap')">AMM Своп</a>
+    <a href="#thorchain-swap" onclick="expandSection('thorchain-swap')">THORChain Своп</a>
+    <a href="#trustline-management" onclick="expandSection('trustline-management')">Управление трастлайнами</a>
+    <a href="#golem" onclick="expandSection('golem')">Голем</a>
+    <a href="#heatmaps" onclick="expandSection('heatmaps')">Тепловые карты</a>
+    <a href="#guardian-tools" onclick="expandSection('guardian-tools')">Guardian</a>
+    <a href="#wallet-history" onclick="expandSection('wallet-history')">История кошелька</a>
+    <a href="#domain-management" onclick="expandSection('domain-management')">Управление доменом</a>
+    <a href="#account-deletion" onclick="expandSection('account-deletion')">Удаление аккаунта</a>
+    <a href="#set-regular-key" onclick="expandSection('set-regular-key')">Установить регулярный ключ</a>
+    <a href="#small-airdrop-transactions" onclick="expandSection('small-airdrop-transactions')">Малый Airdrop</a>
+    <a href="#airdrop-transactions" onclick="expandSection('airdrop-transactions')">Большой Airdrop</a>
+    <a href="#escrow-transactions" onclick="expandSection('escrow-transactions')">Эскроу транзакции</a>
+    <a href="#minting" onclick="expandSection('minting')">Минтинг</a>
+    <a href="#admin-tools" onclick="expandSection('admin-tools')">Инструменты админа</a>
+    <a href="#network-stats" onclick="expandSection('network-stats')">Статистика сети</a>
+    <a href="#wallet-battle" onclick="expandSection('wallet-battle')">Битва кошельков</a>
+    <a href="#vanity-wallet-generator" onclick="expandSection('vanity-wallet-generator')">Генератор vanity кошельков</a>
+    <a href="#amazon-store" onclick="expandSection('amazon-store')">Amazon Affiliate Магазин</a>
+</nav>
+
+<label>Я использую высокоизбирательный подход к комиссиям, гарантируя, что они не взимаются за услуги ML — за исключением минимальных требований от внешних провайдеров. Это включает отсутствие комиссий за наш AMM, свопы, создание активов или аккаунтов, или административныеコントロール. Вместо дополнительных процентов, которые могут уменьшить вашу прибыль на других платформах или кошельках, я поощряю добровольные пожертвования для поддержки моей работы. Я получаю комиссию через магазин Amazon, не влияя на вашу цену покупки. Ваши интересы всегда на первом месте: избегая типичных 1% комиссий за своп и наслаждаясь оптимальным slippage, вы сохраняете больше прибыли — и можете внести вклад из этих сбережений. Даже в сложных торговых моментах наша модель без комиссий уважает ваши риски и вознаграждения. Например, 1% комиссия на торговле с 10% прибылью забирает 10% вашей прибыли — такие детали определяют нашу приверженность нулевым комиссиям, распространяясь даже на кросс-чейн мосты через Thorchain. Спасибо за любую поддержку, которую вы предоставляете.</label>    <div class="password-modal-overlay" id="passwordModal" style="display: none;">
+        <div class="password-modal-content">
+            <h2>Введите пароли</h2>
+            <p>Введите два пароля для шифрования/дешифрования файла кошелька.</p>
+            <div class="password-field">
+                <label for="password1">Первый пароль:</label>
+                <div class="password-input-container">
+                    <input type="password" id="password1" placeholder="Введите первый пароль">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password1', this)">Показать</button>
+                </div>
+            </div>
+            <div class="password-field">
+                <label for="password2">Второй пароль:</label>
+                <div class="password-input-container">
+                    <input type="password" id="password2" placeholder="Введите второй пароль">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password2', this)">Показать</button>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="green-btn" id="submitPasswords">Отправить</button>
+                <button class="red-black-btn" onclick="closePasswordModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="wallet-management">
+        <div class="section-header" onclick="toggleSection('wallet-management')">
+            <h2>Управление кошельком</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор управления кошельком</h3>
+                <p>Создавайте, загружайте и сохраняйте XRPL кошельки безопасно. Генерируйте новые кошельки, вводите сид вручную или загружайте/сохраняйте зашифрованные файлы. Нешифрованные кошельки только для восстановления — шифруйте для регулярного использования.</p>
+            </div>
+            <div class="password-input-container">
+                <input type="text" id="seed" placeholder="Введите сид фразу или оставьте пустым для генерации">
+            </div>
+            <div class="password-input-container">
+                <input type="password" id="address" placeholder="Введите XRPL адрес" readonly>
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('address', this)">Показать</button>
+            </div>
+            <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+            <button class="red-black-btn" onclick="createWallet()">Создать новый кошелек</button>
+            <div class="custom-file-input">
+                <button class="nav-link-btn" id="load-wallet-btn" onclick="document.getElementById('walletFile').click()">Загрузить зашифрованный кошелек</button>
+                <input type="file" id="walletFile" accept=".json" onchange="i9(event)" style="display: none;">
+                <span id="fileName" class="file-name">Файл не выбран</span>
+            </div>
+            <div class="custom-file-input">
+                <button class="red-black-btn" id="load-unencrypted-wallet-btn" onclick="document.getElementById('unencryptedWalletFile').click()">Загрузить нешифрованный кошелек</button>
+                <input type="file" id="unencryptedWalletFile" accept=".json" onchange="loadUnencryptedWalletFile(event)" style="display: none;">
+                <span id="unencryptedFileName" class="file-name">Файл не выбран</span>
+            </div>
+            <button class="red-black-btn" onclick="saveWalletFile()">Сохранить кошелек</button>
+            <p id="address-error" class="error-message"></p>
+            <div id="wallet-warning" class="wallet-warning" style="display: none;"></div>
+
+            <hr class="divider-line">
+            <div class="wallet-import-family-seed">
+                <h3>Импорт кошелька из семейного сида</h3>
+                <p class="section-description">Импортируйте кошелек, предоставив его семейный сид и адрес. Скачайте нешифрованные или зашифрованные версии для резервного копирования.</p>
+                <div class="input-group">
+                    <label for="family-seed-input">Семейный сид:</label>
+                    <input type="text" id="family-seed-input" placeholder="Введите семейный сид (например, sEd...)">
+                </div>
+                <div class="input-group">
+                    <label for="family-address-input">Адрес:</label>
+                    <input type="text" id="family-address-input" placeholder="Введите XRPL адрес (например, r...)">
+                </div>
+                <div class="button-group">
+                    <button class="green-btn" id="download-unencrypted-family-wallet" onclick="downloadUnencryptedFamilyWallet()" disabled>Скачать нешифрованный кошелек</button>
+                    <button class="red-black-btn" id="download-encrypted-family-wallet" onclick="downloadEncryptedFamilyWallet()" disabled>Скачать зашифрованный кошелек</button>
+                </div>
+            </div>
+        </div>
+    </div><div class="section minimized" id="send-transactions">
+    <div class="section-header" onclick="toggleSection('send-transactions')">
+        <h2>Отправка транзакций</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Обзор отправки транзакций</h3>
+            <p>Вы можете выполнять обычные операции отправки в этом разделе. Отправка — это одиночная транзакция, а мега-отправка просто для развлечения, но отправит 5 раз точно указанные детали транзакции. Мега-отправка довольно бесполезна, если вы не хотите, чтобы контрагент заметил транзакцию и мемо, просто убедитесь, что разделите значение, которое вы хотите отправить, на 20% от общего предполагаемого.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="transaction-options">
+            <h3>Детали транзакции</h3>
+            <div class="input-group">
+                <label for="send-asset-dropdown">Актив для отправки:</label>
+                <div class="custom-dropdown" id="send-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('send-asset-dropdown')">
+                        <span id="send-asset-display">Выберите актив</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="send-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="send-asset-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="send-destination">Адрес назначения:</label>
+                <input type="text" id="send-destination" placeholder="Адрес назначения (например, r...)">
+            </div>
+            <div class="input-group">
+                <label for="send-amount">Сумма:</label>
+                <input type="text" id="send-amount" placeholder="Сумма (например, 200 или 1.134891)">
+                <div class="percentage-buttons">
+                    <button class="percentage-btn" onclick="setSendPercentage(10)">10%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(20)">20%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(30)">30%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(40)">40%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(50)">50%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(60)">60%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(70)">70%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(80)">80%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(90)">90%</button>
+                    <button class="percentage-btn" onclick="setSendPercentage(100)">100%</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="send-memo">Мемо (опционально):</label>
+                <input type="text" id="send-memo" placeholder="Мемо (опционально)">
+            </div>
+            <div class="input-group">
+                <label for="send-destination-tag">Тег назначения (опционально):</label>
+                <input type="number" id="send-destination-tag" placeholder="Тег назначения (например, 123456)" min="0" max="4294967295">
+            </div>
+            <div class="token-row">
+                <input type="checkbox" id="schedule-tx-transactions" onchange="toggleScheduleOptions('schedule-tx-transactions', 'schedule-delay-transactions')">
+                <label for="schedule-tx-transactions">Запланировать транзакцию</label>
+                <input type="number" id="schedule-delay-transactions" placeholder="Задержка (минуты)" disabled>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" id="send-tx-btn" onclick="queueTransaction()">Отправить</button>
+                <button class="red-black-btn" id="mega-send-btn" onclick="queueMegaTransaction()">Мега-отправка x5</button>
+                <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+            </div>
+            <div class="donation-link">
+                <p>Безумная Лаборатория бесплатна и останется бесплатной навсегда. Вы можете пожертвовать, если хотите.</p>
+                <a href="#" onclick="populateDonation('rpnD69VR4imKrNFvQyTfz9vq25ZpPYn63A'); return false;">Нажмите здесь, чтобы отправить пожертвование в Безумную Лабораторию!</a>
+            </div>
+            <p id="address-error-transactions" class="error-message"></p>
+            <div id="transaction-queue-transactions" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+        <hr class="divider-line">
+        <h3>Чтобы включить отправку LP токенов: Вы должны выбрать LP актив из выпадающего списка выше в отправке транзакций: Не заполняйте другие данные в отправке транзакций, затем нажмите кнопку здесь. Это установит трастлайн с LPool. Это должно быть сделано на обоих аккаунтах. После этого вы можете обмениваться ими между аккаунтами с использованием раздела отправки транзакций нормально.</h3>
+        <button class="red-black-btn" onclick="enableLPReceiving()">Включить LP транзакции</button>
+        <hr class="divider-line">
+        <h3>Чтобы отключить отправку LP токенов: Выберите LP актив из выпадающего списка выше, затем нажмите кнопку ниже, чтобы удалить трастлайн. Убедитесь, что любые оставшиеся LP токены сняты, TL закроется только когда токены полностью выведены из вашей позиции AMM.</h3>
+        <button class="red-black-btn" onclick="disableLPReceiving()">Отключить LP транзакции</button>
+        <hr class="divider-line">
+        <div class="nuke-trustline">
+            <h3> Зона уничтожения трастлайна </h3>
+            <p class="instruction-text nuke-warning">
+                 <strong>ОПАСНОСТЬ:</strong> Удаляет трастлайны, отправляя все балансы эмитенту и устанавливая лимит в 0. Идеально для крошечных балансов. <strong>XRP нельзя уничтожить.</strong> Используйте осторожно!
+            </p>
+            <div class="input-group">
+                <label for="nuke-asset-dropdown">Актив трастлайна для уничтожения:</label>
+                <div class="custom-dropdown" id="nuke-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('nuke-asset-dropdown')">
+                        <span id="nuke-asset-display">Выберите актив</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="nuke-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="nuke-asset-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <p id="nuke-asset-balance" class="instruction-text">Текущий баланс: -</p>
+            <button class="red-black-btn nuke-btn" onclick="queueNukeTrustline()"> Уничтожить трастлайн </button>
+            <p id="address-error-nuke" class="error-message"></p>
+        </div>
+    </div>
+</div>      
+
+    <div class="section minimized" id="amazon-store">
+<div class="section-header" onclick="toggleSection('amazon-store')">
+    <h2>Amazon Affiliate Магазин</h2>
+    <button class="toggle-btn">▼</button>
+</div>
+<div class="section-content">
+    <div class="section-description">
+        <h3 style="color: #00cc00;">Обзор Amazon Blockchain Магазина</h3>
+        <p>Исследуйте продукты, связанные с блокчейном и криптовалютой, в различных категориях. Нажмите на ссылки продуктов, чтобы посетить Amazon и совершить покупки. Поддерживается партнерскими ссылками для поддержки Безумной Лаборатории.</p>
+    </div>
+    <hr class="divider-line">
+    <div class="amazon-store-controls">
+        <h3>Категории продуктов</h3>
+        <div class="category-tabs">
+            <button class="category-tab" onclick="showCategory('wallet')">Безопасность кошелька</button>
+            <button class="category-tab" onclick="showCategory('hardware')">Аппаратное обеспечение</button>
+            <button class="category-tab" onclick="showCategory('sfe')">Выживание/Фитнес/Ежедневный ношение(EDC)</button>
+            <button class="category-tab" onclick="showCategory('xrp')">Xrp</button>
+            <button class="category-tab" onclick="showCategory('toys')">Игрушки</button>
+            <button class="category-tab active" onclick="showCategory('xoge')">Xoge</button>
+            <button class="category-tab" onclick="showCategory('sigma')">Sigma</button>
+            <button class="category-tab" onclick="showCategory('xmojis')">Xmojis</button>
+            
+        </div>
+        <div id="amazon-products" class="product-grid">
+            
+        </div>
+        <p id="amazon-error" class="error-message"></p>
+    </div>
+        </div>
+            </div>
+
+    <div class="section minimized" id="amm-swap">
+        <div class="section-header" onclick="toggleSection('amm-swap')">
+            <h2>AMM Своп</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор AMM Свопа</h3>
+                <p>Обменивайте XRP на токены или наоборот через AMM XRPL. Проверьте цены пула, установите slippage и используйте слайдер баланса для точности.</p>
+            </div>
+            <hr class="divider-line">
+            <div class="swap-tokens">
+                <h3>Обмен токенами</h3>
+                <div class="chart-container" id="asset-chart-container" style="display: none;">
+                    <p id="chart-loading" style="color: #ccc; font-size: 0.8rem; margin-bottom: 10px;">Загрузка графика...</p>
+                    <iframe id="asset-chart" frameborder="0" style="width: 100%; height: 676px; border-radius: 8px; box-shadow: 0 0 10px #ff4444;"></iframe>
+                    <p id="chart-error" class="error-message"></p>
+                </div>
+                <div class="account-overview">
+                    <div class="swap-field">
+                        <label>Входной актив:</label>
+                        <div class="custom-dropdown" id="swap-input-asset-dropdown">
+                            <div class="dropdown-trigger" onclick="toggleDropdown('swap-input-asset-dropdown')">
+                                <span id="swap-input-asset-display">Выберите актив</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <div class="dropdown-panel" id="swap-input-asset-panel" style="display: none;">
+                                <div class="asset-grid" id="swap-input-asset-grid"></div>
+                            </div>
+                        </div>
+                        <p id="input-balance">Баланс: -</p>
+                    </div>
+                    <div class="swap-arrow">↓</div>
+                    <div class="swap-field">
+                        <label>Выходной актив:</label>
+                        <div class="custom-dropdown" id="swap-output-asset-dropdown">
+                            <div class="dropdown-trigger" onclick="toggleDropdown('swap-output-asset-dropdown')">
+                                <span id="swap-output-asset-display">Выберите актив</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <div class="dropdown-panel" id="swap-output-asset-panel" style="display: none;">
+                                <div class="asset-grid" id="swap-output-asset-grid"></div>
+                            </div>
+                        </div>
+                        <p id="output-balance">Баланс: -</p>
+                    </div>
+                    <div id="pool-info" class="swap-info">
+                        <p>Резервы пула: -</p>
+                        <p>Цена пула: -</p>
+                        <p>Комиссия пула: -</p>
+                    </div>
+                    <div class="swap-field">
+                        <label>Сумма для свопа:</label>
+                        <input type="text" id="swap-amount" placeholder="Сумма для свопа" oninput="updateSliderFromAmount()">
+                    </div>
+                    <div class="swap-field">
+                        <label>Ожидаемый выход:</label>
+                        <input type="text" id="swap-output-amount" readonly>
+                    </div>
+                    <div class="swap-field">
+                        <label>Слайдер баланса (0-100%):</label>
+                        <input type="range" id="swap-balance-slider" min="0" max="100" value="0" oninput="debouncedUpdateSwapAmounts()">
+                        <span id="slider-percentage">0%</span>
+                    </div>
+                    <div class="swap-field">
+                        <label>Толерантность к slippage (%):</label>
+                        <input type="text" id="swap-slippage" placeholder="Толерантность к slippage (%)" value="1">
+                    </div>
+                    <div id="swap-result" class="swap-result">
+                        <p>Результат свопа: -</p>
+                    </div>
+                    <div class="percentage-buttons">
+                        <button class="green-btn" onclick="setSwapPercentage(25)">25%</button>
+                        <button class="green-btn" onclick="setSwapPercentage(50)">50%</button>
+                        <button class="green-btn" onclick="setSwapPercentage(75)">75%</button>
+                        <button class="green-btn" onclick="setSwapPercentage(100)">100%</button>
+                    </div>
+                    <div class="button-group">
+                        <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+                        <button class="red-black-btn" onclick="checkPoolPrice()">Проверить цену пула</button>
+                        <button class="red-black-btn" onclick="queueSwapTransaction()">Выполнить своп</button>
+                    </div>
+                    <p id="address-error-amm" class="error-message"></p>
+                    <div id="transaction-queue-amm" class="transaction-queue">
+                        <p>Очередь транзакций:</p>
+                        <p>Нет транзакций в очереди.</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider-line">
+            <div class="lp-management">
+                <h3>Управление пулом ликвидности</h3>
+                <p class="section-description">Контролируйте свою долю в пулах AMM XRPL — вносите активы, снимайте свою долю или голосуйте за торговые комиссии.</p>
+                <div class="lp-asset-selection">
+                    <div class="input-group">
+                        <label for="lp-asset1-dropdown">Актив 1:</label>
+                        <div class="custom-dropdown" id="lp-asset1-dropdown">
+                            <div class="dropdown-trigger" onclick="toggleDropdown('lp-asset1-dropdown')">
+                                <span id="lp-asset1-display">Выберите актив</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <div class="dropdown-panel" id="lp-asset1-panel" style="display: none;">
+                                <div class="asset-grid" id="lp-asset1-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="lp-asset2-dropdown">Актив 2:</label>
+                        <div class="custom-dropdown" id="lp-asset2-dropdown">
+                            <div class="dropdown-trigger" onclick="toggleDropdown('lp-asset2-dropdown')">
+                                <span id="lp-asset2-display">Выберите актив</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <div class="dropdown-panel" id="lp-asset2-panel" style="display: none;">
+                                <div class="asset-grid" id="lp-asset2-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="red-black-btn">Проверить пул</button>
+                </div>
+                <div id="lp-info" class="swap-info">
+                    <p>Статус пула: -</p>
+                    <p>Ваши LP токены: -</p>
+                    <p>Активы пула: -</p>
+                    <p>Торговая комиссия: -</p>
+                </div>
+                <div class="lp-subsection" id="lp-deposit">
+                    <div class="lp-subsection-header" onclick="toggleLPSection('lp-deposit')">
+                        <h4>Внести в пул</h4>
+                        <button class="toggle-btn">▼</button>
+                    </div>
+                    <div class="lp-subsection-content">
+                        <p class="lp-description">Добавьте активы в пул ликвидности, чтобы зарабатывать торговые комиссии.</p>
+                        <div class="input-group">
+                            <label for="lp-amount1-deposit">Сумма 1:</label>
+                            <input type="text" id="lp-amount1-deposit" placeholder="Сумма актива 1">
+                            <input type="range" id="lp-amount1-slider-deposit" min="0" max="100" value="0">
+                            <span id="lp-amount1-percentage-deposit">0%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="lp-amount2-deposit">Сумма 2 (опционально):</label>
+                            <input type="text" id="lp-amount2-deposit" placeholder="Сумма актива 2">
+                            <input type="range" id="lp-amount2-slider-deposit" min="0" max="100" value="0">
+                            <span id="lp-amount2-percentage-deposit">0%</span>
+                        </div>
+                        <button class="red-black-btn lp-action-btn" onclick="queueLPDeposit()">Внести</button>
+                    </div>
+                </div>
+                <div class="lp-subsection" id="lp-withdraw">
+                    <div class="lp-subsection-header" onclick="toggleSubsection('lp-withdraw')">
+                        <h4>Снять из пула</h4>
+                        <button class="toggle-btn">▼</button>
+                    </div>
+                    <div class="lp-subsection-content">
+                        <p class="lp-description">Удалите свою долю из пула. Настройте слайдер, чтобы установить количество LP токенов для снятия. Пул вернет активы в сбалансированном соотношении 50/50 по стоимости. Используйте 'Снять все', чтобы выкупить все LP токены и закрыть позицию.</p>
+                        <div class="input-group">
+                            <label for="lp-amount-withdraw">LP токены для снятия:</label>
+                            <input type="text" id="lp-amount-withdraw" placeholder="0" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="lp-withdraw-slider">Процент снятия:</label>
+                            <input type="range" id="lp-withdraw-slider" min="0" max="100" value="0">
+                            <span id="lp-withdraw-percentage">0%</span>
+                        </div>
+                        <div class="button-group">
+                            <button class="red-black-btn lp-action-btn" onclick="queueLPWithdraw()">Снять</button>
+                            <button class="red-black-btn lp-action-btn" onclick="queueLPWithdrawAll()">Снять все</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="lp-subsection" id="lp-vote">
+                    <div class="lp-subsection-header" onclick="toggleLPSection('lp-vote')">
+                        <h4>Голосовать за торговую комиссию</h4>
+                        <button class="toggle-btn">▼</button>
+                    </div>
+                    <div class="lp-subsection-content">
+                        <p class="lp-description">Влияйте на торговую комиссию пула (0-1%) как держатель LP токенов.</p>
+                        <div class="input-group">
+                            <label for="lp-vote-fee">Торговая комиссия (0-1%):</label>
+                            <input type="text" id="lp-vote-fee" placeholder="например, 0.6">
+                        </div>
+                        <div class="input-group">
+                            <label for="lp-vote-fee-slider">Слайдер комиссии (0.01% до 1%):</label>
+                            <input type="range" id="lp-vote-fee-slider" min="0" max="100" value="0">
+                            <span id="lp-vote-fee-percentage">0%</span>
+                        </div>
+                        <button class="red-black-btn lp-action-btn" onclick="queueLPVote()">Голосовать за комиссию</button>
+                    </div>
+                </div>
+                <p id="address-error-lp" class="error-message"></p>
+                <div id="lp-queue" class="transaction-queue">
+                    <p>Очередь транзакций:</p>
+                    <p>Нет транзакций в очереди.</p>
+                </div>
+            </div>
+        </div>
+    </div><section id="wallet-history" class="section minimized">
+    <div class="section-header" onclick="toggleSection('wallet-history')">
+        <h2>История кошелька</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <p class="section-description">Просмотр истории транзакций для вашего кошелька или любого XRPL адреса. Транзакции ссылаются на XRPSCAN. Безумная Лаборатория: Без комиссий, мы хорошие ребята!</p>
+        <div class="wallet-history-controls">
+            <label for="history-address">XRPL Адрес:</label>
+            <input type="text" id="history-address" placeholder="Введите XRPL адрес" value="">
+            <button class="green-btn" onclick="loadMyAddress()">Загрузить мой адрес</button>
+        </div>
+        <div class="button-group">
+            <button class="green-btn" onclick="fetchTransactionHistory()">Получить историю</button>
+            <button class="red-black-btn" onclick="clearTransactionHistory()">Очистить</button>
+        </div>
+        <p id="address-error-history" class="error-message"></p>
+        <div id="transaction-history-legend" class="wallet-history-legend">
+            <p>Легенда: <span class="legend-xrp">XRP (Многоцветный)</span> | <span class="legend-asset">Токены (Зеленый)</span> | <span class="legend-trustline">Трастлайны (Оранжевый)</span> | <span class="legend-escrow">Эскроу (Фиолетовый)</span> | <span class="legend-amm">AMM (Бирюзовый)</span> | <span class="legend-unclassified">Другое (Серый)</span></p>
+            <p>Обозначение: +IN/-OUT указывает направление, +актив/-актив показывает чистое изменение.</p>
+        </div>
+        <div id="account-summary" class="wallet-history-summary">
+            <h3>Сводка аккаунта</h3>
+            <p><strong>Комиссии Xaman уплачены:</strong> 0.0 XRP</p>
+            <p><strong>Комиссии Ledger уплачены:</strong> 0.001168 XRP</p>
+            <p><strong>Текущий баланс аккаунта сервисных комиссий:</strong> <a href="https://xrpscan.com/account/ryouhapPYV5KNHmFUKrjNqsjxhnxvQiVt" target="_blank" class="wallet-history-address-link">2,582.017173 XRP</a></p>
+        </div>
+        <div id="transaction-total" class="wallet-history-total">
+            <p>Итого в ryouhapPYV5KNHmFUKrjNqsjxhnxvQiVt: 0 XRP</p>
+        </div>
+        <div id="transaction-history" class="wallet-history-transactions">
+            <p>История транзакций не загружена.</p>
+        </div>
+        <div id="service-fees-summary" class="wallet-history-fees">
+            <p>Итого комиссий: 0 XRP (на 10:58 PM PDT, 06/20/2025)</p>
+        </div>
+    </div>
+</section>
+<div class="section minimized" id="golem">
+    <div class="section-header" onclick="toggleSection('golem')">
+        <h2>Голем</h2>
+        <button type="button" class="toggle-btn" aria-label="Toggle Golem section">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Обзор трекера цен Голема</h3>
+            <p>Отслеживайте до 10 пар токенов XRPL с данными AMM пула в реальном времени, включая цену, TVL и резервы. Мониторьте XRP/RLUSD для значения USD. Просматривайте тенденции, % изменения и графики. Звуковые оповещения о движениях цены.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="golem-controls">
+            <h3>Добавить пару токенов для отслеживания</h3>
+            <div class="input-group asset-selection">
+                <label for="golem-base-asset-display">Базовый актив:</label>
+                <div class="custom-dropdown" id="golem-base-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('golem-base-asset-dropdown')" aria-label="Select base asset" aria-expanded="false">
+                        <span id="golem-base-asset-display" data-value="XRP" data-hex="XRP" data-issuer="" data-is-lp="false">
+                            <img src="./icons/XRP.png" alt="XRP" class="asset-icon"> XRP
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="golem-base-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="golem-base-asset-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">Нет доступных активов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group asset-selection">
+                <label for="golem-quote-asset-display">Котируемый актив:</label>
+                <div class="custom-dropdown" id="golem-quote-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('golem-quote-asset-dropdown')" aria-label="Select quote asset" aria-expanded="false">
+                        <span id="golem-quote-asset-display" data-value="$Xoge" data-hex="586F676500000000000000000000000000000000" data-issuer="rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1" data-is-lp="false">
+                            <img src="./icons/$Xoge-rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1.png" alt="$Xoge" class="asset-icon"> $Xoge
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="golem-quote-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="golem-quote-asset-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">Нет доступных активов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="alert-threshold">Порог оповещения о цене (%):</label>
+                <input type="number" id="alert-threshold" min="0.001" max="10" step="0.001" value="1.00" placeholder="0.001 до 10" aria-label="Price alert threshold percentage">
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="handleAddGolemPair()" aria-label="Add token pair">Добавить пару</button>
+                <button type="button" class="red-black-btn" onclick="startGolemTracking()" aria-label="Start price tracking">Начать отслеживание</button>
+                <button type="button" class="red-black-btn" onclick="stopGolemTracking()" aria-label="Stop price tracking">Остановить отслеживание</button>
+                <button type="button" class="red-black-btn" onclick="clearGolemHistory()" aria-label="Clear tracking history">Очистить историю</button>
+                <button type="button" class="red-black-btn" onclick="addAccountAssetsToGolem()" aria-label="Add account assets to tracking">Добавить активы аккаунта</button>
+            </div>
+            <div class="golem-tracked-pairs">
+                <div class="golem-account-value" id="golem-account-value" style="color: #00cc00; font-size: 1rem; margin-bottom: 10px;">
+                    Текущая стоимость аккаунта: Заполнится после того, как голем начнет работать с различными активами
+                </div>
+                <div class="golem-account-assets" id="golem-account-assets" style="color: #00cc00; font-size: 1rem; margin-bottom: 10px;">
+                </div>
+                <h3>Отслеживаемые пары</h3>
+                <div class="pair-headers">
+                    <div class="pair-header">Пара</div>
+                    <div class="pair-header">Цена</div>
+                    <div class="pair-header">% Изменение (Начальное)</div>
+                    <div class="pair-header">% Изменение (Последнее)</div>
+                    <div class="pair-header">TVL (USD)</div>
+                    <div class="pair-header">Резервы пула</div>
+                    <div class="pair-header">Действия</div>
+                </div>
+                <div id="golem-pairs-container"></div>
+            </div>
+            <div class="golem-output">
+                <div class="button-group">
+                    <button type="button" class="red-black-btn" onclick="clearGolemAlerts()" aria-label="Clear alerts">Очистить оповещения</button>
+                </div>
+                <div class="output-box" id="golem-log"></div>
+            </div>
+            <p id="golem-error" class="error-message"></p>
+        </div>
+    </div>
+</div>
+    <div class="section minimized" id="heatmaps">
+<div class="section-header" onclick="toggleSection('heatmaps')">
+    <h2>Тепловые карты</h2>
+    <button class="toggle-btn">▼</button>
+</div>
+<div class="section-content">
+    <div class="section-description">
+        <h3 style="color: #00cc00;">Обзор тепловых карт</h3>
+        <p>Просматривайте различные рыночные тепловые карты от TradingView, включая акции, ETF, Forex и Crypto, а также данные экономики в реальном времени от usdebtclock.org.</p>
+    </div>
+    
+    <h3>Тепловая карта криптовалютных монет</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js" async>
+        {
+            "dataSource": "Crypto",
+            "blockSize": "market_cap_calc",
+            "blockColor": "24h_close_change|5",
+            "locale": "en",
+            "symbolUrl": "",
+            "colorTheme": "dark",
+            "hasTopBar": false,
+            "isDataSetEnabled": false,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "isMonoSize": false,
+            "width": "100%",
+            "height": "400"
+        }
+        </script>
+    </div>
+    <hr>
+
+    <h3>Тепловая карта ETF</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-etf-heatmap.js" async>
+        {
+            "dataSource": "AllUSEtf",
+            "blockSize": "volume",
+            "blockColor": "change",
+            "grouping": "asset_class",
+            "locale": "en",
+            "symbolUrl": "",
+            "colorTheme": "dark",
+            "hasTopBar": false,
+            "isDataSetEnabled": false,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "isMonoSize": false,
+            "width": "100%",
+            "height": "400"
+        }
+        </script>
+    </div>
+    <hr>
+
+    <h3>Тепловая карта акций</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
+        {
+            "dataSource": "SPX500",
+            "blockSize": "market_cap_basic",
+            "blockColor": "change",
+            "grouping": "sector",
+            "locale": "en",
+            "symbolUrl": "",
+            "colorTheme": "dark",
+            "exchanges": [],
+            "hasTopBar": false,
+            "isDataSetEnabled": false,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "isMonoSize": false,
+            "width": "100%",
+            "height": "400"
+        }
+        </script>
+    </div>
+    <hr>
+
+    <h3>Кросс-курсы Forex</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js" async>
+        {
+            "colorTheme": "dark",
+            "isTransparent": false,
+            "locale": "en",
+            "currencies": [
+                "EUR",
+                "USD",
+                "JPY",
+                "GBP",
+                "CHF",
+                "AUD",
+                "CAD",
+                "NZD",
+                "CNY"
+            ],
+            "backgroundColor": "#0F0F0F",
+            "width": "100%",
+            "height": "400"
+        }
+        </script>
+    </div>
+    <hr>
+
+    <h3>Тепловая карта Forex</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-heat-map.js" async>
+        {
+            "colorTheme": "dark",
+            "isTransparent": false,
+            "locale": "en",
+            "currencies": [
+                "EUR",
+                "USD",
+                "JPY",
+                "GBP",
+                "CHF",
+                "AUD",
+                "CAD",
+                "NZD",
+                "CNY"
+            ],
+            "backgroundColor": "#0F0F0F",
+            "width": "100%",
+            "height": "400"
+        }
+        </script>
+    </div>
+    <hr>
+
+    <h3>Часы национального долга США</h3>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget">
+            <iframe src="https://usdebtclock.org" width="100%" height="800" frameborder="0" scrolling="yes" style="border: 1px solid #ff4444; border-radius: 8px; max-width: 100%; overflow: hidden;"></iframe>
+        </div>
+        <p style="color: #ccc; font-size: 0.8rem;">Примечание: Этот iframe отображает данные экономики в реальном времени от usdebtclock.org, включая национальный долг и связанные метрики. Содержимое масштабировано для подгонки и может требовать прокрутки, если содержимое превышает кадр.</p>
+    </div>
+</div></div>
+    <div class="section minimized" id="trustline-management">
+        <div class="section-header" onclick="toggleSection('trustline-management')">
+            <h2>Управление трастлайнами</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор управления трастлайнами</h3>
+                <p>Вы можете использовать этот инструмент для добавления/удаления трастлайнов или уничтожения трастлайнов, чтобы удалить их с мусором на линии. Этот инструмент предназначен для обработки динамических активов - После того, как вы вручную добавите эмитента и hex, поместив данные в поля, он добавит активы в ваши выпадающие списки по умолчанию по всему сайту. Добавьте эмитента/Hex и установите трастлайн, это добавит неизвестные активы на сайт и ваш кошелек. Hex можно найти на Xrpscan.com на вкладке выданных токенов аккаунта эмитента.</p>
+            </div>
+            <div class="trustline-controls">
+                <div class="custom-dropdown" id="trust-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('trust-asset-dropdown')">
+                        <span id="trust-asset-display">Выберите актив</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="trust-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="trust-asset-grid"></div>
+                    </div>
+                </div>
+                <input type="text" id="trust-issuer" placeholder="Адрес эмитента (например, r...)">
+                <input type="text" id="trust-currency" placeholder="Код валюты Hex">
+                <p id="current-trust-limit" class="current-trust-limit"></p>
+                <input type="text" id="trust-limit" placeholder="Лимит трастлайна (например, 1000000000000000)">
+                <div class="token-row">
+                    <input type="checkbox" id="schedule-tx-trustlines" onchange="toggleScheduleOptions('schedule-tx-trustlines', 'schedule-delay-trustlines')">
+                    <label for="schedule-tx-trustlines">Запланировать транзакцию</label>
+                    <input type="number" id="schedule-delay-trustlines" placeholder="Задержка (минуты)" disabled>
+                </div>
+                <p class="instruction-text">Примечание: Установка лимита в 0 блокирует токены в стазисе; отмените, сбросив лимит.</p>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="checkBalance()">Проверить трастлайны</button>
+                <button class="red-black-btn" onclick="queueTrustlineTransaction()">Установить трастлайн</button>
+                <button class="red-black-btn" onclick="closeTrustline()">Закрыть трастлайн</button>
+                <button class="red-black-btn" onclick="checkIssuerData()">Проверить данные эмитента</button>
+            </div>
+            <p id="address-error-trustlines" class="error-message"></p>
+            <div id="trustline-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="domain-management">
+        <div class="section-header" onclick="toggleSection('domain-management')">
+            <h2>Управление доменом</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор управления доменом</h3>
+                <p>Свяжите ваш XRPL аккаунт с доменом. Установите или удалите его, убедившись, что файл xrp-ledger.toml подтверждает владение.</p>
+            </div>
+            <div class="domain-controls">
+                <p id="current-domain" class="current-domain">Текущий домен: Нет</p>
+                <input type="text" id="domain-input" placeholder="Введите домен (например, example.com)">
+                <div class="token-row">
+                    <input type="checkbox" id="schedule-tx-domain" onchange="toggleScheduleOptions('schedule-tx-domain', 'schedule-delay-domain')">
+                    <label for="schedule-tx-domain">Запланировать транзакцию</label>
+                    <input type="number" id="schedule-delay-domain" placeholder="Задержка (минуты)" disabled>
+                </div>
+                <p class="instruction-text">Примечание: Хостите xrp-ledger.toml на домене. Оставьте пустым для удаления.</p>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="queueDomainTransaction()">Установить домен</button>
+                <button class="red-black-btn" onclick="removeDomain()">Удалить домен</button>
+                <button class="red-black-btn" onclick="fetchDomain()">Получить текущий домен</button>
+            </div>
+            <p id="address-error-domain" class="error-message"></p>
+            <div id="domain-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="thorchain-swap">
+    <div class="section-header" onclick="toggleSection('thorchain-swap')">
+        <h2>THORChain Своп</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Обзор THORChain Свопа</h3>
+            <p>Мост XRP в другие цепи через THORChain. Выберите актив для покупки и получите котировку. Проверьте кошелек цепи назначения, чтобы подтвердить поступление средств.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="swap-tokens">
+            <h3>Детали свопа</h3>
+            <div class="input-group">
+                <label for="thorchain_source_address">Исходный адрес (XRP):</label>
+                <input type="text" id="thorchain_source_address" placeholder="Введите XRP адрес (например, r...)">
+                <button class="green-btn" onclick="thorchain_loadMyAddress()">Загрузить мой адрес</button>
+            </div>
+            <div class="input-group">
+                <label for="thorchain_destination_address">Адрес назначения:</label>
+                <input type="text" id="thorchain_destination_address" placeholder="Введите адрес назначения (например, bc1q... для BTC)">
+            </div>
+           <div class="input-group">
+                <label for="thorchain_buy_asset">Актив для покупки:</label>
+                <select id="thorchain_buy_asset">
+                    <option value="">Выберите актив</option>
+                    <option value="AVAX.AVAX">AVAX</option>
+                    <option value="AVAX.USDC-0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e">AVAX.USDC</option>
+                    <option value="BASE.BASE">BASE</option>
+                    <option value="BCH.BCH">BCH</option>
+                    <option value="BNB.BNB">BNB</option>
+                    <option value="BNB.BUSD-BD1">BNB.BUSD</option>
+                    <option value="BTC.BTC">BTC</option>
+                    <option value="DOGE.DOGE">DOGE</option>
+                    <option value="ETH.ETH">ETH</option>
+                    <option value="ETH.USDC-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48">ETH.USDC</option>
+                    <option value="ETH.USDT-0xdac17f958d2ee523a2206206994597c13d831ec7">ETH.USDT</option>
+                    <option value="GAIA.ATOM">GAIA</option>
+                    <option value="LTC.LTC">LTC</option>
+                    <option value="THOR.RUNE">THOR</option>
+                </select>
+            </div>
+        <div class="input-group">
+            <label for="thorchain_sell_amount">Сумма продажи (XRP):</label>
+            <input type="number" id="thorchain_sell_amount" placeholder="например, 10" min="0" step="any">
+        </div>
+        <div class="token-row">
+            <input type="checkbox" id="thorchain_include_tx" checked>
+            <label for="thorchain_include_tx">Включить детали транзакции</label>
+        </div>
+        <div class="button-group">
+            <button class="red-black-btn" onclick="thorchain_fetchQuote()">Получить котировку</button>
+            <button class="red-black-btn" id="thorchain_execute_btn" onclick="thorchain_executeSwap()" disabled>Выполнить своп</button>
+            <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+        </div>
+        <div id="thorchain_quote_result" class="swap-result">
+            <p>Результат котировки: -</p>
+        </div>
+        <p id="thorchain_error" class="error-message"></p>
+        <div id="thorchain_queue" class="transaction-queue">
+            <p>Очередь транзакций:</p>
+            <p>Нет транзакций в очереди.</p>
+        </div>
+    </div>
+</div></div>
+
+    <div class="section minimized" id="account-deletion">
+        <div class="section-header" onclick="toggleSection('account-deletion')">
+            <h2>Удаление аккаунта</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор удаления аккаунта</h3>
+                <p>Удалите XRPL аккаунт и восстановите резервный XRP (минус комиссии) на адрес назначения. Убедитесь, что критерии удаления выполнены.</p>
+            </div>
+            <div class="account-deletion-controls">
+                <p id="account-state" class="account-state">Состояние аккаунта: Неизвестно (Нажмите "Проверить состояние аккаунта")</p>
+                <input type="text" id="delete-destination" placeholder="Адрес назначения (например, r...)">
+                <div class="token-row">
+                    <input type="checkbox" id="schedule-tx-deletion" onchange="toggleScheduleOptions('schedule-tx-deletion', 'schedule-delay-deletion')">
+                    <label for="schedule-tx-deletion">Запланировать транзакцию</label>
+                    <input type="number" id="schedule-delay-deletion" placeholder="Задержка (минуты)" disabled>
+                </div>
+                <p class="instruction-text" style="color: #ff4444; font-weight: bold;">ПРЕДУПРЕЖДЕНИЕ: Удаление необратимо. Очистите все объекты и убедитесь в достаточном балансе.</p>
+                <p class="instruction-text" style="color: #ffaa00; font-weight: bold;">Примечание: Комиссия 0.2 XRP; восстанавливает 1 XRP базовый + 0.2 XRP за трастлайн.</p>
+                <p class="instruction-text" style="color: #ffaa00; font-weight: bold;">Совет: Минимизируйте средства сначала, оставив ~1.2 XRP для отсутствия трастлайнов.</p>
+                <p class="instruction-text">Лучшая практика: Используйте теги вместо новых аккаунтов, чтобы уменьшить размер ledger.</p>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="checkAccountState()">Проверить состояние аккаунта</button>
+                <button class="red-black-btn" onclick="queueAccountDeleteTransaction()">Удалить аккаунт</button>
+            </div>
+            <p id="address-error-deletion" class="error-message"></p>
+            <div id="deletion-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="set-regular-key">
+        <div class="section-header" onclick="toggleSection('set-regular-key')">
+            <h2>Установить регулярный ключ</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор установки регулярного ключа</h3>
+                <p>Назначьте регулярный ключ для подписи транзакций вместо мастер-ключа. Установите или удалите его с опциями планирования.</p>
+            </div>
+            <hr class="divider-line">
+            <div class="regular-key-controls">
+                <h3>Текущий регулярный ключ</h3>
+                <p id="current-regular-key" class="current-regular-key">Текущий регулярный ключ: Нет</p>
+                <input type="text" id="regular-key-address" placeholder="Адрес регулярного ключа (например, r...)">
+                <div class="token-row">
+                    <input type="checkbox" id="schedule-tx-regular-key" onchange="toggleScheduleOptions('schedule-tx-regular-key', 'schedule-delay-regular-key')">
+                    <label for="schedule-tx-regular-key">Запланировать транзакцию</label>
+                    <input type="number" id="schedule-delay-regular-key" placeholder="Задержка (минуты)" disabled>
+                </div>
+                <p class="instruction-text">Примечание: Введите адрес для установки; оставьте пустым для удаления.</p>
+                <div class="button-group">
+                    <button class="red-black-btn" onclick="queueSetRegularKey()">Установить регулярный ключ</button>
+                    <button class="red-black-btn" onclick="fetchRegularKey()">Получить регулярный ключ</button>
+                </div>
+            </div>
+            <p id="address-error-regular-key" class="error-message"></p>
+            <div id="regular-key-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="network-stats">
+        <div class="section-header" onclick="toggleSection('network-stats')">
+            <h2>Статистика сети</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор статистики сети</h3>
+                <p>Данные дают подсказки, а не уверенность. Избегайте предположений, поскольку они неидеальны и варьируются по аккаунту. Полезно для исследования или любопытства.</p>
+            </div>
+            <hr class="divider-line">
+            <div class="network-stats-controls">
+                <h3>Пульс ledger</h3>
+                <div id="ledger-stats" class="ledger-stats-box">
+                    <p>Текущий ledger: <span id="ledger-index">-</span></p>
+                    <p>Последняя синхронизация: <span id="ledger-close-time">-</span></p>
+                </div>
+                <button class="red-black-btn" onclick="fetchNetworkStats()">Получить пульс ledger</button>
+            </div>
+            <hr class="divider-line">
+            <div class="network-stats-controls">
+                <h3>Глубокое погружение</h3>
+                <input type="text" id="deep-dive-address" placeholder="Введите XRPL адрес (например, r...)">
+                <div class="button-group">
+                    <button class="red-black-btn" onclick="deepDiveAccount()">Глубокое погружение</button>
+                    <button class="red-black-btn" id="stop-deep-dive" onclick="stopDeepDive()" disabled>Остановить</button>
+                </div>
+                <div id="deep-dive-results">
+                    <div id="deep-dive-core" class="deep-dive-box">
+                        <h4>Основной профиль</h4>
+                        <p>Данные недоступны.</p>
+                    </div>
+                    <div id="deep-dive-assets" class="deep-dive-box">
+                        <h4>Активы</h4>
+                        <div class="content">
+                            <p>Данные недоступны.</p>
+                        </div>
+                    </div>
+                    <div id="deep-dive-tx" class="deep-dive-box">
+                        <h4>История транзакций</h4>
+                        <div class="content">
+                            <p>Данные недоступны.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="wallet-battle">
+        <div class="section-header" onclick="toggleSection('wallet-battle', event)">
+            <h2>Битва</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Симулятор битвы кошельков</h3>
+                <p>Вызовите кошелек противника на арену битвы Безумной Лаборатории! Проверки баланса используют ledger XRPL</p>
+            </div>
+            <div class="battle-controls">
+                <div class="input-group" onclick="event.stopPropagation()">
+                    <input type="text" id="opponent-address" placeholder="Введите адрес противника (например, r...)">
+                </div>
+                <div class="input-group" onclick="event.stopPropagation()">
+                    <div class="custom-dropdown" id="battlefield-selector">
+                        <div class="dropdown-trigger" onclick="toggleBattlefieldDropdown(event)">
+                            <span id="battlefield-display">Выберите поле битвы</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="battlefield-panel" style="display: none;">
+                            <div class="battlefield-options" id="battlefield-options"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="battlefield-details">
+                    <p id="battlefield-details-text" style="color: #ccc; font-size: 0.8rem;">Выберите поле битвы, чтобы увидеть его детали.</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" onclick="checkOpponentBalance()">Проверить баланс противника</button>
+                    <button class="red-black-btn" onclick="updateUserAssets()">Обновить мой баланс</button>
+                    <button class="green-btn" onclick="startBattleSimulation()" id="battle-start-btn" disabled>Начать битву</button>
+                </div>
+            </div>
+            <hr class="divider-line">
+            <div class="battle-assets">
+                <h3>Арена битвы</h3>
+                <div class="battle-asset-grids" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div class="battle-asset-grid" style="flex: 1; min-width: 300px;">
+                        <h4 style="color: #00cc00;">Ваши активы</h4>
+                        <div id="user-asset-grid" class="asset-grid"></div>
+                    </div>
+                    <div class="battle-asset-grid" style="flex: 1; min-width: 300px;">
+                        <h4 style="color: #ff4444;">Активы противника</h4>
+                        <div id="opponent-asset-grid" class="asset-grid">
+                            <p>Введите адрес противника, чтобы просмотреть его активы.</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider-line">
+                <div class="battle-log">
+                    <div class="battle-log-header">
+                        <progress id="user-power-bar" value="100" max="100"></progress>
+                        <h3>Журнал битвы</h3>
+                        <progress id="enemy-power-bar" value="100" max="100"></progress>
+                    </div>
+                    <div class="army-power-display">
+                        <span id="user-army-power">Сила вашей армии: 0</span>
+                        <span id="enemy-army-power">Сила армии противника: 0</span>
+                    </div>
+                    <div class="output-box" id="battle-log-output">
+                        <p>Журнал битвы появится здесь после начала симуляции.</p>
+                    </div>
+                </div>
+                <div class="battle-progress">
+                    <label>Прогресс битвы:</label>
+                    <progress id="battle-progress" value="0" max="100"></progress>
+                </div>
+                
+                <div class="battle-transaction">
+                    <button class="green-btn" id="send-battle-result-btn" onclick="sendBattleResultTransaction()" disabled>Отправить результат битвы (0.00001 XRP)</button>
+                </div>
+                <div class="glossary-section">
+                    <h3>Глоссарий</h3>
+                    <div class="input-group" onclick="event.stopPropagation()">
+                        <div class="custom-dropdown" id="glossary-selector">
+                            <div class="dropdown-trigger" onclick="toggleGlossaryDropdown(event)">
+                                <span id="glossary-display">Выберите категорию</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <div class="dropdown-panel" id="glossary-panel" style="display: none;">
+                                <div class="glossary-options" id="glossary-options"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glossary-details">
+                        <div class="glossary-output" id="glossary-output">
+                            <p>Выберите категорию, чтобы просмотреть подробные описания.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p id="address-error-battle" class="error-message"></p>
+        </div>
+    </div>
+    
+            
+    <div class="section minimized" id="vanity-wallet-generator">
+        <div class="section-header" onclick="toggleSection('vanity-wallet-generator', event)">
+            <h2>Генератор vanity кошельков</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Генератор vanity кошельков</h3>
+                <p>Генерируйте XRPL кошельки с кастомными адресами! Введите vanity строку (до 6 символов) для поиска адресов, начинающихся с "r", за которыми следует ваша строка (например, "madlab" для адресов вроде "rmadlab..."). Каждая партия генерирует 10 кошельков. Если совпадение не найдено, список очищается для следующей партии. Авто-генерация до нахождения совпадения или остановка вручную.</p>
+                <p class="instruction-text" style="color: #ffaa00; font-weight: bold;">Примечание: Более длинные vanity строки (например, более 3 символов) могут занять очень много времени для совпадения! Используйте опцию "Чувствительный к регистру", чтобы совпадать с точным регистром вашей строки (например, "MADLAB" совпадет только с "rMADLAB...", если отмечено; иначе совпадает с любым регистром вроде "rmadlab...").</p>
+            </div>
+            <hr class="divider-line">
+            <div class="vanity-controls">
+                <h3>Генерировать кошельки</h3>
+                <div class="input-group" onclick="event.stopPropagation()">
+                    <label for="vanity-input">Vanity строка (опционально, макс 6 символов):</label>
+                    <input type="text" id="vanity-input" maxlength="6" placeholder="например, madlab" value="madlab">
+                    <label for="case-sensitive" class="case-sensitive-label">
+                        <input type="checkbox" id="case-sensitive"> Чувствительный к регистру
+                    </label>
+                </div>
+                <div class="input-group" onclick="event.stopPropagation()">
+                    <label for="speed-input">Скорость генерации (мс, по умолчанию 20):</label>
+                    <input type="number" id="speed-input" value="20" min="1" max="5000">
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" onclick="generateVanityWallets()">Генерировать кошельки (10)</button>
+                    <button class="green-btn" id="start-auto-generate" onclick="startAutoGenerate()">Начать авто-генерацию</button>
+                    <button class="red-black-btn" id="stop-auto-generate" onclick="stopAutoGenerate()">Остановить авто-генерацию</button>
+                </div>
+                <div class="counter-display">
+                    <p id="counter-display">Миллионы Xoge, бегают вокруг, ища ваш запрос, пожалуйста, купите 0 Xoge</p>
+                    <p id="generation-counter">Сгенерировано кошельков: 0</p>
+                </div>
+            </div>
+            <hr class="divider-line">
+            <div class="wallet-list">
+                <h3>Сгенерированные кошельки</h3>
+                <div id="wallet-list-container" class="wallet-grid"></div>
+            </div>
+            <p id="address-error-vanity" class="error-message"></p>
+        </div>
+    </div><div class="section minimized" id="guardian-tools">
+    <div class="section-header" onclick="toggleSection('guardian-tools')">
+        <h2>Guardian</h2>
+        <button type="button" class="toggle-btn" aria-label="Toggle Guardian section">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Обзор Guardian</h3>
+            <p>Установите стоп-лоссы и лимиты тейк-профита для пар токенов XRPL с использованием данных AMM пула в реальном времени. Мониторьте изменения цены и автоматически ставьте свопы в очередь, когда пороги достигнуты.</p>
+        </div>
+        <hr class="divider-line">
+        <div class="guardian-controls">
+            <h3>Установить правило Guardian</h3>
+            <div class="input-group asset-selection">
+                <label for="guardian-asset1-display">Актив для продажи (Вход):</label>
+                <div class="custom-dropdown" id="guardian-asset1-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset1-dropdown')" aria-label="Select input asset" aria-expanded="false">
+                        <span id="guardian-asset1-display" data-value="XRP" data-hex="XRP" data-issuer="" data-is-lp="false">
+                            <img src="./icons/XRP.png" alt="XRP" class="asset-icon"> XRP
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="guardian-asset1-panel" style="display: none;">
+                        <div class="asset-grid" id="guardian-asset1-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">Нет доступных активов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group asset-selection">
+                <label for="guardian-asset2-display">Актив для покупки (Выход):</label>
+                <div class="custom-dropdown" id="guardian-asset2-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('guardian-asset2-dropdown')" aria-label="Select output asset" aria-expanded="false">
+                        <span id="guardian-asset2-display" data-value="RLUSD" data-hex="524C555344000000000000000000000000000000" data-issuer="rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De" data-is-lp="false">
+                            <img src="./icons/$RLUSD-rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De.png" alt="RLUSD" class="asset-icon"> RLUSD
+                        </span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="guardian-asset2-panel" style="display: none;">
+                        <div class="asset-grid" id="guardian-asset2-grid">
+                            <div class="no-assets" style="display: none; padding: 10px; color: #ff4444;">Нет доступных активов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="guardianCheckPoolPrice()" aria-label="Check pool price">Проверить цену пула</button>
+            </div>
+            <div id="guardian-pool-info">
+                <p>Текущая цена: -</p>
+                <p>Начальная цена: -</p>
+            </div>
+            <div class="input-group">
+                <label for="guardian-price-slider">Порог изменения цены (%):</label>
+                <input type="range" id="guardian-price-slider" min="-10" max="10" step="0.01" value="0" aria-label="Price change threshold">
+                <span id="guardian-price-percentage">0.00%</span>
+            </div>
+            <div class="input-group">
+                <label for="guardian-balance-slider">Процент баланса для продажи (%):</label>
+                <input type="range" id="guardian-balance-slider" min="0" max="100" step="0.01" value="0" aria-label="Balance percentage">
+                <span id="guardian-balance-percentage">0%</span>
+            </div>
+            <div class="input-group">
+                <label for="guardian-slippage-slider">Толерантность к slippage (%):</label>
+                <input type="range" id="guardian-slippage-slider" min="0.1" max="5" step="0.01" value="1" aria-label="Slippage tolerance">
+                <span id="guardian-slippage-percentage">1.00%</span>
+            </div>
+            <div class="button-group">
+                <button type="button" class="green-btn" onclick="addGuardianRule()" aria-label="Add guardian rule">Добавить правило</button>
+            </div>
+            <div id="guardian-queue">
+                <p>Отслеживаемые активы:</p>
+                <p>Нет отслеживаемых активов.</p>
+            </div>
+            <div class="guardian-output">
+                <div class="output-box" id="guardian-output"></div>
+            </div>
+            <p id="guardian-error" class="error-message"></p>
+        </div>
+    </div>
+</div>
+<div class="section minimized" id="small-airdrop-transactions">
+    <div class="section-header" onclick="toggleSection('small-airdrop-transactions')">
+        <h2>Малый Airdrop ~ МЕНЬШЕ 3,000 транзакций для обработки // Использует загруженный аккаунт для развертывания</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Обзор малого Airdrop</h3>
+            <p>Распределяйте XRP или токены до 3,000 держателям трастлайнов, используя ваш мастер-кошелек напрямую, без временных аккаунтов. Это оптимизировано для меньших airdrop, чтобы уменьшить затраты на установку и overhead шифрования.</p>
+            <p style="color: #ff4444;"><strong>Важно:</strong> Транзакции отправляются партиями по 100, чтобы минимизировать лаг браузера от шифрования/дешифрования Argon2. Убедитесь, что ваш кошелек имеет достаточный XRP для комиссий (0.00001 XRP за транзакцию).</p>
+            <ol style="text-align: left; font-size: 0.7rem; color: #ccc;">
+                <li><strong>Шаг 1</strong>: В "Построить список трастлайнов" выберите один или два токена для сканирования их трастлайнов и скачайте один CSV файл, содержащий всех держателей трастлайнов.</li>
+                <li><strong>Шаг 2</strong>: В "Выполнить малый Airdrop" выберите актив для airdrop, загрузите CSV файл, настройте сумму (плоскую или на основе процента) и начните airdrop. Транзакции будут отправлены из вашего мастер-кошелька партиями.</li>
+                <li><strong>Шаг 3</strong>: Мониторьте прогресс и скачайте результаты по завершении.</li>
+            </ol>
+        </div>
+        <hr class="divider-line">
+        <div class="lp-subsection minimized" id="small-airdrop-build-trustlines">
+            <div class="lp-subsection-header" onclick="toggleSubsection('small-airdrop-build-trustlines')">
+                <h4>Построить список трастлайнов</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p>Выберите один или два токена для сканирования их трастлайнов и скачайте один CSV файл, перечисляющий всех держателей трастлайнов и их балансы. Используйте второй токен (опционально) для фильтра адресов,持有 трастлайны к обоим токенам. Выберите XRP во втором выпадающем списке, чтобы вернуться к сканированию одного токена.</p>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-trustline-asset-dropdown">Основной токен для сканирования трастлайнов:</label>
+                    <div class="custom-dropdown" id="small-airdrop-trustline-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-trustline-asset-dropdown')">
+                            <span id="small-airdrop-trustline-asset-display">Выберите токен</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-trustline-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-trustline-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-trustline-asset-dropdown-2">Вторичный токен для сканирования трастлайнов (опционально):</label>
+                    <div class="custom-dropdown" id="small-airdrop-trustline-asset-dropdown-2">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-trustline-asset-dropdown-2')">
+                            <span id="small-airdrop-trustline-asset-display-2">XRP</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-trustline-asset-panel-2" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-trustline-asset-grid-2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-recipients">Держатели трастлайнов (Всего: <span id="small-trustline-count">0</span>):</label>
+                    <textarea id="small-airdrop-recipients" rows="5" readonly placeholder="Нажмите 'Получить трастлайны' для заполнения..."></textarea>
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-fetch-progress">Прогресс: -</p>
+                    <div class="progress-bar" id="small-airdrop-progress-bar">
+                        <div class="progress-bar-fill" id="small-airdrop-progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-fetch-trustlines-btn" onclick="fetchSmallAirdropTrustlines()">
+                        <span id="small-fetch-trustlines-text">Получить трастлайны</span>
+                        <span id="small-fetch-trustlines-spinner" style="display: none;"></span>
+                    </button>
+                    <button class="red-black-btn" id="small-remove-zero-balance-btn" onclick="removeSmallZeroBalanceTrustlines()" disabled>Удалить трастлайны с 0-балансом</button>
+                    <button class="red-black-btn" id="small-download-trustline-csv-btn" onclick="downloadSmallTrustlineCSV()" disabled>Скачать CSV трастлайнов</button>
+                    <button class="red-black-btn" id="small-download-trustline-csv-with-zeros-btn" onclick="downloadSmallFullTrustlineCSV()" disabled>Скачать CSV трастлайнов (С 0-ми)</button>
+                </div>
+                <p id="small-address-error-build-trustlines" class="error-message"></p>
+                <div class="trustline-stats">
+                    <h4>Статистика распределения токена</h4>
+                    <div class="top-holders">
+                        <h5>Топ 10 держателей (Основной токен)</h5>
+                        <ul id="small-top-holders-list">
+                            <li>Данные недоступны. Получите трастлайны, чтобы увидеть топ держателей.</li>
+                        </ul>
+                        <p id="small-top-10-percentage" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                    </div>
+                    <div class="distribution-chart">
+                        <h5>Круговая диаграмма распределения (Основной токен)</h5>
+                        <canvas id="small-trustline-distribution-chart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="small-top-holders-secondary" style="display: none;">
+                        <h5>Топ 10 держателей (Вторичный токен)</h5>
+                        <ul id="small-top-holders-list-secondary">
+                            <li>Вторичный токен не выбран.</li>
+                        </ul>
+                        <p id="small-top-10-percentage-secondary" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                    </div>
+                    <div class="distribution-chart" id="small-distribution-chart-secondary" style="display: none;">
+                        <h5>Круговая диаграмма распределения (Вторичный токен)</h5>
+                        <canvas id="small-trustline-distribution-chart-secondary" width="300" height="300"></canvas>
+                    </div>
+                    <div class="top-holders" id="small-top-holders-merged" style="display: none;">
+                        <h5>Топ 10 держателей (Объединенные трастлайны)</h5>
+                        <ul id="small-top-holders-list-merged">
+                            <li>Нет объединенных данных.</li>
+                        </ul>
+                        <p id="small-top-10-percentage-merged" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                    </div>
+                    <div class="distribution-chart" id="small-distribution-chart-merged" style="display: none;">
+                        <h5>Круговая диаграмма распределения (Объединенные трастлайны)</h5>
+                        <canvas id="small-trustline-distribution-chart-merged" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lp-subsection minimized" id="small-airdrop-execute">
+            <div class="lp-subsection-header" onclick="toggleSubsection('small-airdrop-execute')">
+                <h4>Выполнить малый Airdrop</h4>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="lp-subsection-content">
+                <div class="lp-description">
+                    <p style="color: #ff4444;"><strong>Предупреждения:</strong></p>
+                    <ul style="text-align: left; color: #ff4444; font-size: 0.7rem;">
+                        <li><strong>Производительность браузера:</strong> Транзакции отправляются партиями по 100, чтобы уменьшить лаг от шифрования/дешифрования. Избегайте выполнения других тяжелых задач в браузере во время airdrop.</li>
+                        <li><strong>Трастлайны требуются:</strong> Для airdrop токенов получатели должны иметь трастлайны к активу, иначе транзакции провалятся.</li>
+                        <li><strong>Безопасность мастер-кошелька:</strong> Сид вашего мастер-кошелька используется безопасно и очищается после каждой партии, чтобы предотвратить раскрытие.</li>
+                    </ul>
+                    <p>Выберите актив для airdrop, загрузите CSV файл трастлайнов, настройте сумму и начните airdrop. Транзакции будут отправлены из вашего мастер-кошелька партиями по 100.</p>
+                    <p style="color: #00cc00;"><strong>Примечание:</strong> Для airdrop на основе процента процент рассчитывается с использованием баланса основного токена, выбранного в "Построить список трастлайнов".</p>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-asset-dropdown">Актив для Airdrop:</label>
+                    <div class="custom-dropdown" id="small-airdrop-asset-dropdown">
+                        <div class="dropdown-trigger" onclick="toggleDropdown('small-airdrop-asset-dropdown')">
+                            <span id="small-airdrop-asset-display">Выберите актив</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-panel" id="small-airdrop-asset-panel" style="display: none;">
+                            <div class="asset-grid" id="small-airdrop-asset-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-asset-balance">Баланс: -</p>
+                </div>
+                <div class="input-group">
+                    <label>Загрузить CSV файл трастлайнов:</label>
+                    <div class="custom-file-input">
+                        <button class="nav-link-btn" onclick="document.getElementById('small-airdrop-csv-file').click()">Загрузить CSV</button>
+                        <input type="file" id="small-airdrop-csv-file" accept=".csv" onchange="loadSmallAirdropCSV(event)" style="display: none;">
+                        <span id="small-airdrop-csv-file-name" class="file-name">Файл не выбран</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Метод распределения:</label>
+                    <div class="token-row">
+                        <input type="radio" id="small-airdrop-flat" name="small-airdrop-method" value="flat" checked>
+                        <label for="small-airdrop-flat">Плоская сумма (например, 10 XRP или токенов)</label>
+                        <input type="radio" id="small-airdrop-percentage" name="small-airdrop-method" value="percentage">
+                        <label for="small-airdrop-percentage">На основе процента (например, 100% от балансов основного токена)</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-amount">Сумма на адрес (или Процент):</label>
+                    <input type="text" id="small-airdrop-amount" placeholder="например, 10 или 100">
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-memo">Мемо (опционально):</label>
+                    <input type="text" id="small-airdrop-memo" placeholder="Мемо (опционально)">
+                </div>
+                <div class="input-group">
+                    <label for="small-airdrop-destination-tag">Тег назначения (опционально):</label>
+                    <input type="number" id="small-airdrop-destination-tag" placeholder="Тег назначения (например, 123456)" min="0" max="4294967295">
+                </div>
+                <div class="input-group">
+                    <p id="small-airdrop-cost">Общая стоимость: -</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-queue-airdrop-btn" onclick="queueSmallAirdropTransactions()" disabled>Начать Airdrop</button>
+                    <button class="red-black-btn" id="small-stop-airdrop-btn" onclick="stopSmallAirdrop()" disabled>Остановить Airdrop</button>
+                    <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+                </div>
+                <p id="small-address-error-execute-airdrop" class="error-message"></p>
+                <div id="small-airdrop-queue" class="transaction-queue">
+                    <p>Очередь транзакций:</p>
+                    <p>Нет транзакций в очереди.</p>
+                </div>
+                <div class="button-group">
+                    <button class="red-black-btn" id="small-download-results-btn" onclick="downloadSmallAirdropResults()" disabled>Скачать результаты Airdrop</button>
+                    <button class="red-black-btn" id="small-download-details-btn" onclick="downloadSmallAirdropDetails()" disabled>Скачать детали Airdrop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+<div class="section minimized" id="airdrop-transactions">
+    <div class="section-header" onclick="toggleSection('airdrop-transactions')">
+        <h2>Большой Airdrop ~ БОЛЕЕ 3,000 транзакций для обработки // Использует временные аккаунты для развертывания</h2>
+        <button class="toggle-btn">▼</button>
+    </div>
+    <div class="section-content">
+        <div class="section-description">
+            <h3 style="color: #00cc00;">Расширенный Airdrop 3,000+ Трастлайнов</h3>
+            
+        <p></p>
+        <p style="color: #880808;">Предупреждение: Отнеситесь к этому серьезно, убедитесь, что вы на приватном неограниченном WSS, который контролируете, или Ripple WSS при превышении 5,000 трастлайнов, поскольку бесплатные quicknode wss tend to disconnect around 6,000 трастлайнов и вызывают неполные распределения. Со временем, с финансированием Безумная Лаборатория может иметь неограниченный WSS, обязательно помогайте пожертвованиями, когда можете ~ финансирование помогает в создании backend.</p>
+        <p></p>
+        
+        <p>Распределяйте XRP или токены держателям трастлайнов, используя 5 временных аккаунтов для параллельной обработки. Следуйте этим шагам:</p>
+        <ol style="text-align: left; font-size: 0.7rem; color: #ccc;">
+            <li><strong>Шаг 1</strong>: В "Построить список трастлайнов" выберите один или два токена для сканирования их трастлайнов и скачайте 5 CSV файлов, каждый содержащий 1/5 держателей трастлайнов.</li>
+            <li><strong>Шаг 2</strong>: В "Выполнить Airdrop" выберите актив для airdrop, загрузите 5 CSV файлов трастлайнов, настройте сумму (плоскую или процент от балансов трастлайнов) и начните airdrop. Временные аккаунты будут созданы, финансированы и использованы для обработки airdrop параллельно.</li>
+            <li><strong>Шаг 3</strong>: Мониторьте прогресс каждого временного аккаунта. По завершении аккаунты самоудалятся, возвращая оставшийся XRP в ваш кошелек.</li>
+        </ol>
+    </div>
+    <hr class="divider-line">
+    <div class="lp-subsection minimized" id="airdrop-build-trustlines">
+        <div class="lp-subsection-header" onclick="toggleSubsection('airdrop-build-trustlines')">
+            <h4>Построить список трастлайнов</h4>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="lp-subsection-content">
+            <div class="lp-description">
+                <p>Выберите один или два токена для сканирования их трастлайнов эмитентов и скачайте 5 CSV файлов, каждый перечисляющий 1/5 держателей трастлайнов и их балансы. Используйте второй токен (опционально) для фильтра адресов,持有 трастлайны к обоим токенам. Выберите XRP во втором выпадающем списке, чтобы отключить и вернуться к сканированию одного токена.</p>
+            </div>
+            <div class="input-group">
+                <label for="airdrop-trustline-asset-dropdown">Основной токен для сканирования трастлайнов:</label>
+                <div class="custom-dropdown" id="airdrop-trustline-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-trustline-asset-dropdown')">
+                        <span id="airdrop-trustline-asset-display">Выберите токен</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="airdrop-trustline-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="airdrop-trustline-asset-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="airdrop-trustline-asset-dropdown-2">Вторичный токен для сканирования трастлайнов (опционально):</label>
+                <div class="custom-dropdown" id="airdrop-trustline-asset-dropdown-2">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-trustline-asset-dropdown-2')">
+                        <span id="airdrop-trustline-asset-display-2">XRP</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="airdrop-trustline-asset-panel-2" style="display: none;">
+                        <div class="asset-grid" id="airdrop-trustline-asset-grid-2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="airdrop-recipients">Держатели трастлайнов (Всего: <span id="trustline-count">0</span>):</label>
+                <textarea id="airdrop-recipients" rows="5" readonly placeholder="Нажмите 'Получить трастлайны' для заполнения..."></textarea>
+            </div>
+            <div class="input-group">
+                <p id="airdrop-fetch-progress">Прогресс: -</p>
+                <div class="progress-bar" id="airdrop-progress-bar">
+                    <div class="progress-bar-fill" id="airdrop-progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" id="fetch-trustlines-btn" onclick="fetchTrustlines()">
+                    <span id="fetch-trustlines-text">Получить трастлайны</span>
+                    <span id="fetch-trustlines-spinner" style="display: none;"></span>
+                </button>
+                <button class="red-black-btn" id="remove-zero-balance-btn" onclick="removeZeroBalanceTrustlines()" disabled>Удалить трастлайны с 0-балансом</button>
+                <button class="red-black-btn" id="download-trustline-csv-btn" onclick="downloadTrustlineCSV()" disabled>Скачать 5 CSV трастлайнов</button>
+                <button class="red-black-btn" id="download-trustline-csv-with-zeros-btn" onclick="downloadFullTrustlineCSV()" disabled>Скачать 5 CSV трастлайнов (С 0-ми)</button>
+            </div>
+            <p id="address-error-build-trustlines" class="error-message"></p>
+            <div class="trustline-stats">
+                <h4>Статистика распределения токена</h4>
+                <div class="top-holders">
+                    <h5>Топ 10 держателей (Основной токен)</h5>
+                    <ul id="top-holders-list">
+                        <li>Данные недоступны. Получите трастлайны, чтобы увидеть топ держателей.</li>
+                    </ul>
+                    <p id="top-10-percentage" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                </div>
+                <div class="distribution-chart">
+                    <h5>Круговая диаграмма распределения (Основной токен)</h5>
+                    <canvas id="trustline-distribution-chart" width="300" height="300"></canvas>
+                </div>
+                <div class="top-holders" id="top-holders-secondary" style="display: none;">
+                    <h5>Топ 10 держателей (Вторичный токен)</h5>
+                    <ul id="top-holders-list-secondary">
+                        <li>Вторичный токен не выбран.</li>
+                    </ul>
+                    <p id="top-10-percentage-secondary" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                </div>
+                <div class="distribution-chart" id="distribution-chart-secondary" style="display: none;">
+                    <h5>Круговая диаграмма распределения (Вторичный токен)</h5>
+                    <canvas id="trustline-distribution-chart-secondary" width="300" height="300"></canvas>
+                </div>
+                <div class="top-holders" id="top-holders-merged" style="display: none;">
+                    <h5>Топ 10 держателей (Объединенные трастлайны)</h5>
+                    <ul id="top-holders-list-merged">
+                        <li>Нет объединенных данных.</li>
+                    </ul>
+                    <p id="top-10-percentage-merged" style="color: #00cc00; font-size: 0.8rem; text-align: center;">Общий % у топ 10 держателей: -</p>
+                </div>
+                <div class="distribution-chart" id="distribution-chart-merged" style="display: none;">
+                    <h5>Круговая диаграмма распределения (Объединенные трастлайны)</h5>
+                    <canvas id="trustline-distribution-chart-merged" width="300" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lp-subsection minimized" id="airdrop-execute">
+        <div class="lp-subsection-header" onclick="toggleSubsection('airdrop-execute')">
+            <h4>Выполнить Airdrop</h4>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="lp-subsection-content">
+            <div class="lp-description">
+                <p style="color: #ff4444;"><strong>Предупреждения:</strong></p>
+                <ul style="text-align: left; color: #ff4444; font-size: 0.7rem;">
+                    <li><strong>Зрелость аккаунта:</strong> Временные аккаунты должны быть зрелыми (использованы в достаточном количестве транзакций, обычно после 256 ledger), чтобы удалить. Малые airdrop могут не генерировать достаточно активности, оставляя аккаунты неудаляемыми до созревания позже.</li>
+                    <li><strong>Риск малого Airdrop:</strong> Airdrop с менее 3,000 трастлайнами могут привести к устаревшим аккаунтам*ИСПОЛЬЗУЙТЕ МАЛЫЙ ИНСТРУМЕНТ*, каждый costing 1+ XRP для поддержания. Рассмотрите этот инструмент для больших airdrop, чтобы обеспечить экономичность.</li>
+                    <li><strong>Выбор актива:</strong> Выберите правильный актив для airdrop и очистки его трастлайнов во время удаления. Неправильный выбор может оставить трастлайны активными, предотвращая удаление аккаунта.</li>
+                </ul>
+                <p>Выберите актив для airdrop, загрузите 5 CSV файлов трастлайнов, настройте сумму и начните airdrop. Пять временных аккаунтов обработают airdrop параллельно.</p>
+                <p style="color: #ff4444;"><strong>Важно:</strong> Этот процесс требует минимального баланса 12 XRP в вашем кошельке. 10 XRP будут использованы для создания и финансирования 5 временных аккаунтов (2 XRP каждый), с дополнительным буфером 2 XRP для комиссий. Большая часть этого XRP будет возвращена в ваш кошелек после удаления временных аккаунтов.</p>
+                <p style="color: #00cc00;"><strong>Примечание:</strong> Для airdrop на основе процента процент рассчитывается с использованием баланса основного токена, выбранного в "Построить список трастлайнов".</p>
+            </div>
+            <div class="input-group">
+                <label for="airdrop-asset-dropdown">Актив для Airdrop:</label>
+                <div class="custom-dropdown" id="airdrop-asset-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown('airdrop-asset-dropdown')">
+                        <span id="airdrop-asset-display">Выберите актив</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-panel" id="airdrop-asset-panel" style="display: none;">
+                        <div class="asset-grid" id="airdrop-asset-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <p id="airdrop-asset-balance">Баланс: -</p>
+            </div>
+            <div class="input-group">
+                <label>Загрузить 5 CSV файлов трастлайнов:</label>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-1').click()">Загрузить CSV 1</button>
+                    <input type="file" id="airdrop-csv-file-1" accept=".csv" onchange="loadAirdropCSV(event, 1)" style="display: none;">
+                    <span id="airdrop-csv-file-name-1" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-2').click()">Загрузить CSV 2</button>
+                    <input type="file" id="airdrop-csv-file-2" accept=".csv" onchange="loadAirdropCSV(event, 2)" style="display: none;">
+                    <span id="airdrop-csv-file-name-2" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-3').click()">Загрузить CSV 3</button>
+                    <input type="file" id="airdrop-csv-file-3" accept=".csv" onchange="loadAirdropCSV(event, 3)" style="display: none;">
+                    <span id="airdrop-csv-file-name-3" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-4').click()">Загрузить CSV 4</button>
+                    <input type="file" id="airdrop-csv-file-4" accept=".csv" onchange="loadAirdropCSV(event, 4)" style="display: none;">
+                    <span id="airdrop-csv-file-name-4" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('airdrop-csv-file-5').click()">Загрузить CSV 5</button>
+                    <input type="file" id="airdrop-csv-file-5" accept=".csv" onchange="loadAirdropCSV(event, 5)" style="display: none;">
+                    <span id="airdrop-csv-file-name-5" class="file-name">Файл не выбран</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Метод распределения:</label>
+                <div class="token-row">
+                    <input type="radio" id="airdrop-flat" name="airdrop-method" value="flat" checked>
+                    <label for="airdrop-flat">Плоская сумма (например, 10 XRP или токенов)</label>
+                    <input type="radio" id="airdrop-percentage" name="airdrop-method" value="percentage">
+                    <label for="airdrop-percentage">На основе процента (например, 100% от балансов основного токена)</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="airdrop-amount">Сумма на адрес (или Процент):</label>
+                <input type="text" id="airdrop-amount" placeholder="например, 10 или 100">
+            </div>
+            <div class="input-group">
+                <label for="airdrop-memo">Мемо (опционально):</label>
+                <input type="text" id="airdrop-memo" placeholder="Мемо (опционально)">
+            </div>
+            <div class="input-group">
+                <label for="airdrop-destination-tag">Тег назначения (опционально):</label>
+                <input type="number" id="airdrop-destination-tag" placeholder="Тег назначения (например, 123456)" min="0" max="4294967295">
+            </div>
+            <div class="input-group">
+                <p id="airdrop-cost">Общая стоимость: -</p>
+                <p id="airdrop-additional-cost">Дополнительная стоимость: ~1.25 XRP для создания/удаления 5 временных аккаунтов</p>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" id="queue-airdrop-btn" onclick="queueAirdropTransactions()" disabled>Начать Airdrop</button>
+                <button class="red-black-btn" id="stop-airdrop-btn" onclick="stopAirdrop()" disabled>Остановить Airdrop</button>
+                <button class="red-black-btn" onclick="checkBalance()">Проверить баланс</button>
+            </div>
+            <p id="address-error-execute-airdrop" class="error-message"></p>
+            <div class="temp-accounts">
+                <h4>Временные аккаунты</h4>
+                <div class="temp-account" id="temp-account-1">
+                    <h5>Аккаунт 1</h5>
+                    <p><strong>Адрес:</strong> <span id="temp-account-address-1">-</span></p>
+                    <p><strong>Сид:</strong> <span id="temp-account-seed-1">-</span></p>
+                    <div id="temp-account-qr-1" style="margin: 10px 0;"></div>
+                    <p><strong>Прогресс:</strong> <span id="temp-account-progress-1">Не начато</span></p>
+                    <p><strong>Итоговый отчет:</strong> <span id="temp-account-report-1">-</span></p>
+                </div>
+                <div class="temp-account" id="temp-account-2">
+                    <h5>Аккаунт 2</h5>
+                    <p><strong>Адрес:</strong> <span id="temp-account-address-2">-</span></p>
+                    <p><strong>Сид:</strong> <span id="temp-account-seed-2">-</span></p>
+                    <div id="temp-account-qr-2" style="margin: 10px 0;"></div>
+                    <p><strong>Прогресс:</strong> <span id="temp-account-progress-2">Не начато</span></p>
+                    <p><strong>Итоговый отчет:</strong> <span id="temp-account-report-2">-</span></p>
+                </div>
+                <div class="temp-account" id="temp-account-3">
+                    <h5>Аккаунт 3</h5>
+                    <p><strong>Адрес:</strong> <span id="temp-account-address-3">-</span></p>
+                    <p><strong>Сид:</strong> <span id="temp-account-seed-3">-</span></p>
+                    <div id="temp-account-qr-3" style="margin: 10px 0;"></div>
+                    <p><strong>Прогресс:</strong> <span id="temp-account-progress-3">Не начато</span></p>
+                    <p><strong>Итоговый отчет:</strong> <span id="temp-account-report-3">-</span></p>
+                </div>
+                <div class="temp-account" id="temp-account-4">
+                    <h5>Аккаунт 4</h5>
+                    <p><strong>Адрес:</strong> <span id="temp-account-address-4">-</span></p>
+                    <p><strong>Сид:</strong> <span id="temp-account-seed-4">-</span></p>
+                    <div id="temp-account-qr-4" style="margin: 10px 0;"></div>
+                    <p><strong>Прогресс:</strong> <span id="temp-account-progress-4">Не начато</span></p>
+                    <p><strong>Итоговый отчет:</strong> <span id="temp-account-report-4">-</span></p>
+                </div>
+                <div class="temp-account" id="temp-account-5">
+                    <h5>Аккаунт 5</h5>
+                    <p><strong>Адрес:</strong> <span id="temp-account-address-5">-</span></p>
+                    <p><strong>Сид:</strong> <span id="temp-account-seed-5">-</span></p>
+                    <div id="temp-account-qr-5" style="margin: 10px 0;"></div>
+                    <p><strong>Прогресс:</strong> <span id="temp-account-progress-5">Не начато</span></p>
+                    <p><strong>Итоговый отчет:</strong> <span id="temp-account-report-5">-</span></p>
+                </div>
+            </div>
+            <div id="airdrop-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" id="download-results-btn" onclick="downloadAirdropResults()" disabled>Скачать результаты Airdrop</button>
+                <button class="red-black-btn" id="download-details-btn" onclick="downloadAirdropDetails()" disabled>Скачать детали Airdrop</button>
+            </div>
+            <p style="color: #ff4444;"><strong>Важно:</strong> Если airdrop провалится, вы можете загрузить аккаунты здесь, чтобы очистить их/удалить для возврата удаления аккаунта. Убедитесь, что правильный актив выбран вверху, чтобы очистить трастлайны перед удалением.</p>
+            <div class="input-group">
+                <label>Загрузить 5 JSON файлов временных аккаунтов:</label>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-1').click()">Загрузить JSON 1</button>
+                    <input type="file" id="temp-account-json-1" accept=".json" onchange="loadTempAccountJSON(event, 1)" style="display: none;">
+                    <span id="temp-account-json-name-1" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-2').click()">Загрузить JSON 2</button>
+                    <input type="file" id="temp-account-json-2" accept=".json" onchange="loadTempAccountJSON(event, 2)" style="display: none;">
+                    <span id="temp-account-json-name-2" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-3').click()">Загрузить JSON 3</button>
+                    <input type="file" id="temp-account-json-3" accept=".json" onchange="loadTempAccountJSON(event, 3)" style="display: none;">
+                    <span id="temp-account-json-name-3" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-4').click()">Загрузить JSON 4</button>
+                    <input type="file" id="temp-account-json-4" accept=".json" onchange="loadTempAccountJSON(event, 4)" style="display: none;">
+                    <span id="temp-account-json-name-4" class="file-name">Файл не выбран</span>
+                </div>
+                <div class="custom-file-input">
+                    <button class="nav-link-btn" onclick="document.getElementById('temp-account-json-5').click()">Загрузить JSON 5</button>
+                    <input type="file" id="temp-account-json-5" accept=".json" onchange="loadTempAccountJSON(event, 5)" style="display: none;">
+                    <span id="temp-account-json-name-5" class="file-name">Файл не выбран</span>
+                </div>
+            </div>
+            <button class="red-black-btn" id="shred-accounts-btn" onclick="shredAccounts()">Уничтожить аккаунты</button>
+        </div>
+    </div>
+</div></div>
+
+        
+    <div class="section minimized" id="escrow-transactions">
+        <div class="section-header" onclick="toggleSection('escrow-transactions')">
+            <h2>Само-эскроу</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <p class="instruction-text">
+                Заблокируйте XRP в само-эскроу, чтобы зарезервировать его до конечного времени. Отмените после конечного времени, чтобы освободить средства обратно себе. Минимальное конечное время - 30 секунд. Каждое эскроу требует комиссии 0.015 XRP и резервирует 0.2 XRP. Резерв возвращается как закрытие трастлайна, когда эскроу закрыто вами в дату/время завершения. Проверка вашего эскроу покажет красный или зеленый текст в зависимости от в процессе или завершено. Эта система будет пересмотрена в 2026 году, когда поправки для большего количества опций эскроу будут включены на ledger. Наслаждайтесь использованием простого эскроу до тех пор, оно очень легко в использовании и просто работает.
+            </p>
+            <h3>Создать само-эскроу</h3>
+            <div class="input-group">
+                <label for="escrow-amount">Сумма (XRP):</label>
+                <input id="escrow-amount" type="number" step="any" min="0" placeholder="например, 10">
+            </div>
+            <div class="input-group">
+                <label for="escrow-end-time">Конечное время (секунды):</label>
+                <input id="escrow-end-time" type="number" min="30" placeholder="например, 120">
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="queueEscrowCreate()">Создать само-эскроу</button>
+            </div>
+            <h3>Управление само-эскроу</h3>
+            <p class="instruction-text">
+                Перечислите активные само-эскроу, чтобы проверить их статус (Заблокировано или Разблокировано) и номера последовательности. Отмените эскроу, используя его номер последовательности после конечного времени, чтобы освободить средства.
+            </p>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="fetchRecentEscrows()">Перечислить само-эскроу</button>
+            </div>
+            <div class="input-group">
+                <label for="escrow-cancel-sequence">Номер последовательности:</label>
+                <input id="escrow-cancel-sequence" type="number" min="0" placeholder="например, 95008133">
+            </div>
+            <div class="button-group">
+                <button class="red-black-btn" onclick="queueEscrowCancel()">Отменить само-эскроу</button>
+            </div>
+            <p id="address-error-escrow" class="error-message"></p>
+            <div id="escrow-queue" class="transaction-queue"></div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="minting">
+        <div class="section-header" onclick="toggleSection('minting')">
+            <h2>Минт нового токена</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор минтинга</h3>
+                <h3 style="color: #ff4444;">Предупреждение: Некоторые функции инструментов админа (например, Clawback) должны быть включены до минтинга из-за правил ledger XRPL.</h3>
+                <p>Создайте новый fungible токен, используя ваш загруженный кошелек как эмитента. Выберите подходящий метод минтинга в зависимости от ваших нужд:</p>
+                <ul>
+                    <li><strong>Стандартный минт</strong>: Базовый минт токена без дополнительных контролей эмитента.</li>
+                    <li><strong>Минт с Clawback</strong>: Включает Clawback, позволяя восстановление токенов из трастлайнов (постоянно).</li>
+                </ul>
+                <p>Этот процесс будет:
+                    <ol>
+                        <li>Создать аккаунт получателя для хранения минтованных токенов.</li>
+                        <li>Финансировать его 10 XRP для активации (вычтено из вашего текущего кошелька эмитента).</li>
+                        <li>Позволить скачать сид и адрес аккаунта получателя (сохраните их безопасно).</li>
+                        <li>Для Clawback: Включить флаг clawback перед минтом.</li>
+                        <li>Установить трастлайн от получателя к вашему кошельку для нового токена.</li>
+                        <li>Минт токена и отправить его на аккаунт получателя.</li>
+                        <li>Пока Безумная Лаборатория готовит смеси для вас, сидите и смотрите на экран и думайте, насколько это круто. После завершения скачайте ваш новый зашифрованный кошелек!</li>
+                        <li>Новый кошелек держит токен; это ваш основной аккаунт для использования/развертывания токена, в то время как аккаунт эмитента - это тот, на котором вы сейчас.</li>
+                        <li>Рассмотрите настройку пула ликвидности и строительство вашего сообщества/проекта следующим.</li>
+                        <li>Вы можете открыть другую вкладку браузера, чтобы управлять обоими кошельками одновременно.</li>
+                        <li>Если минт провалится, сохраните кошелек получателя, восстановите ваш XRP и попробуйте снова.</li>
+                        <li>УБЕДИТЕСЬ, ЧТО ОЧЕРЕДЬ ПОЛНОСТЬЮ ЗАВЕРШИТСЯ, ЗАШИФРУЙТЕ И СКАЧАЙТЕ ВТОРОЙ КОШЕЛЕК, ЗАГРУЗИТЕ МИНТОВАННЫЙ КОШЕЛЕК В БЕЗУМНУЮ ЛАБОРАТОРИЮ, ИСПОЛЬЗУЙТЕ ОБА НОРМАЛЬНО ДЛЯ КОНТРОЛЯ АКТИВА</li>
+                        <li>НОРМАЛЬНОЕ ИСПОЛЬЗОВАНИЕ: АККАУНТ МИНТА КОНТРОЛИРУЕТ КОМАНДЫ АДМИНА/АККАУНТ ПОЛУЧАТЕЛЯ ОБРАБАТЫВАЕТ РАЗВЕРТЫВАНИЯ - УПРАВЛЯЙТЕ АКТИВОМ ИЗ ЧИСТОГО БРАУЗЕРА/КОМПЬЮТЕРА</li>
+                    </ol>
+                    Тщательно заполните поля ниже (Код валюты и Сумма). Проверьте ваши вводы, затем нажмите подходящую кнопку минта ОДИН РАЗ и ЖДИТЕ!
+                </p>
+            </div>
+            <div id="minting-receiver-warning" class="wallet-warning" style="display: none;"></div>
+            <div class="input-group">
+                <label for="mint-currency">Код валюты (например, GRIND, METAL):</label>
+                <input type="text" id="mint-currency" placeholder="Введите код валюты">
+            </div>
+            <div class="input-group">
+                <label for="mint-amount">Сумма для минта (Макс 999,999,999,999,999):</label>
+                <input type="number" id="mint-amount" placeholder="например, 1000000" min="1" max="999999999999999">
+            </div>
+            <div class="button-group minting-buttons">
+                <button class="red-black-btn" onclick="prepareMint('standard')">Минт токена</button>
+                <button class="red-black-btn" onclick="prepareMint('clawback')">Минт с Clawback</button>
+            </div>
+            <div id="mint-confirmation" class="mint-confirmation" style="display: none;">
+                <p id="mint-confirm-message" class="mint-confirm-message"></p>
+                <div class="button-group minting-confirm-buttons">
+                    <button class="green-btn" id="confirmMint">Подтвердить</button>
+                    <button class="red-black-btn" id="cancelMint" onclick="cancelMint()">Отмена</button>
+                </div>
+            </div>
+            <p id="address-error-minting" class="error-message"></p>
+            <div id="minting-queue" class="transaction-queue">
+                <p>Очередь транзакций:</p>
+                <p>Нет транзакций в очереди.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminConfirmationModal" class="password-modal-overlay" style="display: none;">
+        <div class="password-modal-content">
+            <p id="admin-confirm-content"></p>
+            <div class="input-group">
+                <input type="checkbox" id="admin-confirm-checkbox">
+                <label for="admin-confirm-checkbox">Я понимаю это действие и желаю продолжить</label>
+            </div>
+            <div class="modal-buttons">
+                <button class="green-btn" id="admin-confirm-btn" disabled>Подтвердить</button>
+                <button class="red-black-btn" id="admin-cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section minimized" id="admin-tools">
+        <div class="section-header" onclick="toggleSection('admin-tools')">
+            <h2>Инструменты админа токена</h2>
+            <button class="toggle-btn">▼</button>
+        </div>
+        <div class="section-content">
+            <div class="section-description">
+                <h3 style="color: #00cc00;">Обзор инструментов админа</h3>
+                <p>Управляйте вашим XRPL аккаунтом и выданными токенами. Инструменты разделены на три группы:</p>
+                <ul style="font-size: 0.7rem; color: #ccc; text-align: left;">
+                    <li><strong>Инструменты до минтинга</strong>: Должны быть установлены перед минтом токенов, поскольку они требуют пустого аккаунта (без трастлайнов, эскроу и т.д.).</li>
+                    <li><strong>Переключаемые инструменты</strong>: Могут использоваться в любое время для контроля платежей XRP или рипплинга.</li>
+                    <li><strong>Инструменты эмитента</strong>: Требуют выданных токенов (трастлайнов) и используются для управления выдачей токенов и состоянием аккаунта.</li>
+                </ul>
+                <p style="color: #ffaa00; font-weight: bold;">ПРЕДУПРЕЖДЕНИЕ: Некоторые действия необратимы (например, NoFreeze, Clawback, Blackhole). Всегда проверяйте настройки на <a href="https://xrpscan.com" target="_blank">XRPSCAN</a>.</p>
+            </div>
+
+            <h3>Инструменты до минтинга</h3>
+            <p class="instruction-text">Настройте эти параметры перед минтом токенов, поскольку они не могут быть установлены после существования трастлайнов или других объектов.</p>
+            <button class="red-black-btn" id="admin-nofreeze-btn">Установить NoFreeze</button>
+            <button class="red-black-btn" id="admin-enable-clawback-btn">Включить Clawback</button>
+            <p style="color: #ff4444; font-size: 0.7rem;">
+                Примечание: NoFreeze и Clawback постоянны после установки. Правила ledger, вы можете иметь только один установлен, не оба.
+            </p>
+            <hr class="section-divider">
+
+            <div class="section-header">Переключаемые инструменты</div>
+            <div class="section-content">
+                <p>Эти настройки могут быть применены в любое время для контроля платежей XRP или рипплинга на трастлайнах.</p>
+                <div class="input-group">
+                    <h4>Настройки рипплинга и платежей XRP</h4>
+                    <label for="admin-ripple-currency">Код валюты</label>
+                    <input type="text" id="admin-ripple-currency" placeholder="например, GGG">
+                    <label for="admin-ripple-target">Адрес контрагента</label>
+                    <input type="text" id="admin-ripple-target" placeholder="r...">
+                    <button class="green-btn" id="admin-ripple-btn">Включить рипплинг</button>
+                    <button class="red-black-btn" id="admin-no-ripple-btn">Отключить рипплинг</button>
+                    <button class="green-btn" id="admin-enable-xrp-btn">Включить платежи XRP</button>
+                    <button class="red-black-btn" id="admin-disable-xrp-btn">Отключить платежи XRP</button>
+                </div>
+                <p><strong>Примечание:</strong> Настройки рипплинга требуют существующего трастлайна. Проверьте состояние трастлайна на XRPSCAN перед включением или отключением рипплинга. Платежи XRP контролируют прямые переводы XRP.</p>
+            </div>
+
+            <h3>Инструменты эмитента</h3>
+            <p class="instruction-text">Эти инструменты требуют выданных токенов (трастлайнов) и используются для управления выдачей токенов и состоянием аккаунта.</p>
+            <div class="input-group">
+                <label for="admin-mint-currency">Код валюты минта (3-символьный тикер или hex код)</label>
+                <input type="text" id="admin-mint-currency" placeholder="GGG или 4747470000000000000000000000000000000000">
+            </div>
+            <div class="input-group">
+                <label for="admin-mint-amount">Сумма</label>
+                <input type="number" id="admin-mint-amount" placeholder="например, 1000">
+            </div>
+            <div class="input-group">
+                <label for="admin-mint-target">Целевой адрес (Должен иметь трастлайн)</label>
+                <input type="text" id="admin-mint-target" placeholder="Адрес для получения токенов">
+            </div>
+            <button class="red-black-btn" id="admin-mint-btn">Минт токенов</button>
+            <hr class="section-divider">
+            <div class="input-group">
+                <label for="admin-freeze-currency">Код валюты заморозки/разморозки</label>
+                <input type="text" id="admin-freeze-currency" placeholder="Введите код валюты">
+                <p class="error-message" style="color: #ff4444; font-size: 0.7rem;">
+                    XRPSCAN может занять 5-10 минут для отражения изменений состояния заморозки.
+                </p>
+            </div>
+            <div class="input-group">
+                <label for="admin-freeze-target">Адрес контрагента</label>
+                <input type="text" id="admin-freeze-target" placeholder="Введите адрес контрагента">
+            </div>
+            <button class="red-black-btn" id="admin-freeze-btn">Заморозить трастлайн</button>
+            <button class="red-black-btn" id="admin-unfreeze-btn">Разморозить трастлайн</button>
+            <hr class="section-divider">
+            <div class="input-group">
+                <label for="admin-clawback-currency">Код валюты Clawback</label>
+                <input type="text" id="admin-clawback-currency" placeholder="Введите код валюты">
+                <p class="error-message" id="admin-clawback-error"></p>
+                <label for="admin-clawback-target">Адрес контрагента</label>
+                <input type="text" id="admin-clawback-target" placeholder="Введите адрес контрагента">
+                <label for="admin-clawback-amount">Сумма</label>
+                <input type="text" id="admin-clawback-amount" placeholder="Введите сумму для clawback">
+                <button class="red-black-btn" id="admin-clawback-btn">Clawback токенов</button>
+            </div>
+            <hr class="section-divider">
+            <button class="red-black-btn" id="admin-global-freeze-btn">Глобальная заморозка</button>
+            <button class="red-black-btn" id="admin-global-unfreeze-btn">Глобальная разморозка</button>
+            <hr class="section-divider">
+            <h3>Blackhole аккаунт</h3>
+            <button class="red-black-btn" id="admin-blackhole-btn">Blackhole аккаунт</button>
+            <p style="color: #ff4444; font-size: 0.7rem;">
+                ПРЕДУПРЕЖДЕНИЕ: Blackholing навсегда отключает аккаунт. Убедитесь, что минимальный XRP остался. Иметь .1 XRP в аккаунте, чтобы убедиться, что все необходимые транзакции завершены, дайте достаточное время Безумной Лаборатории, чтобы приготовить все это и убедитесь, что процесс завершен через xrpscan.com перед закрытием Безумной Лаборатории от аккаунта.
+            </p>
+            <hr class="section-divider">
+            <button class="red-black-btn" id="admin-check-xrpscan-btn">Проверить XRPSCAN</button>
+            <p id="address-error-admin" class="error-message"></p>
+            <div id="admin-queue" class="transaction-queue"></div>
+        </div>
+    </div>
+        
+                    
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+          {
+          "lineWidth": 2,
+          "lineType": 0,
+          "chartType": "area",
+          "fontColor": "rgb(106, 109, 120)",
+          "gridLineColor": "rgba(242, 242, 242, 0.06)",
+          "volumeUpColor": "rgba(34, 171, 148, 0.5)",
+          "volumeDownColor": "rgba(247, 82, 95, 0.5)",
+          "backgroundColor": "#0F0F0F",
+          "widgetFontColor": "#DBDBDB",
+          "upColor": "#22ab94",
+          "downColor": "#f7525f",
+          "borderUpColor": "#22ab94",
+          "borderDownColor": "#f7525f",
+          "wickUpColor": "#22ab94",
+          "wickDownColor": "#f7525f",
+          "colorTheme": "dark",
+          "isTransparent": false,
+          "locale": "en",
+          "chartOnly": false,
+          "scalePosition": "right",
+          "scaleMode": "Normal",
+          "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+          "valuesTracking": "1",
+          "changeMode": "price-and-percent",
+          "symbols": [
+            [
+              "COINBASE:XRPUSD|1M"
+            ]
+          ],
+          "dateRanges": [
+            "1d|1",
+            "1m|30",
+            "3m|60",
+            "12m|1D",
+            "60m|1W",
+            "all|1M"
+          ],
+          "fontSize": "10",
+          "headerFontSize": "medium",
+          "autosize": true,
+          "width": "100%",
+          "height": "400",
+          "noTimeScale": false,
+          "hideDateRanges": false,
+          "hideMarketStatus": false,
+          "hideSymbolLogo": false
+        }
+          </script>
+        </div>
+
+        
+    <footer class="footer">
+        <p>
+             <strong>Безумная Лаборатория</strong> - мощный бесплатный инструмент для управления XRPL кошельками, отправки транзакций, выполнения AMM свопов, управления трастлайнами, минта токенов и многого другого. Создано <a href="https://x.com/ClassyXoge" target="_blank">@ClassyXoge с помощью мемспейса XRPL.</a> на X.com для XRPL, инструменты предназначены для безумных парней мемспейса, но доступны всем без условий — используйте как хотите.
+            <strong>Отказ от ответственности</strong>: Безумная Лаборатория подписывает транзакции локально в вашем браузере, используя ваш сид. Для максимальной безопасности запускайте на локальных файлах, чтобы ваш сид никогда не покидал ваше устройство. Когда хостируется онлайн (даже с HTTPS), риски включают вредоносные расширения или скомпрометированные среды. Этот инструмент создан с бюджетом $0 одним разработчиком, так что ожидайте мелких багов и используйте осторожно. Вы принимаете все риски в его использовании/хотя прилагаются большие усилия, чтобы сделать код как можно лучше. Проверяйте все действия на <a href="https://xrpscan.com" target="_blank">XRPSCAN</a>.
+            Используйте этот инструмент ответственно — ваша лаборатория, ваш риск!
+        </p>
+        <a href="https://www.freecounterstat.com" title="web counter code"><img src="https://counter4.optistats.ovh/private/freecounterstat.php?c=uztwrewy8g6gpuk7yw96uxhfmxjchmut" border="0" title="web counter code" alt="web counter code"></a>
+    </footer>
+</div>
+<script src="js/script.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/extendedscripts.js?v=5"></script>
+<script src="js/lp.js"></script>
+<script src="js/escrow.js"></script>
+<script src="js/minting.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/golem.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/airdrop.js"></script>
+<script src="js/airdropsmall.js"></script>
+<script src="js/vanity.js"></script>
+<script src="js/backgroundanimation.js"></script>
+<script src="js/guardian.js"></script>
+<script src="js/wh.js"></script>
+<script src="js/amazon.js"></script>
+<script src="js/thorchain.js"></script></body>
+</body>
+</html>
+
