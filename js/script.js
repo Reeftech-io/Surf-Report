@@ -3665,7 +3665,9 @@ async function setSendPercentage(percentage) {
 const prefabAssets = [
 	{ name: "$Xoge", issuer: "rJMtvf5B3GbuFMrqybh5wYVXEH4QE8VyU1", hex: "586F676500000000000000000000000000000000" },	
     { name: "$GRD", issuer: "rDaDV5smdWjr8QcagD8UhbPZWzJBkdVAnH", hex: "GRD" },
+	{ name: "$HWR", issuer: "rND47ZuHb4Jq7yCT5xjJd1xwq697FPfVxv", hex: "HWR" },
 	{ name: "$RLUSD", issuer: "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De", hex: "524C555344000000000000000000000000000000" },
+	{ name: "$x402", issuer: "rUCs3p2yuBQnTA1weH4TfA3NhBUxMhRSdT", hex: "5834303200000000000000000000000000000000" },
     { name: "$PUPU", issuer: "r4WfqR5DQ7PwPvVJv8Gism5cQBLGtNnvK8", hex: "5055505500000000000000000000000000000000" },
 	{ name: "$Army", issuer: "rGG3wQ4kUzd7Jnmk1n5NWPZjjut62kCBfC", hex: "41524D5900000000000000000000000000000000" },
 	{ name: "$BANANA", issuer: "rpopnahpwzxiwapipm5ehq6kslehvgilqp", hex: "42414e414e410000000000000000000000000000" },

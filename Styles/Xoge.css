@@ -4,7 +4,7 @@ body, html {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    font-size: 16px;
+    font-size: 0.8rem;
     box-sizing: border-box;
 }
 
@@ -43,6 +43,21 @@ h6,
 .toggle-password,
 .modal-buttons {
     cursor: url('test-tube-cursor.png') 0 0, auto !important;
+}
+
+details {
+  font-size: 8px;
+}
+
+summary {
+  font-size: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+details p {
+  font-size: small;
+  margin: 10px 0; 
 }
 
 #minting .input-group {
@@ -136,7 +151,7 @@ h6,
 
 #mintConfirmationModal h2 {
     color: #ff4444;
-    font-size: 1.2rem;
+    font-size: 0.7rem;
     margin-bottom: 10px;
     text-shadow: 0 0 5px #ff4444;
 }
@@ -159,7 +174,7 @@ h6,
         max-width: 300px;
     }
     #mintConfirmationModal h2 {
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
     #mintConfirmationModal p {
         font-size: 0.6rem;
@@ -341,7 +356,7 @@ h1 {
 }
 
 h2 {
-    font-size: 1.2rem;
+    font-size: 0.2rem;
     margin-bottom: 10px;
 }
 
@@ -1357,7 +1372,7 @@ button:hover {
         font-size: 2rem;
     }
     h2 {
-        font-size: 1rem;
+        font-size: 0.7rem;
     }
     h3 {
         font-size: 0.9rem;
@@ -1563,7 +1578,7 @@ button:hover {
 
 .password-modal-content h2 {
     color: #ff4444;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     margin-bottom: 10px;
     text-shadow: 0 0 5px #ff4444;
 }
@@ -2038,7 +2053,7 @@ select:disabled {
 
 .warning-modal h2 {
     color: #ff4444;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     margin-bottom: 10px;
     text-shadow: 0 0 5px #ff4444;
 }
@@ -2055,7 +2070,7 @@ select:disabled {
         max-width: 300px;
     }
     .warning-modal h2 {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     .warning-modal p {
         font-size: 0.6rem;
