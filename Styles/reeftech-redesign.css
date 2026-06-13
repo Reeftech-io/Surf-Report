@@ -1,5 +1,5 @@
 /* =========================================================
-   MAD LAB · ReefTech-Inspired Premium Redesign
+   THE SURFER REPORT · ReefTech-Inspired Premium Redesign
    Senior UI/UX overhaul — modern, minimalist, premium tech
    Loaded AFTER Xoge.css to override legacy styles.
    ========================================================= */
@@ -152,15 +152,14 @@ a:hover { color: var(--rt-green); }
 }
 
 .rt-hero-logo {
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   border: 2px solid var(--rt-teal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin-bottom: 28px;
+  display: block;
+  object-fit: contain;
+  padding: 10px;
+  margin: 0 auto 28px;
   background: rgba(107,212,196,0.06);
   box-shadow: var(--glow);
 }
@@ -315,8 +314,9 @@ a:hover { color: var(--rt-green); }
   border-radius: 50%;
   border: 2px solid var(--rt-teal);
   background: rgba(107,212,196,0.08);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  object-fit: contain;
+  padding: 4px;
+  display: block;
 }
 .rt-brand-text {
   display: flex;

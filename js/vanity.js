@@ -153,7 +153,7 @@ async function activateVanityWallet(index) {
         return;
     }
     if (!globalAddress || !xrpl.isValidAddress(globalAddress)) {
-        errorElement.textContent = 'No wallet loaded in Mad Lab.';
+        errorElement.textContent = 'No wallet loaded in The Surfer Report.';
         return;
     }
     const destinationAddress = wallet.address;
@@ -186,7 +186,7 @@ async function activateVanityWallet(index) {
             Memos: [
                 {
                     Memo: {
-                        MemoData: stringToHex("Wallet Activation - Mad Lab"),
+                        MemoData: stringToHex("Wallet Activation - The Surfer Report"),
                         MemoType: stringToHex("Memo")
                     }
                 }

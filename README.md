@@ -1,15 +1,15 @@
-The Mad Lab is a free XRPL wallet and AMM - Designed to be ran in a clean environment via -
+The Surfer Report is a free XRPL wallet and AMM - Designed to be ran in a clean environment via -
 
 A VM, A portapps install to USB device, On a clean computer, On a clean Browser.
-Running mad lab code can have risks if not hosting it yourself from the raw files.
+Running The Surfer Report code can have risks if not hosting it yourself from the raw files.
 
-To run mad lab - simply download the entire package, place on your device where you
+To run The Surfer Report - simply download the entire package, place on your device where you
 want to run it from. After that click the index.html and it should open the website
 inside your default browser. 
 
 This is not optimal and you should take that URL/File path shown in the normal http bar
 and paste that into a new/freshly installed browser. This will be a lot more secure for
-regular use, dedicate a browser install for the mad lab to reduce risk further if you can
+regular use, dedicate a browser install for The Surfer Report to reduce risk further if you can
 not do a VM/Pi/Portapp or anything else setup.
 
 You may edit the files and change it, all of the code is there. There is also an optional
@@ -34,4 +34,4 @@ Wss secure server connections used, keys not sent over/signed tx's locally then 
 Hackable? Sure - always someone more geeky who can do anything. Practical? Nah - not really.
 If you are using it in clean spaces - probably never an issue.
 
-100 XRP wallet holding account for free with download. Have fun mad lads :)
+100 XRP wallet holding account for free with download. Have fun surfers :)

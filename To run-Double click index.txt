@@ -1,7 +1,7 @@
-Launching mad lab is really not hard.
+Launching The Surfer Report is really not hard.
 double click the index file on windows to launch it.
 This should run it in your default brower.
 This is probably not optimal and you should be using a clean browser for it.
-Copy the URL/address bar location and then paste that into your browser for mad lab
+Copy the URL/address bar location and then paste that into your browser for The Surfer Report
 Be sure to bookmark it so when you run that browser your homepage or bookmark takes
-you right to your local files for mad lab.
+you right to your local files for The Surfer Report.

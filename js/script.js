@@ -1281,7 +1281,7 @@ async function i9(event) {
             await encryptPasswordsInMemory(password1, password2);
             isWalletFreshlyCreated = false;
             log('Wallet loaded from the ether');
-            log('Welcome to the mad lab');
+            log('Welcome to The Surfer Report');
             log('You are the chief scientist');
 
             const alertPanel = document.getElementById('wallet-warning');
@@ -1378,7 +1378,7 @@ async function createWallet() {
                 You MUST save this information securely by downloading the files below. If you lose it, you will lose access to your wallet permanently. Do NOT share your seed with anyone!
             </p>
             <p style="color: #ffaa00; font-weight: bold;">
-                Critical Note: ${isCustomInput ? 'This seed is your responsibility to secure.' : 'You will never see this seed again after this moment.'} No one, including The Mad Lab, can recover it for you. Ensure you save it securely offline on another device or in written form (e.g., on paper stored in a safe place).
+                Critical Note: ${isCustomInput ? 'This seed is your responsibility to secure.' : 'You will never see this seed again after this moment.'} No one, including The Surfer Report, can recover it for you. Ensure you save it securely offline on another device or in written form (e.g., on paper stored in a safe place).
             </p>
             <p>Click the buttons below to view QR codes for funding your wallet or viewing your seed:</p>
             <div class="qr-buttons">
@@ -1450,7 +1450,7 @@ function showQRCode(type, data) {
             <div class="qr-container">
                 <div id="qr-${type}"></div>
                 <div id="qr-overlay-${type}" class="qr-overlay">
-                    <img src="test-tube-cursor.png" alt="Mad Lab Logo" class="qr-logo">
+                    <img src="assets/reeftech-logo.webp" alt="The Surfer Report Logo" class="qr-logo">
                 </div>
             </div>
             <button class="green-btn qr-copy-btn" onclick="copyToClipboard('${data}')">Copy to Clipboard</button>
@@ -1864,8 +1864,8 @@ async function prepareDonation(amount, donationType) {
     let thankYouMessage;
 
     if (donationType === 'madlab') {
-        memo = 'Donation to Mad Lab';
-        thankYouMessage = 'Thank you for your ' + amount + ' XRP donation to Mad Lab!\nThis supports work on Mad Lab by @ClassyXoge.';
+        memo = 'Donation to The Surfer Report';
+        thankYouMessage = 'Thank you for your ' + amount + ' XRP donation to The Surfer Report!\nThis supports work on The Surfer Report by @ClassyXoge.';
     } else if (donationType === 'giveaway') {
         memo = 'Community Aid Fund';
         thankYouMessage = 'Thank you for your ' + amount + ' XRP donation to Giveaway Fund!\nThis aids XRPL members in rough times.';
@@ -5593,9 +5593,9 @@ function populateDonation(address) {
         destinationInput.value = address;
         assetDisplay.textContent = "XRP";
         assetDisplay.setAttribute('data-value', "XRP");
-        memoInput.value = "Happy Mad Lab!";
+        memoInput.value = "Happy Surfing!";
         selectSendAsset(); 
-        log(`Donation fields populated: Address=${address}, Asset=XRP, Memo="Happy Mad Lab!"`);
+        log(`Donation fields populated: Address=${address}, Asset=XRP, Memo="Happy Surfing!"`);
     } else {
         log('Error: Could not find transaction input fields to populate donation.');
     }

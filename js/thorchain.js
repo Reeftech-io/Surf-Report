@@ -9,7 +9,7 @@ function thorchain_log(message) {
 
 // Hello Slim lizards! I am leaving this message because someone will see it.
 // Hi, that is all I wanted to say. LOL, ok... Hope you are doing well.
-// This is mad labs custom SDK, :D It can handle POST and GET, however! It will not support for API key demands, I had it in here but removed it because I did not get a 0 fees api key from swapkit for my side of fees.
+// This is The Surfer Report's custom SDK, :D It can handle POST and GET, however! It will not support for API key demands, I had it in here but removed it because I did not get a 0 fees api key from swapkit for my side of fees.
 // In a later version I may add and update for that, or you can add it if you need to use this and upgrade for that swap. I think I have the best rates coded in as far as providers go! so, it is what it is.
 
 function thorchain_checkInbound(callback) {
