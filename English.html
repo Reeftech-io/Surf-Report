@@ -218,7 +218,6 @@
     <a href="#minting" onclick="expandSection('minting')">Minting</a>
     <a href="#admin-tools" onclick="expandSection('admin-tools')">Admin Tools</a>
     <a href="#network-stats" onclick="expandSection('network-stats')">Network Stats</a>
-    <a href="#wallet-battle" onclick="expandSection('wallet-battle')">Wallet Battle</a>
     <a href="#vanity-wallet-generator" onclick="expandSection('vanity-wallet-generator')">Vanity Wallet Generator</a>
     <a href="#amazon-store" onclick="expandSection('amazon-store')">Amazon Affiliate Store</a>
 </nav>
@@ -1187,103 +1186,6 @@ I take a highly selective approach to fees, ensuring none are imposed across ML 
             </div>
         </div>
 
-        <div class="section minimized" id="wallet-battle">
-            <div class="section-header" onclick="toggleSection('wallet-battle', event)">
-                <h2>Battle</h2>
-                <button class="toggle-btn">▼</button>
-            </div>
-            <div class="section-content">
-                <div class="section-description">
-                    <h3 style="color: #00cc00;">Wallet Battle Simulator</h3>
-                    <p>Challenge an opponent’s wallet in The Mad Lab’s battle arena! Balance checks use the XRPL ledger</p>
-                </div>
-                <div class="battle-controls">
-                    <div class="input-group" onclick="event.stopPropagation()">
-                        <input type="text" id="opponent-address" placeholder="Enter opponent’s address (e.g., r...)">
-                    </div>
-                    <div class="input-group" onclick="event.stopPropagation()">
-                        <div class="custom-dropdown" id="battlefield-selector">
-                            <div class="dropdown-trigger" onclick="toggleBattlefieldDropdown(event)">
-                                <span id="battlefield-display">Select Battlefield</span>
-                                <span class="dropdown-arrow">▼</span>
-                            </div>
-                            <div class="dropdown-panel" id="battlefield-panel" style="display: none;">
-                                <div class="battlefield-options" id="battlefield-options"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="battlefield-details">
-                        <p id="battlefield-details-text" style="color: #ccc; font-size: 0.8rem;">Select a battlefield to see its details.</p>
-                    </div>
-                    <div class="button-group">
-                        <button class="red-black-btn" onclick="checkOpponentBalance()">Check Opponent Balance</button>
-                        <button class="red-black-btn" onclick="updateUserAssets()">Refresh My Balance</button>
-                        <button class="green-btn" onclick="startBattleSimulation()" id="battle-start-btn" disabled>Start Battle</button>
-                    </div>
-                </div>
-                <hr class="divider-line">
-                <div class="battle-assets">
-                    <h3>Battle Arena</h3>
-                    <div class="battle-asset-grids" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                        <div class="battle-asset-grid" style="flex: 1; min-width: 300px;">
-                            <h4 style="color: #00cc00;">Your Assets</h4>
-                            <div id="user-asset-grid" class="asset-grid"></div>
-                        </div>
-                        <div class="battle-asset-grid" style="flex: 1; min-width: 300px;">
-                            <h4 style="color: #ff4444;">Opponent’s Assets</h4>
-                            <div id="opponent-asset-grid" class="asset-grid">
-                                <p>Enter an opponent’s address to view their assets.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="divider-line">
-                    <div class="battle-log">
-                        <div class="battle-log-header">
-                            <progress id="user-power-bar" value="100" max="100"></progress>
-                            <h3>Battle Log</h3>
-                            <progress id="enemy-power-bar" value="100" max="100"></progress>
-                        </div>
-                        <div class="army-power-display">
-                            <span id="user-army-power">Your Army Power: 0</span>
-                            <span id="enemy-army-power">Enemy Army Power: 0</span>
-                        </div>
-                        <div class="output-box" id="battle-log-output">
-                            <p>Battle log will appear here once the simulation starts.</p>
-                        </div>
-                    </div>
-                    <div class="battle-progress">
-                        <label>Battle Progress:</label>
-                        <progress id="battle-progress" value="0" max="100"></progress>
-                    </div>
-                    
-                    <div class="battle-transaction">
-                        <button class="green-btn" id="send-battle-result-btn" onclick="sendBattleResultTransaction()" disabled>Send Battle Result (0.00001 XRP)</button>
-                    </div>
-                    <div class="glossary-section">
-                        <h3>Glossary</h3>
-                        <div class="input-group" onclick="event.stopPropagation()">
-                            <div class="custom-dropdown" id="glossary-selector">
-                                <div class="dropdown-trigger" onclick="toggleGlossaryDropdown(event)">
-                                    <span id="glossary-display">Select Category</span>
-                                    <span class="dropdown-arrow">▼</span>
-                                </div>
-                                <div class="dropdown-panel" id="glossary-panel" style="display: none;">
-                                    <div class="glossary-options" id="glossary-options"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="glossary-details">
-                            <div class="glossary-output" id="glossary-output">
-                                <p>Select a category to view detailed descriptions.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p id="address-error-battle" class="error-message"></p>
-            </div>
-        </div>
-		
-				
         <div class="section minimized" id="vanity-wallet-generator">
             <div class="section-header" onclick="toggleSection('vanity-wallet-generator', event)">
                 <h2>Vanity Wallet Generator</h2>
@@ -2183,7 +2085,6 @@ I take a highly selective approach to fees, ensuring none are imposed across ML 
     <script src="js/minting.js"></script>
     <script src="js/admin.js"></script>
 	<script src="js/golem.js"></script>
-    <script src="js/battle.js"></script>
 	<script src="js/cards.js"></script>
 	<script src="js/airdrop.js"></script>
 	<script src="js/airdropsmall.js"></script>
