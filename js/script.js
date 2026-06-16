@@ -1851,56 +1851,6 @@ async function calculateTotalReserve(address, additionalObjects = 0) {
     }
 }
 
-async function prepareDonation(amount, donationType) {
-    const madlabAddress = 'rpnD69VR4imKrNFvQyTfz9vq25ZpPYn63A';
-    const giveawayAddress = 'rGiVeFd9fUvdVEHwWQKrd5kGyk4tdZqu8u';
-    const donationAddress = donationType === 'madlab' ? madlabAddress : giveawayAddress;
-    let memo;
-    let thankYouMessage;
-
-    if (donationType === 'madlab') {
-        memo = 'Donation to The Surfer Report';
-        thankYouMessage = 'Thank you for your ' + amount + ' XRP donation to The Surfer Report!\nThis supports work on The Surfer Report by @ClassyXoge.';
-    } else if (donationType === 'giveaway') {
-        memo = 'Community Aid Fund';
-        thankYouMessage = 'Thank you for your ' + amount + ' XRP donation to Giveaway Fund!\nThis aids XRPL members in rough times.';
-    } else {
-        log('Error: Invalid donation type.');
-        return;
-    }
-
-    const tx = {
-        TransactionType: "Payment",
-        Account: globalAddress,
-        Destination: donationAddress,
-        Amount: xrpl.xrpToDrops(amount),
-        Fee: TRANSACTION_FEE_DROPS,
-        Memos: [{ Memo: { MemoData: stringToHex(memo), MemoType: stringToHex("Memo") } }]
-    };
-
-    const seed = await fetchRenderContent();
-    const wallet = xrpl.Wallet.fromSeed(seed);
-
-    const capitalizedType = donationType.charAt(0).toUpperCase() + donationType.slice(1);
-    const description = `Donate ${amount} XRP to ${capitalizedType} with memo "${memo}"`;
-    const txEntry = {
-        tx: tx,
-        wallet: wallet,
-        description: description,
-        delayMs: 0,
-        type: "payment",
-        queueElementId: "transaction-queue-transactions"
-    };
-
-    transactionQueue.push(txEntry);
-    updateTransactionQueueDisplay();
-    if (!isProcessingQueue) {
-        processTransactionQueue();
-    }
-
-    alert(thankYouMessage);
-}
-
 async function checkDepositAuth(issuerAddress) {
     try {
         await ensureConnected();
@@ -5578,23 +5528,6 @@ async function updateBalances() {
 }
 
 
-
-function populateDonation(address) {
-    const destinationInput = document.getElementById('send-destination');
-    const assetDisplay = document.getElementById('send-asset-display');
-    const memoInput = document.getElementById('send-memo');
-
-    if (destinationInput && assetDisplay && memoInput) {
-        destinationInput.value = address;
-        assetDisplay.textContent = "XRP";
-        assetDisplay.setAttribute('data-value', "XRP");
-        memoInput.value = "Happy Surfing!";
-        selectSendAsset(); 
-        log(`Donation fields populated: Address=${address}, Asset=XRP, Memo="Happy Surfing!"`);
-    } else {
-        log('Error: Could not find transaction input fields to populate donation.');
-    }
-}
 
 async function fetchDomain() {
     try {
