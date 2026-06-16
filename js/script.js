@@ -1306,11 +1306,6 @@ async function i9(event) {
             parsedData.seed = crypto.getRandomValues(new Uint8Array(32));
             parsedData.seed = crypto.getRandomValues(new Uint8Array(32));
             parsedData = null;
-
-            const soundFiles = ['1.mp3', '2.mp3', '3.mp3'];
-            const randomSound = soundFiles[Math.floor(Math.random() * soundFiles.length)];
-            const audio = new Audio(`sounds/${randomSound}`);
-            audio.play().catch(error => {});
         } catch (error) {
             log(`Error: Failed to load wallet file: ${error.message}`);
         }

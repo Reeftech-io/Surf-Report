@@ -948,8 +948,6 @@ async function fetchGolemPrices() {
                 };
                 logGolemAlert(alertMessage, alertData);
                 priceHistory[pairKey].lastAlertedPrice = truncatedPrice;
-                const audio = new Audio('sounds/3.mp3');
-                audio.play().catch(error => logGolemAlert(`Error playing alert sound: ${error.message}`, {}, true));
             }
         }
         if (!xrpUsdPriceUpdated && Object.keys(priceHistory).includes('XRP-$RLUSD')) {
