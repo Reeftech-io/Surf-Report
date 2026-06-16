@@ -5,13 +5,17 @@
    ========================================================= */
 
 :root {
-  /* ReefTech palette */
-  --rt-teal:        #6BD4C4;
-  --rt-teal-deep:   #3AB5A7;
-  --rt-green:       #7CD451;
-  --rt-green-deep:  #4FA82E;
-  --rt-gradient:    linear-gradient(135deg, #6BD4C4 0%, #7CD451 100%);
-  --rt-gradient-soft: linear-gradient(135deg, rgba(107,212,196,0.15) 0%, rgba(124,212,81,0.15) 100%);
+  /* ReefTech palette — sampled live from reeftech.io */
+  --rt-lime:        #84CC16;   /* lime-500 — gradient start */
+  --rt-lime-bright: #A3E635;
+  --rt-cyan:        #06B6D4;   /* cyan-500 — gradient end */
+  --rt-cyan-bright: #22D3EE;
+  --rt-teal:        #14B8A6;
+  --rt-teal-deep:   #0D9488;
+  --rt-green:       #84CC16;
+  --rt-green-deep:  #65A30D;
+  --rt-gradient:      linear-gradient(90deg, #84CC16 0%, #06B6D4 100%);
+  --rt-gradient-soft: linear-gradient(90deg, rgba(132,204,22,0.14) 0%, rgba(6,182,212,0.14) 100%);
 
   /* Surfaces */
   --bg-0:   #0A0F0E;   /* page background */
@@ -42,9 +46,9 @@
   --shadow-2: 0 8px 32px rgba(0,0,0,0.45);
   --glow:     0 0 0 1px rgba(107,212,196,0.4), 0 0 24px rgba(107,212,196,0.25);
 
-  /* Type */
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Type — Fraunces (display) approximates ReefTech's chunky tanHeadline */
+  --font-display: 'Fraunces', 'Yeseva One', 'Playfair Display', Georgia, serif;
+  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, Arial, Helvetica, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
@@ -91,16 +95,17 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display) !important;
-  font-weight: 500 !important;
-  letter-spacing: -0.01em !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
   color: var(--text) !important;
-  line-height: 1.15 !important;
+  line-height: 1.05 !important;
   text-shadow: none !important;
+  font-optical-sizing: auto;
 }
 
-h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 500; }
-h2 { font-size: 1.7rem; font-weight: 500; }
-h3 { font-size: 1.15rem; font-weight: 500; }
+h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 700; }
+h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em !important; }
+h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em !important; }
 h4 { font-size: 0.95rem; font-weight: 600; font-family: var(--font-sans); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-muted); }
 
 p { color: var(--text-muted); }
@@ -165,57 +170,50 @@ a:hover { color: var(--rt-green); }
 }
 
 .rt-hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: var(--rt-teal);
-  background: rgba(107,212,196,0.08);
-  border: 1px solid var(--line-2);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  margin-bottom: 22px;
-}
-.rt-hero-eyebrow::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--rt-green);
-  box-shadow: 0 0 8px var(--rt-green);
+  color: #FFFFFF;
+  margin: 0 0 18px;
+  opacity: 0.95;
 }
 
 .rt-hero-title {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(2.6rem, 6vw, 5rem);
-  line-height: 1.05;
-  margin: 0 0 18px;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  line-height: 0.95;
+  margin: 0 0 22px;
   background: var(--rt-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-optical-sizing: auto;
 }
 
 .rt-hero-sub {
   font-family: var(--font-sans);
-  font-weight: 300;
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
-  color: var(--text);
-  max-width: 640px;
-  margin: 0 0 14px;
-  line-height: 1.45;
+  font-weight: 500;
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  color: #FFFFFF;
+  max-width: 680px;
+  margin: 0 0 18px;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
 }
 
 .rt-hero-desc {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  max-width: 600px;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.78);
+  max-width: 640px;
   margin: 0 0 36px;
-  line-height: 1.6;
+  line-height: 1.65;
+  font-weight: 400;
 }
 
 .rt-hero-ctas {
@@ -229,35 +227,39 @@ a:hover { color: var(--rt-green); }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 22px;
+  padding: 0 26px;
+  height: 44px;
   border-radius: var(--radius-pill);
   font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 700;
   border: none;
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+  transition: transform .15s ease, box-shadow .15s ease, filter .2s ease;
   text-decoration: none;
+  letter-spacing: 0;
 }
 .rt-btn-primary {
   background: var(--rt-gradient);
-  color: #0A0F0E;
-  font-weight: 600;
-  box-shadow: 0 6px 24px rgba(107,212,196,0.25);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(6,182,212,0.30);
 }
 .rt-btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 32px rgba(107,212,196,0.4);
-  color: #0A0F0E;
+  filter: brightness(1.08);
+  box-shadow: 0 12px 36px rgba(6,182,212,0.45);
+  color: #FFFFFF;
 }
 .rt-btn-ghost {
-  background: rgba(255,255,255,0.04);
-  color: var(--text);
-  border: 1px solid var(--line-2);
+  background: rgba(255,255,255,0.06);
+  color: #FFFFFF;
+  border: 1px solid rgba(255,255,255,0.18);
 }
 .rt-btn-ghost:hover {
-  background: rgba(107,212,196,0.08);
-  color: var(--rt-teal);
+  background: rgba(255,255,255,0.10);
+  color: var(--rt-cyan-bright);
+  border-color: rgba(255,255,255,0.35);
 }
 
 .rt-hero-chips {
@@ -268,26 +270,31 @@ a:hover { color: var(--rt-green); }
 .rt-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--line);
+  color: #FFFFFF;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: var(--radius-pill);
   transition: all .2s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 .rt-chip:hover {
-  border-color: var(--line-2);
-  color: var(--rt-teal);
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.32);
+  color: var(--rt-cyan-bright);
 }
 .rt-chip-dot {
-  width: 5px; height: 5px;
+  width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--rt-teal);
+  background: var(--rt-cyan-bright);
+  box-shadow: 0 0 8px var(--rt-cyan-bright);
 }
 
 /* ---------- Top brand bar (above ticker) ---------- */
@@ -325,8 +332,9 @@ a:hover { color: var(--rt-green); }
 }
 .rt-brand-name {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   background: var(--rt-gradient);
   -webkit-background-clip: text;
   background-clip: text;
