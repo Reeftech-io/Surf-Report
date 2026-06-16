@@ -153,7 +153,7 @@ async function activateVanityWallet(index) {
         return;
     }
     if (!globalAddress || !xrpl.isValidAddress(globalAddress)) {
-        errorElement.textContent = 'No wallet loaded in The Surfer Report.';
+        errorElement.textContent = 'No wallet loaded in The Surf Report.';
         return;
     }
     const destinationAddress = wallet.address;
@@ -186,7 +186,7 @@ async function activateVanityWallet(index) {
             Memos: [
                 {
                     Memo: {
-                        MemoData: stringToHex("Wallet Activation - The Surfer Report"),
+                        MemoData: stringToHex("Wallet Activation - The Surf Report"),
                         MemoType: stringToHex("Memo")
                     }
                 }

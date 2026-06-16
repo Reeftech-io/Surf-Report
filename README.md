@@ -1,15 +1,15 @@
-The Surfer Report is a free XRPL wallet and AMM - Designed to be ran in a clean environment via -
+The Surf Report is a free XRPL wallet and AMM - Designed to be ran in a clean environment via -
 
 A VM, A portapps install to USB device, On a clean computer, On a clean Browser.
-Running The Surfer Report code can have risks if not hosting it yourself from the raw files.
+Running The Surf Report code can have risks if not hosting it yourself from the raw files.
 
-To run The Surfer Report - simply download the entire package, place on your device where you
+To run The Surf Report - simply download the entire package, place on your device where you
 want to run it from. After that click the index.html and it should open the website
 inside your default browser. 
 
 This is not optimal and you should take that URL/File path shown in the normal http bar
 and paste that into a new/freshly installed browser. This will be a lot more secure for
-regular use, dedicate a browser install for The Surfer Report to reduce risk further if you can
+regular use, dedicate a browser install for The Surf Report to reduce risk further if you can
 not do a VM/Pi/Portapp or anything else setup.
 
 You may edit the files and change it, all of the code is there. There is also an optional
