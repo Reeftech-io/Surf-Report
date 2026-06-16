@@ -131,9 +131,18 @@ a:hover { color: var(--rt-green); }
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   background:
-    radial-gradient(1000px 500px at 50% -10%, rgba(107,212,196,0.18), transparent 60%),
-    radial-gradient(700px 400px at 90% 100%, rgba(124,212,81,0.12), transparent 60%),
+    linear-gradient(180deg, rgba(10,15,14,0.72) 0%, rgba(10,15,14,0.78) 55%, rgba(10,15,14,0.95) 100%),
+    radial-gradient(1000px 500px at 50% -10%, rgba(107,212,196,0.22), transparent 60%),
+    radial-gradient(700px 400px at 90% 100%, rgba(124,212,81,0.14), transparent 60%),
+    url('../assets/wave-backdrop.jpg') center / cover no-repeat,
     linear-gradient(180deg, #0B1413 0%, #0A0F0E 100%);
+  background-attachment: fixed, scroll, scroll, scroll, scroll;
+}
+
+@media (max-width: 768px) {
+  .rt-hero {
+    background-attachment: scroll, scroll, scroll, scroll, scroll;
+  }
 }
 
 .rt-hero::before {
@@ -141,8 +150,8 @@ a:hover { color: var(--rt-green); }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(107,212,196,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(107,212,196,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(107,212,196,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(107,212,196,0.025) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
