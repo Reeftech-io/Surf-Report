@@ -5718,10 +5718,10 @@ function hexToDomain(hex) {
 }
 
 function reapplyCursorStyle() {
-    document.body.style.cursor = "url('test-tube-cursor.png') 0 0, auto";
+    document.body.style.cursor = "auto";
     const allElements = document.querySelectorAll('*');
     allElements.forEach(element => {
-        element.style.cursor = "url('test-tube-cursor.png') 0 0, auto";
+        element.style.cursor = "auto";
     });
 }
 
