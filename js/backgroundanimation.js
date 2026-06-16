@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .container, .section, .sidebar-left, .sidebar-right, .nav-bar, .header, .footer, .account-overview, .trustline-controls, .output-box, .swap-tokens, .swap-info, .swap-result, .wallet-warning, .qr-modal-content, .transaction-queue, .password-modal-content, .lp-subsection, .lp-subsection-header, .lp-subsection-content, .regular-key-controls, .network-stats-controls, .nuke-trustline, .ledger-stats-box, .deep-dive-box, .warning-modal .password-modal-content, .golem-output, .golem-controls, .pair-headers, .pair-block, .pair-data, .pair-charts, .category-tab, .product-item, .wallet-history-legend, .wallet-history-summary, .wallet-history-total, .wallet-history-transactions, .wallet-history-item p, .wallet-history-item .wallet-history-details {
             background-color: rgba(26, 26, 26, 0.8) !important;
         }
-        .section-header, .nav-bar a, .red-black-btn, .green-btn, .teal-btn, .clear-dom-btn, .qr-copy-btn, .qr-close-btn, .nuke-btn, .lp-action-btn, .percentage-btn, .emergency-btn, .custom-file-input .nav-link-btn, .battle-log-header, .product-link {
+        .section-header, .red-black-btn, .green-btn, .teal-btn, .clear-dom-btn, .qr-copy-btn, .qr-close-btn, .nuke-btn, .lp-action-btn, .percentage-btn, .emergency-btn, .custom-file-input .nav-link-btn, .battle-log-header, .product-link {
             background: rgba(51, 51, 51, 0.8) !important;
         }
     `;

@@ -377,14 +377,14 @@ a:hover { color: var(--rt-green); }
   -webkit-text-fill-color: var(--text);
 }
 
-/* ---------- Navigation (the long section list) ---------- */
+/* ---------- Navigation (the long section list) ----------
+   Symmetrical grid of Launch-Wallet-style buttons (lime -> cyan gradient).
+   ---------------------------------------------------------- */
 .nav-bar {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: wrap !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-  padding: 18px !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
+  gap: 14px !important;
+  padding: 22px !important;
   background: var(--bg-1) !important;
   border: 1px solid var(--line) !important;
   border-radius: var(--radius-lg) !important;
@@ -394,27 +394,58 @@ a:hover { color: var(--rt-green); }
 .nav-bar a {
   display: inline-flex !important;
   align-items: center !important;
-  padding: 8px 16px !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  padding: 12px 18px !important;
   margin: 0 !important;
-  font-size: 0.82rem !important;
-  font-weight: 500 !important;
-  color: var(--text-muted) !important;
-  background: rgba(255,255,255,0.02) !important;
-  border: 1px solid var(--line) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.2 !important;
+  color: #FFFFFF !important;
+  background: var(--rt-gradient) !important;
+  border: none !important;
   border-radius: var(--radius-pill) !important;
   text-decoration: none !important;
-  transition: all .18s ease !important;
-  white-space: nowrap !important;
-  box-shadow: none !important;
+  white-space: normal !important;
+  box-shadow: 0 8px 24px rgba(6,182,212,0.28) !important;
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease !important;
 }
 .nav-bar a::after,
 .nav-bar a::before { display: none !important; content: none !important; }
-.nav-bar a:hover {
-  color: var(--rt-teal) !important;
-  background: rgba(107,212,196,0.08) !important;
-  border-color: var(--line-2) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: none !important;
+.nav-bar a:hover,
+.nav-bar a:focus-visible {
+  color: #FFFFFF !important;
+  filter: brightness(1.08) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 36px rgba(6,182,212,0.42) !important;
+  outline: none !important;
+}
+.nav-bar a:active {
+  transform: translateY(0) !important;
+  filter: brightness(0.96) !important;
+  box-shadow: 0 6px 18px rgba(6,182,212,0.30) !important;
+}
+
+@media (max-width: 640px) {
+  .nav-bar {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 16px !important;
+  }
+  .nav-bar a {
+    min-height: 48px !important;
+    font-size: 0.88rem !important;
+    padding: 10px 12px !important;
+  }
+}
+@media (max-width: 380px) {
+  .nav-bar {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ---------- Layout container ----------
@@ -889,7 +920,7 @@ details p { font-size: 0.85rem !important; color: var(--text-muted); line-height
 @media (max-width: 900px) {
   .rt-menu-toggle { display: inline-flex; }
   .nav-bar { display: none !important; }
-  .nav-bar.is-open { display: flex !important; }
+  .nav-bar.is-open { display: grid !important; }
   .rt-brandbar-actions .rt-btn-ghost { display: none; }
 }
 
