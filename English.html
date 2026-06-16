@@ -773,141 +773,32 @@ I take a highly selective approach to fees, ensuring none are imposed across ML 
     <div class="section-content">
         <div class="section-description">
             <h3 style="color: #00cc00;">Heatmaps Overview</h3>
-            <p>View various market heatmaps from TradingView, including Stock, ETF, Forex, and Crypto, along with real-time economic data from usdebtclock.org.</p>
+            <p>Live, interactive crypto bubble visualizations. XRPL Meme Bubbles tracks the XRPL memecoin ecosystem, and Crypto Bubbles covers the broader market across chains.</p>
         </div>
-        
-        <h3>Crypto Coins Heatmap</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js" async>
-            {
-                "dataSource": "Crypto",
-                "blockSize": "market_cap_calc",
-                "blockColor": "24h_close_change|5",
-                "locale": "en",
-                "symbolUrl": "",
-                "colorTheme": "dark",
-                "hasTopBar": false,
-                "isDataSetEnabled": false,
-                "isZoomEnabled": true,
-                "hasSymbolTooltip": true,
-                "isMonoSize": false,
-                "width": "100%",
-                "height": "400"
-            }
-            </script>
-        </div>
-        <hr>
 
-        <h3>ETF Heatmap</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-etf-heatmap.js" async>
-            {
-                "dataSource": "AllUSEtf",
-                "blockSize": "volume",
-                "blockColor": "change",
-                "grouping": "asset_class",
-                "locale": "en",
-                "symbolUrl": "",
-                "colorTheme": "dark",
-                "hasTopBar": false,
-                "isDataSetEnabled": false,
-                "isZoomEnabled": true,
-                "hasSymbolTooltip": true,
-                "isMonoSize": false,
-                "width": "100%",
-                "height": "400"
-            }
-            </script>
-        </div>
-        <hr>
-
-        <h3>Stock Heatmap</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
-            {
-                "dataSource": "SPX500",
-                "blockSize": "market_cap_basic",
-                "blockColor": "change",
-                "grouping": "sector",
-                "locale": "en",
-                "symbolUrl": "",
-                "colorTheme": "dark",
-                "exchanges": [],
-                "hasTopBar": false,
-                "isDataSetEnabled": false,
-                "isZoomEnabled": true,
-                "hasSymbolTooltip": true,
-                "isMonoSize": false,
-                "width": "100%",
-                "height": "400"
-            }
-            </script>
-        </div>
-        <hr>
-
-        <h3>Forex Cross Rates</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js" async>
-            {
-                "colorTheme": "dark",
-                "isTransparent": false,
-                "locale": "en",
-                "currencies": [
-                    "EUR",
-                    "USD",
-                    "JPY",
-                    "GBP",
-                    "CHF",
-                    "AUD",
-                    "CAD",
-                    "NZD",
-                    "CNY"
-                ],
-                "backgroundColor": "#0F0F0F",
-                "width": "100%",
-                "height": "400"
-            }
-            </script>
-        </div>
-        <hr>
-
-        <h3>Forex Heat Map</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-heat-map.js" async>
-            {
-                "colorTheme": "dark",
-                "isTransparent": false,
-                "locale": "en",
-                "currencies": [
-                    "EUR",
-                    "USD",
-                    "JPY",
-                    "GBP",
-                    "CHF",
-                    "AUD",
-                    "CAD",
-                    "NZD",
-                    "CNY"
-                ],
-                "backgroundColor": "#0F0F0F",
-                "width": "100%",
-                "height": "400"
-            }
-            </script>
-        </div>
-        <hr>
-
-        <h3>U.S. National Debt Clock</h3>
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget">
-                <iframe src="https://usdebtclock.org" width="100%" height="800" frameborder="0" scrolling="yes" style="border: 1px solid #ff4444; border-radius: 8px; max-width: 100%; overflow: hidden;"></iframe>
+        <div class="heatmap-embed heatmap-launcher">
+            <div class="heatmap-embed-header">
+                <h3>XRPL Meme Bubbles</h3>
+                <a href="https://xrplmemebubbles.com/" target="_blank" rel="noopener noreferrer" class="heatmap-embed-link">Open in new tab ↗</a>
             </div>
-            <p style="color: #ccc; font-size: 0.8rem;">Note: This iframe displays real-time economic data from usdebtclock.org, including national debt and related metrics. Content is scaled to fit and may require scrolling if content exceeds the frame.</p>
+            <a href="https://xrplmemebubbles.com/" target="_blank" rel="noopener noreferrer" class="heatmap-launcher-cta">
+                <span class="heatmap-launcher-icon">🫧</span>
+                <span class="heatmap-launcher-text">
+                    <strong>Launch XRPL Meme Bubbles</strong>
+                    <small>Live bubble visualization of the XRPL memecoin ecosystem. Opens in a new tab — this site does not allow embedding.</small>
+                </span>
+                <span class="heatmap-launcher-arrow">↗</span>
+            </a>
+        </div>
+
+        <div class="heatmap-embed">
+            <div class="heatmap-embed-header">
+                <h3>Crypto Bubbles</h3>
+                <a href="https://cryptobubbles.net/" target="_blank" rel="noopener noreferrer" class="heatmap-embed-link">Open in new tab ↗</a>
+            </div>
+            <div class="heatmap-embed-frame">
+                <iframe src="https://cryptobubbles.net/" loading="lazy" referrerpolicy="no-referrer" allow="fullscreen" title="Crypto Bubbles"></iframe>
+            </div>
         </div>
     </div>
 </div>
